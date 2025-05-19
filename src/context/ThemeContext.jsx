@@ -11,13 +11,26 @@ export const useTheme = () => useContext(ThemeContext)
 // Provedor do tema
 export const ThemeProvider = ({ children }) => {
   // Verificar se há uma preferência salva no localStorage
-  const [theme, setTheme] = useState(() => {
+  const [theme, setTheme] = useState("light") // Iniciar com light como padrão
+
+  // Efeito para carregar o tema do localStorage na montagem do componente
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const savedTheme = localStorage.getItem("etecnotes-theme")
-      return savedTheme || "light" // Padrão é modo claro
+      if (savedTheme) {
+        setTheme(savedTheme)
+        if (savedTheme === "dark") {
+          document.documentElement.classList.add("dark")
+        } else {
+          document.documentElement.classList.remove("dark")
+        }
+      } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        // Se não houver tema salvo, verificar preferência do sistema
+        setTheme("dark")
+        document.documentElement.classList.add("dark")
+      }
     }
-    return "light"
-  })
+  }, [])
 
   // Atualizar o tema no localStorage e no DOM quando ele mudar
   useEffect(() => {
@@ -35,7 +48,10 @@ export const ThemeProvider = ({ children }) => {
 
   // Função para alternar o tema
   const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light")
+    setTheme((prevTheme) => {
+      const newTheme = prevTheme === "light" ? "dark" : "light"
+      return newTheme
+    })
   }
 
   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>

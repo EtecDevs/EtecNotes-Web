@@ -1,4 +1,4 @@
-import { Home, Calendar, MessageCircle, User, Cloud, Plus, HelpCircle, Menu } from 'lucide-react';
+import { Home, Calendar, MessageCircle, User, Cloud, Plus, HelpCircle, Menu } from "lucide-react"
 
 function Header() {
   return (
@@ -16,37 +16,37 @@ function Header() {
 
       {/* Navigation Icons */}
       <div className="hidden md:flex items-center space-x-6">
-        <button className="p-1.5 rounded-md text-[#8C43FF] transition-all duration-300 hover:text-[#8C43FF] hover:bg-[#8C43FF]/10 hover:shadow-[0_0_15px_rgba(140,67,255,0.5)]">
+        <button className="p-1.5 rounded-md text-[#8C43FF]">
           <Home size={28} />
         </button>
-        <button className="p-1.5 rounded-md text-[#D0B3FF] transition-all duration-300 hover:text-[#8C43FF] hover:bg-[#8C43FF]/10 hover:shadow-[0_0_15px_rgba(140,67,255,0.5)]">
+        <button className="p-1.5 rounded-md text-[#D0B3FF]">
           <Calendar size={28} />
         </button>
-        <button className="p-1.5 rounded-md text-[#D0B3FF] transition-all duration-300 hover:text-[#8C43FF] hover:bg-[#8C43FF]/10 hover:shadow-[0_0_15px_rgba(140,67,255,0.5)]">
+        <button className="p-1.5 rounded-md text-[#D0B3FF]">
           <MessageCircle size={28} />
         </button>
-        <button className="p-1.5 rounded-md text-[#D0B3FF] transition-all duration-300 hover:text-[#8C43FF] hover:bg-[#8C43FF]/10 hover:shadow-[0_0_15px_rgba(140,67,255,0.5)]">
+        <button className="p-1.5 rounded-md text-[#D0B3FF]">
           <User size={28} />
         </button>
-        <button className="p-1.5 rounded-md text-[#D0B3FF] transition-all duration-300 hover:text-[#8C43FF] hover:bg-[#8C43FF]/10 hover:shadow-[0_0_15px_rgba(140,67,255,0.5)]">
+        <button className="p-1.5 rounded-md text-[#D0B3FF]">
           <Cloud size={28} />
         </button>
-        <button className="p-1.5 rounded-md text-[#D0B3FF] transition-all duration-300 hover:text-[#8C43FF] hover:bg-[#8C43FF]/10 hover:shadow-[0_0_15px_rgba(140,67,255,0.5)]">
+        <button className="p-1.5 rounded-md text-[#D0B3FF]">
           <Plus size={28} />
         </button>
       </div>
 
       {/* Right Icons */}
       <div className="flex items-center space-x-4">
-        <button className="p-1.5 rounded-full border border-black transition-all duration-300 hover:bg-black/5 hover:shadow-[0_0_10px_rgba(0,0,0,0.2)]">
+        <button className="p-1.5 rounded-full border border-black">
           <HelpCircle size={20} className="text-black" />
         </button>
-        <button className="p-1.5 text-[#D0B3FF] transition-all duration-300 hover:text-[#8C43FF] hover:bg-[#8C43FF]/10 hover:rounded-md hover:shadow-[0_0_15px_rgba(140,67,255,0.5)]">
+        <button className="p-1.5 text-[#D0B3FF]">
           <Menu size={28} />
         </button>
       </div>
     </header>
-  );
+  )
 }
 
-export default Header;
+export default Header
