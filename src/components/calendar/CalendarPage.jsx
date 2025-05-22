@@ -85,6 +85,7 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
   // Função para navegar entre os meses
   const navigateMonth = (direction) => {
     const newMonth = new Date(currentMonth)
+
     newMonth.setMonth(newMonth.getMonth() + direction)
     setCurrentMonth(newMonth)
   }
@@ -152,10 +153,10 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
       <div className="w-full max-w-7xl mx-auto px-6 py-10">
         <h1 className="text-4xl font-bold mb-8 dark:text-white text-gray-800">Calendário</h1>
 
-        {/* Tabs - Adicionado aqui para manter consistência */}
-        <TabNavigation activeTab={activeTab} onTabChange={onTabChange} />
-
+        {/* Tabs removidas */}
+        
         <div className="flex flex-col lg:flex-row gap-6 h-full">
+
           {/* Calendário */}
           <motion.div
             className="flex-1 dark:bg-[#1E1E1E]/80 bg-white backdrop-blur-md rounded-3xl p-6 shadow-lg border dark:border-[#333333] border-gray-200"
@@ -171,13 +172,13 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
               <div className="flex gap-2">
                 <button
                   onClick={() => navigateMonth(-1)}
-                  className="p-2 rounded-full dark:bg-[#2D2D2D] bg-gray-100 hover:bg-gray-200 dark:hover:bg-[#3D3D3D] transition-colors"
+                  className="p-2 rounded-full dark:bg-[#2D2D2D] bg-gray-100 hover:bg-gray-200 dark:hover:bg-[#3D3D3D] transition-colors cursor-pointer"
                 >
                   <ChevronLeft size={20} className="text-[#8C43FF]" />
                 </button>
                 <button
                   onClick={() => navigateMonth(1)}
-                  className="p-2 rounded-full dark:bg-[#2D2D2D] bg-gray-100 hover:bg-gray-200 dark:hover:bg-[#3D3D3D] transition-colors"
+                  className="p-2 rounded-full dark:bg-[#2D2D2D] bg-gray-100 hover:bg-gray-200 dark:hover:bg-[#3D3D3D] transition-colors cursor-pointer"
                 >
                   <ChevronRight size={20} className="text-[#8C43FF]" />
                 </button>
@@ -196,16 +197,16 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
             {/* Dias do mês */}
             <div className="grid grid-cols-7 gap-1">
               {days.map((day, index) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ scale: 1.05 }}
-                  onClick={() => setSelectedDay(day.date)}
-                  className={`
-                    relative h-20 p-2 rounded-xl cursor-pointer transition-all
-                    ${day.isCurrentMonth ? "dark:bg-[#2D2D2D] bg-gray-50" : "dark:bg-[#252525] bg-gray-100 opacity-40"}
-                    ${isToday(day.date) ? "border border-[#00B2FF]" : ""}
-                    ${isSelected(day.date) ? "dark:bg-[#3A1F5D] bg-[#F0E6FF] shadow-[0_0_15px_rgba(140,67,255,0.3)]" : ""}
-                  `}
+  <motion.div
+    key={index}
+    whileHover={{ scale: 1.05 }}
+    onClick={() => setSelectedDay(day.date)}
+    className={`
+      relative h-20 p-2 rounded-xl cursor-pointer transition-all
+      ${day.isCurrentMonth ? "dark:bg-[#2D2D2D] bg-gray-50" : "dark:bg-[#252525] bg-gray-100 opacity-40"}
+      ${isToday(day.date) ? "border border-[#00B2FF]" : ""}
+      ${isSelected(day.date) ? "border-2 border-[#8C43FF] dark:border-[#8C43FF] shadow-[0_0_15px_rgba(140,67,255,0.3)]" : ""}
+    `}
                 >
                   <span
                     className={`
@@ -295,7 +296,7 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
                       </div>
                       <div className="flex gap-1">
                         <button
-                          className="p-1 rounded-full dark:hover:bg-[#3D3D3D] hover:bg-gray-200 transition-colors"
+                          className="p-1 rounded-full dark:hover:bg-[#3D3D3D] hover:bg-gray-200 transition-colors cursor-pointer"
                           onClick={() => handleDeleteEvent(item.id)}
                         >
                           <Trash2 size={16} className="dark:text-gray-400 text-gray-500" />
@@ -315,14 +316,14 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
             <div className="space-y-3">
               <button
                 onClick={openAddNoteModal}
-                className="w-full py-3 px-4 bg-[#8C43FF] hover:bg-[#9955FF] rounded-xl font-medium flex items-center justify-center gap-2 transition-colors text-white"
+                className="w-full py-3 px-4 bg-[#8C43FF] hover:bg-[#9955FF] rounded-xl font-medium flex items-center justify-center gap-2 transition-colors text-white cursor-pointer"
               >
                 <Edit size={18} />
                 <span>Adicionar nova nota</span>
               </button>
               <button
                 onClick={openAddEventModal}
-                className="w-full py-3 px-4 dark:bg-[#2D2D2D] bg-gray-100 dark:hover:bg-[#3D3D3D] hover:bg-gray-200 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors dark:text-white text-gray-800"
+                className="w-full py-3 px-4 dark:bg-[#2D2D2D] bg-gray-100 dark:hover:bg-[#3D3D3D] hover:bg-gray-200 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors dark:text-white text-gray-800 cursor-pointer"
               >
                 <CalendarIcon size={18} className="text-[#00B2FF]" />
                 <span>Adicionar evento</span>

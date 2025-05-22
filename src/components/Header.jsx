@@ -38,10 +38,10 @@ function Header() {
 
       {/* Right Icons */}
       <div className="flex items-center space-x-4">
-        <button className="p-1.5 rounded-full border border-black">
+        <button className="p-1.5 rounded-full border border-black cursor-pointer">
           <HelpCircle size={20} className="text-black" />
         </button>
-        <button className="p-1.5 text-[#D0B3FF]">
+        <button className="p-1.5 text-[#D0B3FF] cursor-pointer">
           <Menu size={28} />
         </button>
       </div>

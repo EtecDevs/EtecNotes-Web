@@ -9,7 +9,7 @@ const PatchNotesPage = ({ activeTab, onTabChange }) => {
       <div className="w-full max-w-7xl mx-auto px-6 py-10">
         <h1 className="text-4xl font-bold mb-8 dark:text-white text-gray-800">Patch Notes</h1>
 
-        {/* Tabs - Adicionado aqui para manter consistência */}
+        {/* Tabs */}
         <TabNavigation activeTab={activeTab} onTabChange={onTabChange} />
 
         <div className="flex flex-col md:flex-row gap-8 mb-10">

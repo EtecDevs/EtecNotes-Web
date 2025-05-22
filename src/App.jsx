@@ -24,14 +24,15 @@ function App() {
   }
 
   // Função para lidar com a mudança de abas de conteúdo
-  const handleContentTabChange = (tab) => {
+   const handleContentTabChange = (tab) => {
     setActiveContentTab(tab)
 
-    // Se a aba for "Patch Notes", navegar para essa página
     if (tab === "Patch Notes") {
       setActiveTab("Patch Notes")
     } else if (tab === "Horários") {
       setActiveTab("Horários")
+    } else if (tab === "Jornal Etec") {
+      setActiveTab("Início")
     }
   }
 
@@ -71,8 +72,8 @@ function App() {
           {/* Navigation Icons */}
           <div className="hidden md:flex items-center space-x-6">
             <button
-              className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Início" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500"
+              className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]${
+                activeTab === "Início" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500  cursor-pointer"
               }`}
               onClick={() => handleMainTabChange("Início")}
               aria-label="Página Inicial"
@@ -81,7 +82,7 @@ function App() {
             </button>
             <button
               className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Calendário" ? "text-[#00B2FF]" : "dark:text-gray-400 text-gray-500"
+                activeTab === "Calendário" ? "text-[#00B2FF]" : "dark:text-gray-400 text-gray-500  cursor-pointer"
               }`}
               onClick={() => handleMainTabChange("Calendário")}
               aria-label="Calendário"
@@ -90,7 +91,7 @@ function App() {
             </button>
             <button
               className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Chat" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500"
+                activeTab === "Chat" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500  cursor-pointer"
               }`}
               onClick={() => handleMainTabChange("Chat")}
               aria-label="Chat"
@@ -99,7 +100,7 @@ function App() {
             </button>
             <button
               className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Perfil" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500"
+                activeTab === "Perfil" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500  cursor-pointer"
               }`}
               onClick={() => handleMainTabChange("Perfil")}
               aria-label="Perfil"
@@ -108,7 +109,7 @@ function App() {
             </button>
             <button
               className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Cloud" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500"
+                activeTab === "Cloud" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500  cursor-pointer"
               }`}
               onClick={() => handleMainTabChange("Cloud")}
               aria-label="Cloud"
@@ -116,7 +117,7 @@ function App() {
               <Cloud size={28} />
             </button>
             <button
-              className="p-1.5 rounded-md dark:text-gray-400 text-gray-500 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]"
+              className="p-1.5 rounded-md dark:text-gray-400 text-gray-500 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]  cursor-pointer"
               aria-label="Adicionar"
             >
               <Plus size={28} />

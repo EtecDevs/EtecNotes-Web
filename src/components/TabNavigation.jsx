@@ -18,7 +18,7 @@ function TabNavigation({ activeTab, onTabChange }) {
       {tabs.map((tab) => (
         <button
           key={tab}
-          className={`pb-2 mr-8 font-medium whitespace-nowrap transition-all duration-300 ${
+          className={`pb-2 mr-8 font-medium whitespace-nowrap transition-all duration-300 cursor-pointer ${
             activeTab === tab
               ? "text-[#8C43FF] border-b-2 border-[#8C43FF]"
               : "dark:text-[#D0B3FF] text-[#8C43FF]/70 hover:text-[#8C43FF] hover:border-b-2 hover:border-[#8C43FF]/50"
