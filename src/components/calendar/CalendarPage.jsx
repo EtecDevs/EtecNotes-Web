@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight, CalendarIcon, Clock, Edit, Trash2, Bell, BookOpen } from "lucide-react"
 import { motion } from "framer-motion"
-import ActionMenu from "../ActionMenu"
 import AddEventModal from "../AddEventModal"
 import AddNoteModal from "../AddNoteModal"
 import TabNavigation from "../TabNavigation"
@@ -333,8 +332,7 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
         </div>
       </div>
 
-      {/* Botão flutuante com menu de ações */}
-      <ActionMenu onAddNote={openAddNoteModal} onAddEvent={openAddEventModal} />
+
 
       {/* Modais */}
       <AddEventModal

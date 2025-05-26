@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Home, Calendar, MessageCircle, User, Cloud, Plus, HelpCircle, Menu } from "lucide-react"
 import CalendarPage from "./components/calendar/CalendarPage"
 import HomePage from "./components/HomePage"
@@ -8,10 +8,13 @@ import PatchNotesPage from "./components/PatchNotesPage"
 import SchedulePage from "./components/SchedulePage"
 import ThemeToggle from "./components/ThemeToggle"
 import { ThemeProvider } from "./context/ThemeContext"
+import LogoEtecNotes from "./assets/LogoEtecNotes.png"
 
 function App() {
   const [activeTab, setActiveTab] = useState("Início")
   const [activeContentTab, setActiveContentTab] = useState("Jornal Etec")
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Função para lidar com a mudança de abas principais
   const handleMainTabChange = (tab) => {
@@ -36,6 +39,24 @@ function App() {
     }
   }
 
+  // Fecha dropdowns ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (!event.target.closest(".profile-dropdown")) {
+        setProfileDropdownOpen(false)
+      }
+      if (!event.target.closest(".mobile-menu-dropdown")) {
+        setMobileMenuOpen(false)
+      }
+    }
+    if (profileDropdownOpen || mobileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside)
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [profileDropdownOpen, mobileMenuOpen])
+
   // Renderizar a página correta com base na aba ativa
   const renderActivePage = () => {
     switch (activeTab) {
@@ -58,22 +79,21 @@ function App() {
         <header className="h-[60px] dark:bg-[#1E1E1E] bg-white border-b dark:border-[#333333] border-gray-200 flex items-center justify-between px-6 transition-colors duration-300">
           {/* Logo */}
           <div className="flex items-center">
-            <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-              <div className="flex h-full">
-                <div className="w-1/2 bg-[#8C43FF]"></div>
-                <div className="w-1/2 bg-[#00B2FF]"></div>
-              </div>
-            </div>
+            <img
+              src={LogoEtecNotes}
+              alt="Logo EtecNotes"
+              className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+            />
             <span className="ml-2 dark:text-white text-gray-800 font-bold text-lg transition-colors duration-300">
               EtecNotes
             </span>
           </div>
 
-          {/* Navigation Icons */}
+          {/* Navigation Icons - Desktop */}
           <div className="hidden md:flex items-center space-x-6">
             <button
-              className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]${
-                activeTab === "Início" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500  cursor-pointer"
+              className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
+                activeTab === "Início" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
               }`}
               onClick={() => handleMainTabChange("Início")}
               aria-label="Página Inicial"
@@ -82,7 +102,7 @@ function App() {
             </button>
             <button
               className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Calendário" ? "text-[#00B2FF]" : "dark:text-gray-400 text-gray-500  cursor-pointer"
+                activeTab === "Calendário" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
               }`}
               onClick={() => handleMainTabChange("Calendário")}
               aria-label="Calendário"
@@ -91,7 +111,7 @@ function App() {
             </button>
             <button
               className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Chat" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500  cursor-pointer"
+                activeTab === "Chat" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
               }`}
               onClick={() => handleMainTabChange("Chat")}
               aria-label="Chat"
@@ -100,7 +120,7 @@ function App() {
             </button>
             <button
               className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Perfil" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500  cursor-pointer"
+                activeTab === "Perfil" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
               }`}
               onClick={() => handleMainTabChange("Perfil")}
               aria-label="Perfil"
@@ -109,19 +129,72 @@ function App() {
             </button>
             <button
               className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Cloud" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500  cursor-pointer"
+                activeTab === "Cloud" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
               }`}
               onClick={() => handleMainTabChange("Cloud")}
               aria-label="Cloud"
             >
               <Cloud size={28} />
             </button>
-            <button
-              className="p-1.5 rounded-md dark:text-gray-400 text-gray-500 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]  cursor-pointer"
-              aria-label="Adicionar"
-            >
-              <Plus size={28} />
-            </button>
+          </div>
+
+          {/* Navigation Icons - Mobile Dropdown */}
+          <div className="md:hidden flex items-center">
+            <div className="relative mobile-menu-dropdown">
+              <button
+                className="p-1.5 rounded-full text-[#8C43FF] hover:bg-gray-100 dark:hover:bg-[#333333] transition-all"
+                onClick={() => setMobileMenuOpen((open) => !open)}
+                aria-label="Abrir menu"
+                aria-haspopup="true"
+                aria-expanded={mobileMenuOpen}
+              >
+                <Menu size={28} />
+              </button>
+              {mobileMenuOpen && (
+                <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-[#232323] border border-gray-200 dark:border-[#333333] rounded-md shadow-lg z-50 py-2 text-sm">
+                  <button
+                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
+                      activeTab === "Início" ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
+                    } hover:bg-gray-100 dark:hover:bg-[#333333]`}
+                    onClick={() => { handleMainTabChange("Início"); setMobileMenuOpen(false); }}
+                  >
+                    <span className="inline-flex items-center gap-2"><Home size={22} /> Início</span>
+                  </button>
+                  <button
+                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
+                      activeTab === "Calendário" ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
+                    } hover:bg-gray-100 dark:hover:bg-[#333333]`}
+                    onClick={() => { handleMainTabChange("Calendário"); setMobileMenuOpen(false); }}
+                  >
+                    <span className="inline-flex items-center gap-2"><Calendar size={22} /> Calendário</span>
+                  </button>
+                  <button
+                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
+                      activeTab === "Chat" ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
+                    } hover:bg-gray-100 dark:hover:bg-[#333333]`}
+                    onClick={() => { handleMainTabChange("Chat"); setMobileMenuOpen(false); }}
+                  >
+                    <span className="inline-flex items-center gap-2"><MessageCircle size={22} /> Chat</span>
+                  </button>
+                  <button
+                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
+                      activeTab === "Perfil" ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
+                    } hover:bg-gray-100 dark:hover:bg-[#333333]`}
+                    onClick={() => { handleMainTabChange("Perfil"); setMobileMenuOpen(false); }}
+                  >
+                    <span className="inline-flex items-center gap-2"><User size={22} /> Perfil</span>
+                  </button>
+                  <button
+                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
+                      activeTab === "Cloud" ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
+                    } hover:bg-gray-100 dark:hover:bg-[#333333]`}
+                    onClick={() => { handleMainTabChange("Cloud"); setMobileMenuOpen(false); }}
+                  >
+                    <span className="inline-flex items-center gap-2"><Cloud size={22} /> Cloud</span>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Right Icons */}
@@ -130,9 +203,38 @@ function App() {
             <button className="p-1.5 rounded-full border dark:border-gray-600 border-gray-300 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]">
               <HelpCircle size={20} className="dark:text-gray-400 text-gray-500" />
             </button>
-            <button className="p-1.5 dark:text-gray-400 text-gray-500 transition-all duration-300 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#333333] hover:rounded-md">
-              <Menu size={28} />
-            </button>
+            <div className="relative profile-dropdown">
+              <button
+                className="p-1.5 rounded-full border dark:border-gray-600 border-gray-300 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]"
+                onClick={() => setProfileDropdownOpen((open) => !open)}
+                aria-haspopup="true"
+                aria-expanded={profileDropdownOpen}
+              >
+                <User size={28} />
+              </button>
+              {profileDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#232323] border border-gray-200 dark:border-[#333333] rounded-md shadow-lg z-50 py-2 text-sm">
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#333333] transition-colors"
+                  >
+                    Meu Perfil
+                  </a>
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#333333] transition-colors"
+                  >
+                    Configurações
+                  </a>
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#333333] transition-colors"
+                  >
+                    Sair
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 

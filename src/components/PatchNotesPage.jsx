@@ -7,7 +7,7 @@ const PatchNotesPage = ({ activeTab, onTabChange }) => {
   return (
     <div className="flex flex-col h-full dark:bg-[#121212] bg-white">
       <div className="w-full max-w-7xl mx-auto px-6 py-10">
-        <h1 className="text-4xl font-bold mb-8 dark:text-white text-gray-800">Patch Notes</h1>
+        <h1 className="text-4xl font-bold mb-8 dark:text-white text-gray-800">Início</h1>
 
         {/* Tabs */}
         <TabNavigation activeTab={activeTab} onTabChange={onTabChange} />
