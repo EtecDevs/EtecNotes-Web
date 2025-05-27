@@ -9,6 +9,7 @@ import SchedulePage from "./components/SchedulePage"
 import ThemeToggle from "./components/ThemeToggle"
 import { ThemeProvider } from "./context/ThemeContext"
 import LogoEtecNotes from "./assets/LogoEtecNotes.png"
+import ChatPage from "./components/ChatPage"
 
 function App() {
   const [activeTab, setActiveTab] = useState("Início")
@@ -66,6 +67,8 @@ function App() {
         return <PatchNotesPage activeTab="Patch Notes" onTabChange={handleContentTabChange} />
       case "Horários":
         return <SchedulePage activeTab="Horários" onTabChange={handleContentTabChange} />
+      case "Chat":
+        return <ChatPage />
       case "Início":
       default:
         return <HomePage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
@@ -93,7 +96,7 @@ function App() {
           <div className="hidden md:flex items-center space-x-6">
             <button
               className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Início" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
+                (activeTab === "Início" || activeTab === "Patch Notes" || activeTab === "Horários") ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
               }`}
               onClick={() => handleMainTabChange("Início")}
               aria-label="Página Inicial"
@@ -154,7 +157,7 @@ function App() {
                 <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-[#232323] border border-gray-200 dark:border-[#333333] rounded-md shadow-lg z-50 py-2 text-sm">
                   <button
                     className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
-                      activeTab === "Início" ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
+                      (activeTab === "Início" || activeTab === "Patch Notes" || activeTab === "Horários") ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
                     } hover:bg-gray-100 dark:hover:bg-[#333333]`}
                     onClick={() => { handleMainTabChange("Início"); setMobileMenuOpen(false); }}
                   >
