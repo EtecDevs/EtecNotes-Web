@@ -9,76 +9,76 @@ const SchedulePage = ({ activeTab, onTabChange }) => {
     {
       day: "Segunda",
       periods: [
-        { time: "08:00 - 08:50", subject: "Matemática", teacher: "Prof. Silva" },
-        { time: "08:50 - 09:40", subject: "Português", teacher: "Prof. Oliveira" },
+        { time: "08:00 - 08:50", subject: "Aula Vaga", isVacant: true },
+        { time: "08:50 - 09:40", subject: "Aula Vaga", isVacant: true },
         { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "Física", teacher: "Prof. Santos" },
-        { time: "10:50 - 11:40", subject: "Química", teacher: "Prof. Costa" },
-        { time: "11:40 - 12:30", subject: "Biologia", teacher: "Prof. Pereira" },
+        { time: "10:00 - 10:50", subject: "Sistemas Embarcados", teacher: "Prof. Iury" },
+        { time: "10:50 - 11:40", subject: "Sistemas Embarcados", teacher: "Prof. Iury" },
+        { time: "11:40 - 12:30", subject: "Sociologia", teacher: "Prof. Elza" },
         { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
-        { time: "13:30 - 14:20", subject: "História", teacher: "Prof. Almeida" },
-        { time: "14:20 - 15:10", subject: "Geografia", teacher: "Prof. Lima" },
-        { time: "15:10 - 16:00", subject: "Inglês", teacher: "Prof. Souza" },
+        { time: "13:30 - 14:20", subject: "EAMT", teacher: "Prof. Elza" },
+        { time: "14:20 - 15:10", subject: "EAMT", teacher: "Prof. Elza" },
+        { time: "15:10 - 16:00", subject: "EAMT", teacher: "Prof. Elza" },
       ],
     },
     {
       day: "Terça",
       periods: [
-        { time: "08:00 - 08:50", subject: "Ed. Física", teacher: "Prof. Ferreira" },
-        { time: "08:50 - 09:40", subject: "Artes", teacher: "Prof. Ribeiro" },
+        { time: "08:00 - 08:50", subject: "P.W. I, II, III", teacher: "Prof. Paulo e William G." },
+        { time: "08:50 - 09:40", subject: "Programação Web I, II e III", teacher: "Prof. Paulo e William G." },
         { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "Matemática", teacher: "Prof. Silva" },
-        { time: "10:50 - 11:40", subject: "Português", teacher: "Prof. Oliveira" },
-        { time: "11:40 - 12:30", subject: "Física", teacher: "Prof. Santos" },
+        { time: "10:00 - 10:50", subject: "E.A.C.N.T.", teacher: "Prof. Elza e Prof. Andreia" },
+        { time: "10:50 - 11:40", subject: "E.A.C.N.T.", teacher: "Prof. Elza e Prof. Andreia" },
+        { time: "11:40 - 12:30", subject: "Matematica", teacher: "Prof. Santos" },
         { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
-        { time: "13:30 - 14:20", subject: "Química", teacher: "Prof. Costa" },
-        { time: "14:20 - 15:10", subject: "Biologia", teacher: "Prof. Pereira" },
-        { time: "15:10 - 16:00", subject: "História", teacher: "Prof. Almeida" },
+        { time: "13:30 - 14:20", subject: "Inglês", teacher: "Prof. Fidélis" },
+        { time: "14:20 - 15:10", subject: "Matematica", teacher: "Prof. William B." },
+        { time: "15:10 - 16:00", subject: "Matematica", teacher: "Prof. William B." },
       ],
     },
     {
       day: "Quarta",
       periods: [
-        { time: "08:00 - 08:50", subject: "Geografia", teacher: "Prof. Lima" },
-        { time: "08:50 - 09:40", subject: "Inglês", teacher: "Prof. Souza" },
+        { time: "08:00 - 08:50", subject: "P.A.M. I, II", teacher: "Prof. Paulo" },
+        { time: "08:50 - 09:40", subject: "P.A.M. I, II", teacher: "Prof. Paulo" },
         { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "Ed. Física", teacher: "Prof. Ferreira" },
-        { time: "10:50 - 11:40", subject: "Artes", teacher: "Prof. Ribeiro" },
-        { time: "11:40 - 12:30", subject: "Matemática", teacher: "Prof. Silva" },
+        { time: "10:00 - 10:50", subject: "IPSSI", teacher: "Prof. Iury e Prof. Vanessa" },
+        { time: "10:00 - 10:50", subject: "IPSSI", teacher: "Prof. Iury e Prof. Vanessa" },
+        { time: "11:40 - 12:30", subject: "Filosofia", teacher: "Prof. Silva" },
         { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
-        { time: "13:30 - 14:20", subject: "Português", teacher: "Prof. Oliveira" },
-        { time: "14:20 - 15:10", subject: "Física", teacher: "Prof. Santos" },
-        { time: "15:10 - 16:00", subject: "Química", teacher: "Prof. Costa" },
+        { time: "13:30 - 14:20", subject: "Biologia", teacher: "Prof. Andreia" },
+        { time: "14:20 - 15:10", subject: "Biologia", teacher: "Prof. Andreia" },
+        { time: "15:10 - 16:00", subject: "E.A.C.N.T.", teacher: "Prof. Andreia e Prof. Elza" },
       ],
     },
     {
       day: "Quinta",
       periods: [
-        { time: "08:00 - 08:50", subject: "Biologia", teacher: "Prof. Pereira" },
-        { time: "08:50 - 09:40", subject: "História", teacher: "Prof. Almeida" },
+        { time: "08:00 - 08:50", subject: "Português", teacher: "Prof. Fidélis" },
+        { time: "08:50 - 09:40", subject: "Português", teacher: "Prof. Fidélis" },
         { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "Geografia", teacher: "Prof. Lima" },
-        { time: "10:50 - 11:40", subject: "Inglês", teacher: "Prof. Souza" },
-        { time: "11:40 - 12:30", subject: "Ed. Física", teacher: "Prof. Ferreira" },
+        { time: "10:00 - 10:50", subject: "P.D.T.C.C.", teacher: "Prof. Veridiane e Prof. Elisângela" },
+        { time: "10:50 - 11:40", subject: "P.D.T.C.C.", teacher: "Prof. Veridiane e Prof. Elisângela" },
+        { time: "11:40 - 12:30", subject: "P.D.T.C.C.", teacher: "Prof. Veridiane e Prof. Elisângela" },
         { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
-        { time: "13:30 - 14:20", subject: "Artes", teacher: "Prof. Ribeiro" },
-        { time: "14:20 - 15:10", subject: "Matemática", teacher: "Prof. Silva" },
-        { time: "15:10 - 16:00", subject: "Português", teacher: "Prof. Oliveira" },
+        { time: "13:30 - 14:20", subject: "Português", teacher: "Prof. Fidélis" },
+        { time: "14:20 - 15:10", subject: "Matematica", teacher: "Prof. William B." },
+        { time: "15:10 - 16:00", subject: "Matematica", teacher: "Prof. William B." },
       ],
     },
     {
       day: "Sexta",
       periods: [
-        { time: "08:00 - 08:50", subject: "Programação", teacher: "Prof. Martins" },
-        { time: "08:50 - 09:40", subject: "Banco de Dados", teacher: "Prof. Gomes" },
+        { time: "08:00 - 08:50", subject: "Aula Vaga", isVacant: true },
+        { time: "08:50 - 09:40", subject: "Filosofia", teacher: "Prof. Elza" },
         { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "Redes", teacher: "Prof. Dias" },
-        { time: "10:50 - 11:40", subject: "Sistemas", teacher: "Prof. Carvalho" },
-        { time: "11:40 - 12:30", subject: "Projeto", teacher: "Prof. Mendes" },
+        { time: "10:00 - 10:50", subject: "Q.T.S.", teacher: "Prof. Iury e Prof. Gisbert" },
+        { time: "10:50 - 11:40", subject: "Q.T.S.", teacher: "Prof. Iury e Prof. Gisbert" },
+        { time: "11:40 - 12:30", subject: "Aula Vaga", isVacant: true },
         { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
-        { time: "13:30 - 14:20", subject: "Matemática", teacher: "Prof. Silva" },
-        { time: "14:20 - 15:10", subject: "Português", teacher: "Prof. Oliveira" },
-        { time: "15:10 - 16:00", subject: "Física", teacher: "Prof. Santos" },
+        { time: "13:30 - 14:20", subject: "Geografia", teacher: "Prof. Valdeci" },
+        { time: "14:20 - 15:10", subject: "Geografia", teacher: "Prof. Valdeci" },
+        { time: "15:10 - 16:00", subject: "Sociologia", teacher: "Prof. Elza" },
       ],
     },
   ]
@@ -91,7 +91,8 @@ const SchedulePage = ({ activeTab, onTabChange }) => {
         {/* Tabs */}
         <TabNavigation activeTab={activeTab} onTabChange={onTabChange} />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Dias da semana em linha com rolagem horizontal */}
+        <div className="flex gap-6 overflow-x-auto pb-4">
           {scheduleData.map((daySchedule, index) => {
             // Verifica se é o dia da semana atual
             const today = new Date();
@@ -109,7 +110,7 @@ const SchedulePage = ({ activeTab, onTabChange }) => {
             return (
               <motion.div
                 key={daySchedule.day}
-                className={`dark:bg-[#1E1E1E] bg-white rounded-3xl p-5 shadow-lg border dark:border-[#v8C43FF] border-black-200 transition-all
+                className={`min-w-[320px] max-w-xs flex-shrink-0 dark:bg-[#1E1E1E] bg-white rounded-3xl p-5 shadow-lg border dark:border-[#v8C43FF] border-black-200 transition-all
                   ${isToday ? "border-4 border-[#8C43FF] shadow-[0_0_15px_rgba(140,67,255,0.15)]" : ""}
                 `}
                 initial={{ opacity: 0, y: 20 }}
@@ -129,22 +130,31 @@ const SchedulePage = ({ activeTab, onTabChange }) => {
                       className={`py-1 px-3 rounded-lg text-sm ${
                         period.isBreak
                           ? "bg-[#F3EFFF] dark:bg-[#2D2D2D] text-[#8C43FF] font-semibold text-center"
-                          : "dark:bg-[#2D2D2D] bg-gray-50"
+                          : period.isVacant
+                            ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-200 font-semibold text-center"
+                            : "dark:bg-[#2D2D2D] bg-gray-50"
                       }`}
                     >
                       <div className="flex justify-between items-center mb-1">
-                        <span className={`font-medium ${period.isBreak ? "w-full text-center" : "dark:text-white text-gray-800"}`}>
+                        <span className={`font-medium ${
+                          period.isBreak || period.isVacant
+                            ? "w-full text-center"
+                            : "dark:text-white text-gray-800"
+                        }`}>
                           {period.subject}
                         </span>
-                        {!period.isBreak && (
+                        {!(period.isBreak || period.isVacant) && (
                           <span className="text-sm dark:text-gray-400 text-gray-500">{period.time}</span>
                         )}
                       </div>
-                      {!period.isBreak && (
+                      {!(period.isBreak || period.isVacant) && (
                         <div className="text-sm dark:text-gray-400 text-gray-600">{period.teacher}</div>
                       )}
                       {period.isBreak && (
                         <div className="text-xs text-[#8C43FF]">{period.time}</div>
+                      )}
+                      {period.isVacant && (
+                        <div className="text-xs text-yellow-700 dark:text-yellow-200">{period.time}</div>
                       )}
                     </div>
                   ))}
