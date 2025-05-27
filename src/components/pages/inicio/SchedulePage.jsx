@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import TabNavigation from "./TabNavigation"
+import TabNavigation from "../../../TabNavigation"
 
 const SchedulePage = ({ activeTab, onTabChange }) => {
   // Dados de exemplo para os horários
