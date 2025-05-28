@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import TabNavigation from "../../../TabNavigation"
+import TabNavigation from "../../navigation/TabNavigation"
 
 const PatchNotesPage = ({ activeTab, onTabChange }) => {
   return (

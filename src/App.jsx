@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react"
 import { Home, Calendar, MessageCircle, User, Cloud, Plus, HelpCircle, Menu } from "lucide-react"
-import CalendarPage from "./components/calendar/CalendarPage"
-import HomePage from "./components/HomePage"
-import PatchNotesPage from "./components/PatchNotesPage"
-import SchedulePage from "./components/SchedulePage"
+import CalendarPage from "./components/pages/calendar/CalendarPage"
+import HomePage from "./components/pages/inicio/HomePage"
+import PatchNotesPage from "./components/pages/inicio/PatchNotesPage"
+import SchedulePage from "./components/pages/inicio/SchedulePage"
 import ThemeToggle from "./components/ThemeToggle"
 import { ThemeProvider } from "./context/ThemeContext"
 import LogoEtecNotes from "./assets/LogoEtecNotes.png"
-import ChatPage from "./components/ChatPage"
+import ChatPage from "./components/pages/chat/ChatPage"
 
 function App() {
   const [activeTab, setActiveTab] = useState("Início")

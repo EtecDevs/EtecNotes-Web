@@ -4,8 +4,7 @@ import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight, CalendarIcon, Clock, Edit, Trash2, Bell, BookOpen } from "lucide-react"
 import { motion } from "framer-motion"
 import AddEventModal from "./AddEventModal"
-import AddNoteModal from "../../AddNoteModal"
-import TabNavigation from "../../TabNavigation"
+import AddNoteModal from "./AddNoteModal"
 
 const CalendarPage = ({ activeTab, onTabChange }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date())

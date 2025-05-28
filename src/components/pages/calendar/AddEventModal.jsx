@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Modal from "../../Modal"
+import Modal from "./Modal"
 import { Clock } from "lucide-react"
 
 const AddEventModal = ({ isOpen, onClose, onSave, selectedDate }) => {

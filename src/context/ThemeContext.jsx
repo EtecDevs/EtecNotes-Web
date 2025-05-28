@@ -10,34 +10,26 @@ export const useTheme = () => useContext(ThemeContext)
 
 // Provedor do tema
 export const ThemeProvider = ({ children }) => {
-  // Verificar se há uma preferência salva no localStorage
-  const [theme, setTheme] = useState("light") // Iniciar com light como padrão
+  const [theme, setTheme] = useState("light")
 
-  // Efeito para carregar o tema do localStorage na montagem do componente
+  // Carregar tema salvo ou preferência do sistema na montagem
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedTheme = localStorage.getItem("etecnotes-theme")
-      if (savedTheme) {
-        setTheme(savedTheme)
-        if (savedTheme === "dark") {
-          document.documentElement.classList.add("dark")
-        } else {
-          document.documentElement.classList.remove("dark")
-        }
-      } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        // Se não houver tema salvo, verificar preferência do sistema
+      if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
         setTheme("dark")
         document.documentElement.classList.add("dark")
+      } else {
+        setTheme("light")
+        document.documentElement.classList.remove("dark")
       }
     }
   }, [])
 
-  // Atualizar o tema no localStorage e no DOM quando ele mudar
+  // Atualizar localStorage e classe do html sempre que o tema mudar
   useEffect(() => {
     if (typeof window !== "undefined") {
       localStorage.setItem("etecnotes-theme", theme)
-
-      // Atualizar a classe no elemento html
       if (theme === "dark") {
         document.documentElement.classList.add("dark")
       } else {
@@ -48,10 +40,7 @@ export const ThemeProvider = ({ children }) => {
 
   // Função para alternar o tema
   const toggleTheme = () => {
-    setTheme((prevTheme) => {
-      const newTheme = prevTheme === "light" ? "dark" : "light"
-      return newTheme
-    })
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"))
   }
 
   return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>
