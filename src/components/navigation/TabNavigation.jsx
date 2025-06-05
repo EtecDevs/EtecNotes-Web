@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 
 function TabNavigation({ activeTab, onTabChange }) {
-  const tabs = ["Jornal Etec", "Patch Notes", "Horários"]
+  const tabs = ["Jornal Etec", "Patch Notes", "Horários", "Eventos"]
 
   // Efeito para garantir que as abas sejam exibidas corretamente
   useEffect(() => {
