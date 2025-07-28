@@ -4,7 +4,7 @@ import LogoEtecNotes from "../assets/LogoEtecNotes.png"
 // Adicione activeTab e onMainTabChange como props
 function Header({ activeTab, onMainTabChange }) {
   return (
-    <header className="h-[60px] bg-white border-b border-gray-100 flex items-center justify-between px-6">
+    <header className="h-[60px] dark:bg-[#1E1E1E] bg-white border-b dark:border-[#333333] border-gray-100 flex items-center justify-between px-6 transition-colors duration-300">
       {/* Logo */}
       <div className="flex items-center">
         <img
@@ -12,64 +12,64 @@ function Header({ activeTab, onMainTabChange }) {
           alt="Logo EtecNotes"
           className="w-8 h-8 rounded-full object-cover flex-shrink-0"
         />
-        <span className="ml-2 text-[#2D2E37] font-bold text-lg">EtecNotes</span>
+        <span className="ml-2 dark:text-white text-[#2D2E37] font-bold text-lg transition-colors duration-300">EtecNotes</span>
       </div>
 
       {/* Navigation Icons */}
       <div className="hidden md:flex items-center space-x-6">
         <button
-          className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 ${
+          className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
             (activeTab === "Início" || activeTab === "Patch Notes" || activeTab === "Horários")
               ? "text-[#8C43FF]"
-              : "text-[#D0B3FF]"
+              : "dark:text-gray-400 text-[#D0B3FF]"
           }`}
           onClick={() => onMainTabChange && onMainTabChange("Início")}
         >
           <Home size={28} />
         </button>
         <button
-          className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 ${
-            activeTab === "Calendário" ? "text-[#8C43FF]" : "text-[#D0B3FF]"
+          className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
+            activeTab === "Calendário" ? "text-[#8C43FF]" : "dark:text-gray-400 text-[#D0B3FF]"
           }`}
           onClick={() => onMainTabChange && onMainTabChange("Calendário")}
         >
           <Calendar size={28} />
         </button>
         <button
-          className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 ${
-            activeTab === "Chat" ? "text-[#8C43FF]" : "text-[#D0B3FF]"
+          className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
+            activeTab === "Chat" ? "text-[#8C43FF]" : "dark:text-gray-400 text-[#D0B3FF]"
           }`}
           onClick={() => onMainTabChange && onMainTabChange("Chat")}
         >
           <MessageCircle size={28} />
         </button>
         <button
-          className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 ${
-            activeTab === "Perfil" ? "text-[#8C43FF]" : "text-[#D0B3FF]"
+          className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
+            activeTab === "Perfil" ? "text-[#8C43FF]" : "dark:text-gray-400 text-[#D0B3FF]"
           }`}
           onClick={() => onMainTabChange && onMainTabChange("Perfil")}
         >
           <User size={28} />
         </button>
         <button
-          className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 ${
-            activeTab === "Cloud" ? "text-[#8C43FF]" : "text-[#D0B3FF]"
+          className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
+            activeTab === "Cloud" ? "text-[#8C43FF]" : "dark:text-gray-400 text-[#D0B3FF]"
           }`}
           onClick={() => onMainTabChange && onMainTabChange("Cloud")}
         >
           <Cloud size={28} />
         </button>
-        <button className="p-1.5 rounded-md text-[#D0B3FF]">
+        <button className="p-1.5 rounded-md text-[#D0B3FF] dark:text-gray-400">
           <Plus size={28} />
         </button>
       </div>
 
       {/* Right Icons */}
       <div className="flex items-center space-x-4">
-        <button className="p-1.5 rounded-full border border-black cursor-pointer">
-          <HelpCircle size={20} className="text-black" />
+        <button className="p-1.5 rounded-full border dark:border-gray-600 border-black cursor-pointer dark:bg-[#333333] bg-white transition-colors duration-300">
+          <HelpCircle size={20} className="dark:text-gray-400 text-black" />
         </button>
-        <button className="p-1.5 text-[#D0B3FF] cursor-pointer">
+        <button className="p-1.5 text-[#D0B3FF] dark:text-gray-400 cursor-pointer">
           <Menu size={28} />
         </button>
       </div>
