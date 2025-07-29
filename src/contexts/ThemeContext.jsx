@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect } from "react"
+import { THEME_STORAGE_KEY } from "../constants"
 
 // Criando o contexto do tema
 const ThemeContext = createContext()
@@ -12,7 +13,7 @@ export const useTheme = () => useContext(ThemeContext)
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
     if (typeof window !== "undefined") {
-      const savedTheme = localStorage.getItem("etecnotes-theme")
+      const savedTheme = localStorage.getItem(THEME_STORAGE_KEY)
       if (savedTheme === "dark" || savedTheme === "light") {
         return savedTheme
       }
@@ -25,7 +26,7 @@ export const ThemeProvider = ({ children }) => {
   // Atualiza classe do html e localStorage sempre que o tema mudar
   useEffect(() => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("etecnotes-theme", theme)
+      localStorage.setItem(THEME_STORAGE_KEY, theme)
       if (theme === "dark") {
         document.documentElement.classList.add("dark")
       } else {
@@ -39,7 +40,7 @@ export const ThemeProvider = ({ children }) => {
     setTheme((prevTheme) => {
       const newTheme = prevTheme === "light" ? "dark" : "light"
       if (typeof window !== "undefined") {
-        localStorage.setItem("etecnotes-theme", newTheme)
+        localStorage.setItem(THEME_STORAGE_KEY, newTheme)
         if (newTheme === "dark") {
           document.documentElement.classList.add("dark")
         } else {

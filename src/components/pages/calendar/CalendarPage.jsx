@@ -167,7 +167,26 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
               <h2 className="text-2xl font-semibold capitalize dark:text-white text-gray-800">
                 {formatMonthYear(currentMonth)}
               </h2>
-              <div className="flex gap-2">
+                {/* Legenda */}
+              <div className="flex flex-wrap gap-4 mt-4 text-sm dark:text-gray-400 text-gray-600">
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 rounded-full bg-[#00B2FF]"></div>
+                  <span>Evento</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 rounded-full bg-[#8C43FF]"></div>
+                  <span>Lembrete</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 rounded-full bg-[#FF4D4D]"></div>
+                  <span>Prova</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 rounded-full bg-[#4CAF50]"></div>
+                  <span>Nota</span>
+                </div>
+              </div>
+              <div className="flex gap-2">               
                 <button
                   onClick={() => navigateMonth(-1)}
                   className="p-2 rounded-full dark:bg-[#2D2D2D] bg-gray-100 hover:bg-gray-200 dark:hover:bg-[#3D3D3D] transition-colors cursor-pointer"
@@ -195,16 +214,16 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
             {/* Dias do mês */}
             <div className="grid grid-cols-7 gap-1">
               {days.map((day, index) => (
-  <motion.div
-    key={index}
-    whileHover={{ scale: 1.05 }}
-    onClick={() => setSelectedDay(day.date)}
-    className={`
-      relative h-20 p-2 rounded-xl cursor-pointer transition-all
-      ${day.isCurrentMonth ? "dark:bg-[#2D2D2D] bg-gray-50" : "dark:bg-[#252525] bg-gray-100 opacity-40"}
-      ${isToday(day.date) ? "border border-[#00B2FF]" : ""}
-      ${isSelected(day.date) ? "border-2 border-[#8C43FF] dark:border-[#8C43FF] shadow-[0_0_15px_rgba(140,67,255,0.3)]" : ""}
-    `}
+          <motion.div
+            key={index}
+            whileHover={{ scale: 1.05 }}
+            onClick={() => setSelectedDay(day.date)}
+            className={`
+              relative h-20 p-2 rounded-xl cursor-pointer transition-all
+              ${day.isCurrentMonth ? "dark:bg-[#2D2D2D] bg-gray-50" : "dark:bg-[#252525] bg-gray-100 opacity-40"}
+              ${isToday(day.date) ? "border border-[#00B2FF]" : ""}
+              ${isSelected(day.date) ? "border-2 border-[#8C43FF] dark:border-[#8C43FF] shadow-[0_0_15px_rgba(140,67,255,0.3)]" : ""}
+            `}
                 >
                   <span
                     className={`
@@ -226,26 +245,6 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
                   </div>
                 </motion.div>
               ))}
-            </div>
-
-            {/* Legenda */}
-            <div className="flex flex-wrap gap-4 mt-4 text-sm dark:text-gray-400 text-gray-600">
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-full bg-[#00B2FF]"></div>
-                <span>Evento</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-full bg-[#8C43FF]"></div>
-                <span>Lembrete</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-full bg-[#FF4D4D]"></div>
-                <span>Prova</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 rounded-full bg-[#4CAF50]"></div>
-                <span>Nota</span>
-              </div>
             </div>
           </motion.div>
 

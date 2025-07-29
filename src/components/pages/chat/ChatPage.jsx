@@ -18,14 +18,14 @@ const ChatPage = () => {
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
 
-  // Auto scroll to bottom when new messages arrive
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+  // Remover auto scroll para permitir navegação manual
+  // const scrollToBottom = () => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  // }
 
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+  // useEffect(() => {
+  //   scrollToBottom()
+  // }, [messages])
 
   // Focus input on mount
   useEffect(() => {
@@ -118,9 +118,60 @@ const ChatPage = () => {
 
   return (
     <div className="flex flex-col h-full dark:bg-[#121212] bg-white">
+      {/* Estilos personalizados para scrollbar */}
+      <style jsx>{`
+        .custom-scrollbar {
+          --sb-size: 8px;
+        }
+        
+        /* Tema escuro */
+        .dark .custom-scrollbar {
+          --sb-track-color: #232E33;
+          --sb-thumb-color: #8c43ff;
+        }
+        
+        /* Tema claro */
+        .custom-scrollbar {
+          --sb-track-color: #f1f5f9;
+          --sb-thumb-color: #8c43ff;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+          width: var(--sb-size);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: var(--sb-track-color);
+          border-radius: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: var(--sb-thumb-color);
+          border-radius: 6px;
+          transition: background-color 0.2s ease;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #9955ff;
+        }
+
+        /* Para Firefox */
+        @supports not selector(::-webkit-scrollbar) {
+          .dark .custom-scrollbar {
+            scrollbar-color: #8c43ff #232E33;
+            scrollbar-width: thin;
+          }
+          
+          .custom-scrollbar {
+            scrollbar-color: #8c43ff #f1f5f9;
+            scrollbar-width: thin;
+          }
+        }
+      `}</style>
+
       <div className="w-full max-w-4xl mx-auto px-6 py-10 flex flex-col h-full">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-8 flex-shrink-0">
           <div>
             <h1 className="text-4xl font-bold dark:text-white text-gray-800 mb-2">IATEC AI</h1>
             <p className="dark:text-gray-400 text-gray-600">Assistente virtual inteligente da Etec</p>
@@ -138,13 +189,13 @@ const ChatPage = () => {
 
         {/* Chat Container */}
         <motion.div
-          className="flex-1 dark:bg-[#1E1E1E]/80 bg-white backdrop-blur-md rounded-3xl shadow-lg border dark:border-[#333333] border-gray-200 flex flex-col overflow-hidden"
+          className="flex-1 min-h-0 dark:bg-[#1E1E1E]/80 bg-white backdrop-blur-md rounded-3xl shadow-lg border dark:border-[#333333] border-gray-200 flex flex-col overflow-hidden"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          {/* Messages Area - Altura fixa com scroll */}
+          <div className="h-[400px] overflow-y-auto p-6 space-y-4 custom-scrollbar">
             <AnimatePresence>
               {messages.map((message) => (
                 <motion.div
@@ -187,18 +238,6 @@ const ChatPage = () => {
                               >
                                 <Copy size={12} className="opacity-70" />
                               </button>
-                              <button
-                                className="p-1 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
-                                title="Útil"
-                              >
-                                <ThumbsUp size={12} className="opacity-70" />
-                              </button>
-                              <button
-                                className="p-1 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
-                                title="Não útil"
-                              >
-                                <ThumbsDown size={12} className="opacity-70" />
-                              </button>
                             </div>
                           )}
                         </div>
@@ -218,7 +257,7 @@ const ChatPage = () => {
           </div>
 
           {/* Input Area */}
-          <div className="border-t dark:border-[#333333] border-gray-200 p-4">
+          <div className="flex-shrink-0 border-t dark:border-[#333333] border-gray-200 p-4">
             <form onSubmit={handleSubmit} className="flex gap-3">
               <input
                 ref={inputRef}
@@ -259,7 +298,7 @@ const ChatPage = () => {
         </motion.div>
 
         {/* Footer Info */}
-        <div className="mt-4 text-center">
+        <div className="mt-4 text-center flex-shrink-0">
           <p className="text-xs dark:text-gray-500 text-gray-400">
             IATEC AI é uma assistente virtual desenvolvida para auxiliar estudantes da Etec
           </p>
