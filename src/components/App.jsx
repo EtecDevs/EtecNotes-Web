@@ -1,15 +1,19 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Home, Calendar, MessageCircle, User, Cloud, Plus, HelpCircle, Menu } from "lucide-react"
+import { Home, Calendar, MessageCircle, User, Cloud, HelpCircle, Menu } from "lucide-react"
 import CalendarPage from "./pages/calendar/CalendarPage"
 import HomePage from "./pages/inicio/HomePage"
 import PatchNotesPage from "./pages/inicio/PatchNotesPage"
 import SchedulePage from "./pages/inicio/SchedulePage"
+import ProfilePage from "./pages/profile/ProfilePage"
+import ChatPage from "./pages/chat/ChatPage"
 import ThemeToggle from "./ThemeToggle"
 import { ThemeProvider } from "../contexts/ThemeContext"
 import LogoEtecNotes from "../assets/LogoEtecNotes.png"
-import ChatPage from "./pages/chat/ChatPage"
+import CloudPage from "./pages/cloud/CloudPage"
+
+
 
 function App() {
   const [activeTab, setActiveTab] = useState("Início")
@@ -61,14 +65,18 @@ function App() {
   // Renderizar a página correta com base na aba ativa
   const renderActivePage = () => {
     switch (activeTab) {
-      case "Calendário":
-        return <CalendarPage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
       case "Patch Notes":
         return <PatchNotesPage activeTab="Patch Notes" onTabChange={handleContentTabChange} />
       case "Horários":
         return <SchedulePage activeTab="Horários" onTabChange={handleContentTabChange} />
+        case "Calendário":
+        return <CalendarPage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
       case "Chat":
-        return <ChatPage />
+        return <div>Chat Page em construção</div>
+      case "Perfil":
+        return <ProfilePage activeTab="Perfil" onTabChange={handleContentTabChange} />
+      case "Cloud":
+        return <CloudPage activeTab="Cloud" onTabChange={handleContentTabChange} />
       case "Início":
       default:
         return <HomePage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
@@ -173,11 +181,11 @@ function App() {
                   </button>
                   <button
                     className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
-                      activeTab === "Chat" ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
+                      activeTab === "Cloud" ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
                     } hover:bg-gray-100 dark:hover:bg-[#333333]`}
-                    onClick={() => { handleMainTabChange("Chat"); setMobileMenuOpen(false); }}
+                    onClick={() => { handleMainTabChange("Cloud"); setMobileMenuOpen(false); }}
                   >
-                    <span className="inline-flex items-center gap-2"><MessageCircle size={22} /> Chat</span>
+                    <span className="inline-flex items-center gap-2"><Cloud size={22} /> Cloud</span>
                   </button>
                   <button
                     className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
@@ -206,38 +214,7 @@ function App() {
             <button className="p-1.5 rounded-full border dark:border-gray-600 border-gray-300 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]">
               <HelpCircle size={20} className="dark:text-gray-400 text-gray-500" />
             </button>
-            <div className="relative profile-dropdown">
-              <button
-                className="p-1.5 rounded-full border dark:border-gray-600 border-gray-300 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]"
-                onClick={() => setProfileDropdownOpen((open) => !open)}
-                aria-haspopup="true"
-                aria-expanded={profileDropdownOpen}
-              >
-                <User size={28} />
-              </button>
-              {profileDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#232323] border border-gray-200 dark:border-[#333333] rounded-md shadow-lg z-50 py-2 text-sm">
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#333333] transition-colors"
-                  >
-                    Meu Perfil
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#333333] transition-colors"
-                  >
-                    Configurações
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#333333] transition-colors"
-                  >
-                    Sair
-                  </a>
-                </div>
-              )}
-            </div>
+            
           </div>
         </header>
 

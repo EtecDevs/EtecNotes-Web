@@ -189,7 +189,7 @@ const ChatPage = () => {
 
         {/* Chat Container */}
         <motion.div
-          className="flex-1 min-h-0 dark:bg-[#1E1E1E]/80 bg-white backdrop-blur-md rounded-3xl shadow-lg border dark:border-[#333333] border-gray-200 flex flex-col overflow-hidden"
+          className="flex-1 min-h-0 dark:bg-[#1E1E1E]/80 bg-purple-100 backdrop-blur-md rounded-3xl shadow-lg border dark:border-[#333333] border-gray-300 flex flex-col overflow-hidden"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -266,7 +266,7 @@ const ChatPage = () => {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Digite sua mensagem para a IATEC AI..."
                 disabled={isLoading}
-                className="flex-1 px-4 py-3 rounded-2xl dark:bg-[#2D2D2D] bg-gray-100 dark:text-white text-gray-800 placeholder-gray-500 dark:placeholder-gray-400 border-none outline-none focus:ring-2 focus:ring-[#8C43FF] disabled:opacity-50"
+                className="flex-1 px-4 py-3 rounded-2xl dark:bg-[#2D2D2D] bg-[#d5bbff] dark:text-white text-gray-800 placeholder-gray-500 dark:placeholder-gray-400 border-none outline-none focus:ring-2 focus:ring-[#8C43FF] disabled:opacity-50"
               />
               <button
                 type="submit"
