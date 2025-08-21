@@ -12,6 +12,7 @@ import ThemeToggle from "./ThemeToggle"
 import { ThemeProvider } from "../contexts/ThemeContext"
 import LogoEtecNotes from "../assets/LogoEtecNotes.png"
 import CloudPage from "./pages/cloud/CloudPage"
+import LandingPage from "./pages/landing/LandingPage"
 
 
 
@@ -24,8 +25,6 @@ function App() {
   // Função para lidar com a mudança de abas principais
   const handleMainTabChange = (tab) => {
     setActiveTab(tab)
-
-    // Resetar a aba de conteúdo para a padrão quando mudar para a página inicial
     if (tab === "Início") {
       setActiveContentTab("Jornal Etec")
     }
@@ -65,6 +64,8 @@ function App() {
   // Renderizar a página correta com base na aba ativa
   const renderActivePage = () => {
     switch (activeTab) {
+      case "Landing":
+        return <LandingPage />
       case "Patch Notes":
         return <PatchNotesPage activeTab="Patch Notes" onTabChange={handleContentTabChange} />
       case "Horários":
@@ -89,7 +90,11 @@ function App() {
         {/* Header */}
         <header className="h-[60px] dark:bg-[#1E1E1E] bg-white border-b dark:border-[#333333] border-gray-200 flex items-center justify-between px-6 transition-colors duration-300">
           {/* Logo */}
-          <div className="flex items-center">
+          <div
+            className="flex items-center cursor-pointer"
+            onClick={() => handleMainTabChange("Landing")}
+            title="Ir para a landing page"
+          >
             <img
               src={LogoEtecNotes}
               alt="Logo EtecNotes"
