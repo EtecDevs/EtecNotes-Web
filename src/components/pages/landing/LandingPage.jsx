@@ -49,7 +49,7 @@ const LandingPage = ({ onGetStarted }) => {
   // Dados dos integrantes da equipe
   const teamMembers = [
     {
-      name: "Danie Pereira",
+      name: "Gustavo Silva",
       role: "Full Stack Developer & Project Lead",
       image: "/placeholder.svg?height=300&width=300&text=DP",
       description:
@@ -62,7 +62,7 @@ const LandingPage = ({ onGetStarted }) => {
       },
     },
     {
-      name: "Ana Silva",
+      name: "Daniel Pereira",
       role: "UI/UX Designer & Frontend",
       image: "/placeholder.svg?height=300&width=300&text=AS",
       description:
@@ -75,7 +75,7 @@ const LandingPage = ({ onGetStarted }) => {
       },
     },
     {
-      name: "Carlos Santos",
+      name: "Pedro Cruz",
       role: "Backend Developer & DevOps",
       image: "/placeholder.svg?height=300&width=300&text=CS",
       description: "Desenvolvedor backend especializado em APIs robustas, banco de dados e infraestrutura em nuvem.",
@@ -87,7 +87,31 @@ const LandingPage = ({ onGetStarted }) => {
       },
     },
     {
-      name: "Maria Oliveira",
+      name: "Maykon Sullyvan",
+      role: "AI Developer & Data Science",
+      image: "/placeholder.svg?height=300&width=300&text=MO",
+      description: "Responsável pelo desenvolvimento da IATEC AI, machine learning e análise de dados educacionais.",
+      skills: ["Python", "TensorFlow", "NLP", "Data Analysis"],
+      social: {
+        github: "https://github.com/maria",
+        linkedin: "https://linkedin.com/in/maria",
+        email: "maria@etecnotes.com",
+      },
+    },
+    {
+      name: "Gustavo Paes",
+      role: "AI Developer & Data Science",
+      image: "/placeholder.svg?height=300&width=300&text=MO",
+      description: "Responsável pelo desenvolvimento da IATEC AI, machine learning e análise de dados educacionais.",
+      skills: ["Python", "TensorFlow", "NLP", "Data Analysis"],
+      social: {
+        github: "https://github.com/maria",
+        linkedin: "https://linkedin.com/in/maria",
+        email: "maria@etecnotes.com",
+      },
+    },
+    {
+      name: "Pedro Victor",
       role: "AI Developer & Data Science",
       image: "/placeholder.svg?height=300&width=300&text=MO",
       description: "Responsável pelo desenvolvimento da IATEC AI, machine learning e análise de dados educacionais.",
