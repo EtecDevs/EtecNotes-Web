@@ -13,11 +13,14 @@ import { ThemeProvider } from "../context/ThemeContext"
 import LogoEtecNotes from "../assets/LogoEtecNotes.png"
 import CloudPage from "./pages/cloud/CloudPage"
 import LandingPage from "./pages/landing/LandingPage"
+import LoginPage from "./pages/landing/LoginPage"
 
 
 
 function App() {
-  const [activeTab, setActiveTab] = useState("Início")
+  // Track simple auth state: false = guest, true = logged in
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [activeTab, setActiveTab] = useState("Landing")
   const [activeContentTab, setActiveContentTab] = useState("Jornal Etec")
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -65,7 +68,10 @@ function App() {
   const renderActivePage = () => {
     switch (activeTab) {
       case "Landing":
-        return <LandingPage />
+        return <LandingPage onGetStarted={() => setActiveTab("Login")} />
+      case "Login":
+        // lazy import local Login page component
+        return <LoginPage onLogin={() => { setIsAuthenticated(true); setActiveTab("Início"); }} onCancel={() => setActiveTab("Landing")} />
       case "Patch Notes":
         return <PatchNotesPage activeTab="Patch Notes" onTabChange={handleContentTabChange} />
       case "Horários":
@@ -105,122 +111,78 @@ function App() {
             </span>
           </div>
 
-          {/* Navigation Icons - Desktop */}
-          <div className="hidden md:flex items-center space-x-6">
-            <button
-              className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                (activeTab === "Início" || activeTab === "Patch Notes" || activeTab === "Horários") ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
-              }`}
-              onClick={() => handleMainTabChange("Início")}
-              aria-label="Página Inicial"
-            >
-              <Home size={28} />
-            </button>
-            <button
-              className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Calendário" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
-              }`}
-              onClick={() => handleMainTabChange("Calendário")}
-              aria-label="Calendário"
-            >
-              <Calendar size={28} />
-            </button>
-            <button
-              className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Chat" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
-              }`}
-              onClick={() => handleMainTabChange("Chat")}
-              aria-label="Chat"
-            >
-              <MessageCircle size={28} />
-            </button>
-            <button
-              className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Perfil" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
-              }`}
-              onClick={() => handleMainTabChange("Perfil")}
-              aria-label="Perfil"
-            >
-              <User size={28} />
-            </button>
-            <button
-              className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                activeTab === "Cloud" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
-              }`}
-              onClick={() => handleMainTabChange("Cloud")}
-              aria-label="Cloud"
-            >
-              <Cloud size={28} />
-            </button>
-          </div>
-
-          {/* Navigation Icons - Mobile Dropdown */}
-          <div className="md:hidden flex items-center">
-            <div className="relative mobile-menu-dropdown">
-              <button
-                className="p-1.5 rounded-full text-[#8C43FF] hover:bg-gray-100 dark:hover:bg-[#333333] transition-all"
-                onClick={() => setMobileMenuOpen((open) => !open)}
-                aria-label="Abrir menu"
-                aria-haspopup="true"
-                aria-expanded={mobileMenuOpen}
-              >
-                <Menu size={28} />
-              </button>
-              {mobileMenuOpen && (
-                <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-[#232323] border border-gray-200 dark:border-[#333333] rounded-md shadow-lg z-50 py-2 text-sm">
+          {/* If not authenticated, show only Login button */}
+                {!isAuthenticated ? (
+                <div className="flex items-center space-x-4">
+                  <ThemeToggle />
                   <button
-                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
-                      (activeTab === "Início" || activeTab === "Patch Notes" || activeTab === "Horários") ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
-                    } hover:bg-gray-100 dark:hover:bg-[#333333]`}
-                    onClick={() => { handleMainTabChange("Início"); setMobileMenuOpen(false); }}
+                  onClick={() => setActiveTab("Login")}
+                  className="px-4 py-2 bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD] text-white rounded-full font-medium"
                   >
-                    <span className="inline-flex items-center gap-2"><Home size={22} /> Início</span>
-                  </button>
-                  <button
-                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
-                      activeTab === "Calendário" ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
-                    } hover:bg-gray-100 dark:hover:bg-[#333333]`}
-                    onClick={() => { handleMainTabChange("Calendário"); setMobileMenuOpen(false); }}
-                  >
-                    <span className="inline-flex items-center gap-2"><Calendar size={22} /> Calendário</span>
-                  </button>
-                  <button
-                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
-                      activeTab === "Cloud" ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
-                    } hover:bg-gray-100 dark:hover:bg-[#333333]`}
-                    onClick={() => { handleMainTabChange("Cloud"); setMobileMenuOpen(false); }}
-                  >
-                    <span className="inline-flex items-center gap-2"><Cloud size={22} /> Cloud</span>
-                  </button>
-                  <button
-                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
-                      activeTab === "Perfil" ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
-                    } hover:bg-gray-100 dark:hover:bg-[#333333]`}
-                    onClick={() => { handleMainTabChange("Perfil"); setMobileMenuOpen(false); }}
-                  >
-                    <span className="inline-flex items-center gap-2"><User size={22} /> Perfil</span>
-                  </button>
-                  <button
-                    className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
-                      activeTab === "Cloud" ? "text-[#8C43FF]" : "text-gray-700 dark:text-gray-200"
-                    } hover:bg-gray-100 dark:hover:bg-[#333333]`}
-                    onClick={() => { handleMainTabChange("Cloud"); setMobileMenuOpen(false); }}
-                  >
-                    <span className="inline-flex items-center gap-2"><Cloud size={22} /> Cloud</span>
+                  Login
                   </button>
                 </div>
-              )}
-            </div>
-          </div>
+                ) : (
+            /* Authenticated header (original full navigation) */
+            <>
+              {/* Navigation Icons - Desktop */}
+              <div className="hidden md:flex items-center space-x-6">
+                <button
+                  className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
+                    (activeTab === "Início" || activeTab === "Patch Notes" || activeTab === "Horários") ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
+                  }`}
+                  onClick={() => handleMainTabChange("Início")}
+                  aria-label="Página Inicial"
+                >
+                  <Home size={28} />
+                </button>
+                <button
+                  className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
+                    activeTab === "Calendário" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
+                  }`}
+                  onClick={() => handleMainTabChange("Calendário")}
+                  aria-label="Calendário"
+                >
+                  <Calendar size={28} />
+                </button>
+                <button
+                  className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
+                    activeTab === "Chat" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
+                  }`}
+                  onClick={() => handleMainTabChange("Chat")}
+                  aria-label="Chat"
+                >
+                  <MessageCircle size={28} />
+                </button>
+                <button
+                  className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
+                    activeTab === "Perfil" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
+                  }`}
+                  onClick={() => handleMainTabChange("Perfil")}
+                  aria-label="Perfil"
+                >
+                  <User size={28} />
+                </button>
+                <button
+                  className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
+                    activeTab === "Cloud" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
+                  }`}
+                  onClick={() => handleMainTabChange("Cloud")}
+                  aria-label="Cloud"
+                >
+                  <Cloud size={28} />
+                </button>
+              </div>
 
-          {/* Right Icons */}
-          <div className="flex items-center space-x-4">
-            <ThemeToggle />
-            <button className="p-1.5 rounded-full border dark:border-gray-600 border-gray-300 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]">
-              <HelpCircle size={20} className="dark:text-gray-400 text-gray-500" />
-            </button>
-            
-          </div>
+              {/* Right Icons */}
+              <div className="flex items-center space-x-4">
+                <ThemeToggle />
+                <button className="p-1.5 rounded-full border dark:border-gray-600 border-gray-300 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]">
+                  <HelpCircle size={20} className="dark:text-gray-400 text-gray-500" />
+                </button>
+              </div>
+            </>
+          )}
         </header>
 
         {/* Main Content */}

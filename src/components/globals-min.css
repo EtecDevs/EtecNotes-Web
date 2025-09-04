@@ -1,0 +1,47 @@
+/* Minimal theme variables and base rules extracted from globals.css
+   Only the essentials for the login page: color variables (light/dark),
+   body background/text color, and smooth transitions. Kept intentionally small.
+*/
+
+:root {
+  /* Light theme (minimal subset) */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --primary: oklch(0.6 0.2 280);
+  --card: oklch(0.97 0.02 300);
+  --muted: oklch(0.97 0.02 300);
+  --border: oklch(0.9 0.01 300);
+  --ring: oklch(0.6 0.2 280 / 0.5);
+}
+
+.dark {
+  /* Dark theme minimal overrides */
+  --background: oklch(0.1 0 0);
+  --foreground: oklch(0.985 0 0);
+  --primary: oklch(0.7 0.25 280);
+  --card: oklch(0.15 0.02 280);
+  --muted: oklch(0.15 0.02 280);
+  --border: oklch(0.2 0.02 280);
+  --ring: oklch(0.7 0.25 280 / 0.5);
+}
+
+/* Apply the theme variables to the page in a minimal, robust way */
+html,
+body {
+  height: 100%;
+  background-color: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth transitions for theme changes */
+html {
+  transition: color 0.25s ease, background-color 0.25s ease;
+}
+
+/* Small utility used by some components for glass effect */
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
