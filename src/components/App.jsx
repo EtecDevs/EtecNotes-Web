@@ -17,7 +17,6 @@ import LoginPage from "./pages/login/LoginPage"
 import Footer from "./Footer"
 
 
-
 function App() {
   // Track simple auth state: false = guest, true = logged in
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -35,13 +34,15 @@ function App() {
   }
 
   // Função para lidar com a mudança de abas de conteúdo
-   const handleContentTabChange = (tab) => {
+  const handleContentTabChange = (tab) => {
     setActiveContentTab(tab)
-
+    // Mapeia cada tab para o activeTab correto
     if (tab === "Patch Notes") {
       setActiveTab("Patch Notes")
     } else if (tab === "Horários") {
       setActiveTab("Horários")
+    } else if (tab === "Eventos") {
+      setActiveTab("Eventos")
     } else if (tab === "Jornal Etec") {
       setActiveTab("Início")
     }
@@ -82,13 +83,15 @@ function App() {
       case "Landing":
         return <LandingPage onGetStarted={() => setActiveTab("Login")} />
       case "Login":
-        // lazy import local Login page component
         return <LoginPage onLogin={() => { setIsAuthenticated(true); setActiveTab("Início"); }} onCancel={() => setActiveTab("Landing")} />
       case "Patch Notes":
-        return <PatchNotesPage activeTab="Patch Notes" onTabChange={handleContentTabChange} />
+        return <PatchNotesPage activeTab="Patch Notes" onTabChange={handleContentTabChange} navigateToEvents={() => { setActiveTab('Eventos'); setActiveContentTab('Eventos'); }} />
       case "Horários":
-        return <SchedulePage activeTab="Horários" onTabChange={handleContentTabChange} />
-        case "Calendário":
+        return <SchedulePage activeTab="Horários" onTabChange={handleContentTabChange} navigateToEvents={() => { setActiveTab('Eventos'); setActiveContentTab('Eventos'); }} />
+      case "Eventos":
+        // Renderiza HomePage com activeTab = "Eventos" para mostrar EventsPage
+        return <HomePage activeTab="Eventos" onTabChange={handleContentTabChange} />
+      case "Calendário":
         return <CalendarPage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
       case "Chat":
         return <div>Chat Page em construção</div>

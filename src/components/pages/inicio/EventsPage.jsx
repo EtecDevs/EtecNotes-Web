@@ -30,38 +30,38 @@ const EventsPage = () => {
   return (
     <div className="p-6">
       {/* Lista de Eventos */}
-      <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {events.map((event) => (
-          <div key={event.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 flex">
+          <div key={event.id} className="bg-gradient-to-br from-[#8C43FF]/80 to-[#CCA9DD]/80 dark:from-[#2D2D2D] dark:to-[#8C43FF]/40 rounded-3xl shadow-xl p-6 flex flex-col md:flex-row items-center hover:scale-[1.02] transition-transform duration-300">
             <img
               src={event.image}
               alt={event.title}
-              className="w-48 h-32 object-cover rounded-lg"
+              className="w-60 h-32 object-cover rounded-2xl shadow-lg border-4 border-white dark:border-[#232E33]"
             />
-            <div className="ml-4 flex flex-col flex-grow">
-              <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
+            <div className="md:ml-6 mt-4 md:mt-0 flex flex-col flex-grow">
+              <h3 className="text-2xl font-bold text-white drop-shadow mb-2">
                 {event.title}
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 mt-2">
+              <p className="text-white/80 dark:text-gray-300 mb-2">
                 {event.shortDescription}
               </p>
-              <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              <div className="mb-2 text-sm text-white/70 dark:text-gray-400">
                 <p>Data: {new Date(event.date).toLocaleDateString()}</p>
                 <p>Horário: {event.time}</p>
               </div>
               <div className="mt-auto flex gap-4">
                 <button
                   onClick={() => setSelectedEvent(event)}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  className="px-5 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white font-semibold rounded-xl shadow transition-colors"
                 >
                   Saber mais
                 </button>
                 <button
                   onClick={() => handleMarkPresence(event.id)}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
+                  className={`px-5 py-2 rounded-xl font-semibold shadow transition-colors ${
                     markedEvents.includes(event.id)
                       ? 'bg-green-500 text-white'
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
+                      : 'bg-white/80 dark:bg-gray-700 text-[#8C43FF] dark:text-white border border-[#8C43FF] dark:border-gray-600'
                   }`}
                 >
                   {markedEvents.includes(event.id) ? 'Presença Marcada' : 'Marcar Presença'}
@@ -74,30 +74,30 @@ const EventsPage = () => {
 
       {/* Modal de Detalhes */}
       {selectedEvent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+        <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-gradient-to-br from-[#8C43FF]/90 to-[#CCA9DD]/90 dark:from-[#232E33] dark:to-[#8C43FF]/60 rounded-3xl p-8 max-w-2xl w-full shadow-2xl border-2 border-[#8C43FF]/40 relative">
+            <button
+              onClick={() => setSelectedEvent(null)}
+              className="absolute top-4 right-4 px-3 py-1 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg shadow transition-colors"
+            >
+              Fechar
+            </button>
+            <h2 className="text-3xl font-bold text-white mb-4 drop-shadow">
               {selectedEvent.title}
             </h2>
             <img
               src={selectedEvent.image}
               alt={selectedEvent.title}
-              className="w-full h-64 object-cover rounded-lg mb-4"
+              className="w-full h-64 object-cover rounded-2xl mb-6 shadow-lg border-4 border-white dark:border-[#232E33]"
             />
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
+            <p className="text-white/90 dark:text-gray-300 mb-4 text-lg">
               {selectedEvent.fullDescription}
             </p>
-            <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            <div className="text-md text-white/80 dark:text-gray-400 mb-4">
               <p>Data: {new Date(selectedEvent.date).toLocaleDateString()}</p>
               <p>Horário: {selectedEvent.time}</p>
               <p>Local: {selectedEvent.location}</p>
             </div>
-            <button
-              onClick={() => setSelectedEvent(null)}
-              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-            >
-              Fechar
-            </button>
           </div>
         </div>
       )}

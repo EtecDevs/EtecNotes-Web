@@ -115,8 +115,8 @@ export default function SchedulePage({ activeTab, onTabChange }) {
       <div className="w-full max-w-7xl mx-auto px-6 py-10">
         <h1 className="text-4xl font-bold mb-8 dark:text-white text-gray-800">Início</h1>
 
-        {/* Tabs */}
-        <TabNavigation activeTab={defaultActiveTab} onTabChange={onTabChange} />
+  {/* Tabs */}
+  <TabNavigation activeTab={defaultActiveTab} onTabChange={(tab) => { if (tab === 'Eventos' && typeof navigateToEvents === 'function') return navigateToEvents(); return onTabChange(tab); }} />
 
         {/* Date Navigation Container */}
         <div className="relative flex items-center justify-center">
