@@ -13,7 +13,8 @@ import { ThemeProvider } from "../context/ThemeContext"
 import LogoEtecNotes from "../assets/LogoEtecNotes.png"
 import CloudPage from "./pages/cloud/CloudPage"
 import LandingPage from "./pages/landing/LandingPage"
-import LoginPage from "./pages/landing/LoginPage"
+import LoginPage from "./pages/login/LoginPage"
+import Footer from "./Footer"
 
 
 
@@ -63,6 +64,17 @@ function App() {
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [profileDropdownOpen, mobileMenuOpen])
+
+  // Scroll to top when changing main tabs so pages always start at the top
+  useEffect(() => {
+    // try to scroll the app's main container first (it's the one with overflow-auto)
+    const mainEl = document.querySelector('main')
+    if (mainEl) {
+      mainEl.scrollTop = 0
+    }
+    // also ensure window scroll is at top as a fallback
+    if (typeof window !== 'undefined') window.scrollTo(0, 0)
+  }, [activeTab])
 
   // Renderizar a página correta com base na aba ativa
   const renderActivePage = () => {
@@ -190,20 +202,22 @@ function App() {
           {renderActivePage()}
         </main>
 
-        {/* Footer */}
-        <footer className="h-[60px] dark:bg-[#1E1E1E] bg-white border-t dark:border-[#333333] border-gray-200 px-6 transition-colors duration-300">
-          <div className="h-full max-w-7xl mx-auto flex items-center justify-between">
-            <div className="dark:text-gray-500 text-gray-500 text-sm">© 2025 EtecNotes</div>
-            <div className="flex space-x-4">
-              <a href="#" className="dark:text-gray-500 text-gray-500 text-sm hover:text-[#8C43FF] transition-colors">
-                Privacidade
-              </a>
-              <a href="#" className="dark:text-gray-500 text-gray-500 text-sm hover:text-[#8C43FF] transition-colors">
-                Termos de Uso
-              </a>
-            </div>
-          </div>
-        </footer>
+  {/* Footer component (renders differently for guest vs auth) */}
+        {activeTab !== "Login" && (
+          <Footer isAuthenticated={isAuthenticated} onNavigate={(tab) => {
+            // Map footer navigation names to app tabs
+            const map = {
+              "Login": "Login",
+              "Início": "Início",
+              "Calendário": "Calendário",
+              "Chat": "Chat",
+              "Perfil": "Perfil",
+              "Cloud": "Cloud"
+            }
+            const target = map[tab] || tab
+            setActiveTab(target)
+          }} />
+        )}
       </div>
     </ThemeProvider>
   )

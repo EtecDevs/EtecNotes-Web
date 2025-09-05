@@ -122,6 +122,18 @@ const LandingPage = ({ onGetStarted }) => {
         email: "maria@etecnotes.com",
       },
     },
+    {
+      name: "Leandro Silva",
+      role: "AI Developer & Data Science",
+      image: "/placeholder.svg?height=300&width=300&text=MO",
+      description: "Responsável pelo desenvolvimento da IATEC AI, machine learning e análise de dados educacionais.",
+      skills: ["Python", "TensorFlow", "NLP", "Data Analysis"],
+      social: {
+        github: "https://github.com/maria",
+        linkedin: "https://linkedin.com/in/maria",
+        email: "maria@etecnotes.com",
+      },
+    },
   ]
 
   // Funcionalidades principais
@@ -320,7 +332,7 @@ const LandingPage = ({ onGetStarted }) => {
       </section>
 
       {/* Features Section */}
-      <section id="recursos" className="py-20 dark:bg-[#0F0F0F] bg-gray-50">
+      <section id="recursos" className="py-20 dark:bg-[#0F0F0F] bg-gray-0">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 50 }}

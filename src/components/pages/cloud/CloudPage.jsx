@@ -20,20 +20,22 @@ const CloudPage = () => {
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
+  const prevMessagesLengthRef = useRef(messages.length)
 
   // Estados da Meditação
   const [currentMusic, setCurrentMusic] = useState(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentGame, setCurrentGame] = useState(null)
 
-  useEffect(() => {
-    if (activeTab === "iatec") {
-      inputRef.current?.focus()
-    }
-  }, [activeTab])
+  // Do not autofocus when navigating to the page to avoid scrolling the viewport.
+  // The user can click the input to focus when ready.
 
+  // Only auto-scroll to bottom when new messages are added (i.e. messages length increases).
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    if (messages.length > prevMessagesLengthRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
+    prevMessagesLengthRef.current = messages.length
   }, [messages])
 
   const generateIATECResponse = async (userMessage) => {
