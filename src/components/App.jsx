@@ -15,6 +15,7 @@ import CloudPage from "./pages/cloud/CloudPage"
 import LandingPage from "./pages/landing/LandingPage"
 import LoginPage from "./pages/login/LoginPage"
 import Footer from "./Footer"
+import EtecDashboard from "./pages/dashboard/EtecDashboard"
 
 
 function App() {
@@ -24,12 +25,26 @@ function App() {
   const [activeContentTab, setActiveContentTab] = useState("Jornal Etec")
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [userType, setUserType] = useState(null) // 'student' or 'etec'
 
   // Função para lidar com a mudança de abas principais
   const handleMainTabChange = (tab) => {
     setActiveTab(tab)
     if (tab === "Início") {
       setActiveContentTab("Jornal Etec")
+    }
+  }
+
+   // Função para entrar na aplicação
+  const handleGetStarted = () => {
+    if (user) {
+      if (userType === "etec") {
+        setActiveTab("Dashboard")
+      } else {
+        setActiveTab("Início")
+      }
+    } else {
+      setActiveTab("Login")
     }
   }
 
@@ -46,6 +61,34 @@ function App() {
     } else if (tab === "Jornal Etec") {
       setActiveTab("Início")
     }
+  }
+
+  
+  // Função para fazer login
+  const handleLogin = (userData) => {
+    setUser(userData)
+    // Simular diferentes tipos de usuário baseado no email
+    if (userData.email && userData.email.includes("@etec.sp.gov.br") && userData.email.includes("admin")) {
+      setUserType("etec")
+      setActiveTab("Dashboard")
+    } else {
+      setUserType("student")
+      setActiveTab("Início")
+    }
+  }
+
+    // Função para fazer registro
+  const handleRegister = (userData) => {
+    setUser(userData)
+    setUserType("student")
+    setActiveTab("Início")
+  }
+
+    // Função para logout
+  const handleLogout = () => {
+    setUser(null)
+    setUserType(null)
+    setActiveTab("Landing")
   }
 
   // Fecha dropdowns ao clicar fora
@@ -80,6 +123,8 @@ function App() {
   // Renderizar a página correta com base na aba ativa
   const renderActivePage = () => {
     switch (activeTab) {
+      case "Dashboard":
+        return <EtecDashboard onLogout={handleLogout} />
       case "Landing":
         return <LandingPage onGetStarted={() => setActiveTab("Login")} />
       case "Login":
@@ -94,7 +139,7 @@ function App() {
       case "Calendário":
         return <CalendarPage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
       case "Chat":
-        return <div>Chat Page em construção</div>
+        return <EtecDashboard activeTab="Chat" onTabChange={handleContentTabChange} />
       case "Perfil":
         return <ProfilePage activeTab="Perfil" onTabChange={handleContentTabChange} />
       case "Cloud":
