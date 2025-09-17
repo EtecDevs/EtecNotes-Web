@@ -40,6 +40,15 @@ function Footer({ isAuthenticated = false, onNavigate, alwaysShowFull = false })
                   Chat
                 </a>
               </li>
+              <li>
+                <a
+                  href="#"
+                  onClick={(e) => handleNav(e, isAuthenticated ? "Chat" : "Login")}
+                  className="hover:underline"
+                >
+                  Chat
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -73,6 +82,7 @@ function Footer({ isAuthenticated = false, onNavigate, alwaysShowFull = false })
       </div>
     </footer>
   )
+
 }
 
 export default Footer

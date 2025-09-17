@@ -27,9 +27,9 @@ export default function LoginPage({ onLogin, onCancel }) {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log("Login attempt:", { userType, ...formData })
-    // If parent provided an onLogin handler (App), call it to switch to Início
+    // If parent provided an onLogin handler (App), pass role and switch to Início there
     if (typeof onLogin === "function") {
-      onLogin()
+      onLogin({ role: userType, ...formData })
     } else {
       // Fallback: navigate to root
       window.location.href = "/"
@@ -43,18 +43,19 @@ export default function LoginPage({ onLogin, onCancel }) {
   ]
 
   return (
-    <div
-      className="min-h-screen bg-gray-900 flex items-center justify-center p-4"
-      style={{ background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)" }}
-    >
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-400/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+    <div className="relative isolate min-h-dvh flex items-center justify-center p-4">
+      {/* Fixed full-viewport gradient background */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#8c43ff] via-[#a76fff] to-[#553b7d]" />
+        {/* Background decorative elements */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-400/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+        </div>
       </div>
 
-      <div className="relative z-10 w-full max-w-md">
+  <div className="fixed z-10 w-full max-w-md left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl mb-4 shadow-lg">
@@ -67,18 +68,22 @@ export default function LoginPage({ onLogin, onCancel }) {
         <Card className="bg-gray-800/90 backdrop-blur-xl border-gray-600 shadow-2xl">
           <CardContent className="p-6">
             {/* User Type Tabs */}
-            <div className="flex bg-gray-700/50 rounded-xl p-1 mb-6">
-              {userTypes.map((type) => {
+            <div className="flex bg-gray-700/50 rounded-xl overflow-hidden h-12 mb-6">
+              {userTypes.map((type, idx) => {
                 const Icon = type.icon
+                const isActive = userType === type.id
+                const isFirst = idx === 0
+                const isLast = idx === userTypes.length - 1
                 return (
                   <button
                     key={type.id}
                     onClick={() => setUserType(type.id)}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg transition-all duration-300 ${
-                      userType === type.id
-                        ? "bg-purple-500 text-white shadow-lg"
-                        : "text-white hover:text-white hover:bg-gray-600/50"
-                    }`}
+                    className={[
+                      "flex-1 h-full flex items-center justify-center gap-2 px-4 transition-all duration-300",
+                      isActive ? "bg-purple-500 text-white shadow-lg" : "text-white hover:text-white hover:bg-gray-600/50",
+                      isActive && isFirst ? "rounded-l-xl" : "",
+                      isActive && isLast ? "rounded-r-xl" : "",
+                    ].join(" ")}
                   >
                     <Icon className="w-4 h-4" />
                     <span className="text-sm font-medium">{type.label}</span>

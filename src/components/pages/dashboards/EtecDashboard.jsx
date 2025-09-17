@@ -1938,9 +1938,6 @@ const EtecDashboard = () => {
                       >
                         <Edit size={16} />
                       </button>
-                      <button className="p-2 text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors">
-                        <Eye size={16} />
-                      </button>
                       <button
                         onClick={() => handleDeleteItem("teacher", teacher.id)}
                         className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
@@ -2047,9 +2044,6 @@ const EtecDashboard = () => {
                           className="p-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors"
                         >
                           <Edit size={16} />
-                        </button>
-                        <button className="p-2 text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors">
-                          <Eye size={16} />
                         </button>
                         <button
                           onClick={() => handleDeleteItem("student", student.id)}
@@ -2170,58 +2164,6 @@ const EtecDashboard = () => {
         <h2 className="text-2xl font-bold dark:text-white text-gray-900">Gestão de Conteúdo</h2>
       </div>
 
-      {/* Events Management */}
-      <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Calendar size={20} className="text-[#8C43FF]" />
-            <h3 className="text-lg font-semibold dark:text-white text-gray-900">Eventos dos Alunos</h3>
-          </div>
-          <button
-            onClick={() => setShowCreateEventModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
-          >
-            <Plus size={18} />
-            Adicionar Evento
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {eventsData.map((event) => (
-            <div key={event.id} className="dark:bg-[#0D1117] bg-gray-50 rounded-xl p-4">
-              <div className="flex gap-4">
-                <img
-                  src={event.image || "/placeholder.svg?height=80&width=120&text=Evento"}
-                  alt={event.title}
-                  className="w-20 h-16 object-cover rounded-lg"
-                />
-                <div className="flex-1">
-                  <h4 className="font-semibold dark:text-white text-gray-900 mb-1">{event.title}</h4>
-                  <p className="text-sm dark:text-gray-400 text-gray-600 mb-2">{event.shortDescription}</p>
-                  <div className="text-xs dark:text-gray-500 text-gray-500">
-                    {new Date(event.date).toLocaleDateString("pt-BR")} às {event.time}
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <button
-                    onClick={() => handleEditItem("event", event)}
-                    className="p-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors"
-                  >
-                    <Edit size={16} />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteItem("studentevent", event.id)}
-                    className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* News Management */}
       <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
         <div className="flex items-center justify-between mb-6">
@@ -2279,109 +2221,52 @@ const EtecDashboard = () => {
         </div>
       </div>
 
-      {/* Patch Notes Management */}
+      {/* Events Management */}
       <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <FileText size={20} className="text-[#8C43FF]" />
-            <h3 className="text-lg font-semibold dark:text-white text-gray-900">Atualizações do Sistema</h3>
+            <Calendar size={20} className="text-[#8C43FF]" />
+            <h3 className="text-lg font-semibold dark:text-white text-gray-900">Eventos dos Alunos</h3>
           </div>
           <button
-            onClick={() => setShowAddPatchNoteModal(true)}
+            onClick={() => setShowCreateEventModal(true)}
             className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
           >
             <Plus size={18} />
-            Adicionar Atualização
+            Adicionar Evento
           </button>
         </div>
 
-        <div className="space-y-4">
-          {patchNotesData.map((patchNote) => (
-            <div key={patchNote.id} className="dark:bg-[#0D1117] bg-gray-50 rounded-xl p-4">
-              <div className="flex items-start justify-between">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {eventsData.map((event) => (
+            <div key={event.id} className="dark:bg-[#0D1117] bg-gray-50 rounded-xl p-4">
+              <div className="flex gap-4">
+                <img
+                  src={event.image || "/placeholder.svg?height=80&width=120&text=Evento"}
+                  alt={event.title}
+                  className="w-20 h-16 object-cover rounded-lg"
+                />
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[#8C43FF] mr-2 text-xl">•</span>
-                    <h4 className="font-semibold dark:text-white text-gray-900">{patchNote.title}</h4>
-                    {patchNote.version && (
-                      <span className="px-2 py-1 bg-blue-500/10 text-blue-500 rounded-full text-xs font-medium">
-                        v{patchNote.version}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm dark:text-gray-400 text-gray-600 mb-2">{patchNote.description}</p>
+                  <h4 className="font-semibold dark:text-white text-gray-900 mb-1">{event.title}</h4>
+                  <p className="text-sm dark:text-gray-400 text-gray-600 mb-2">{event.shortDescription}</p>
                   <div className="text-xs dark:text-gray-500 text-gray-500">
-                    {new Date(patchNote.date).toLocaleDateString("pt-BR")}
+                    {new Date(event.date).toLocaleDateString("pt-BR")} às {event.time}
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-2">
                   <button
-                    onClick={() => {
-                      setNewPatchNote(patchNote)
-                      setShowAddPatchNoteModal(true)
-                    }}
+                    onClick={() => handleEditItem("event", event)}
                     className="p-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors"
                   >
                     <Edit size={16} />
                   </button>
                   <button
-                    onClick={() => handleDeleteItem("patchnote", patchNote.id)}
+                    onClick={() => handleDeleteItem("studentevent", event.id)}
                     className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
                   >
                     <Trash2 size={16} />
                   </button>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Schedule Management */}
-      <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Clock size={20} className="text-[#8C43FF]" />
-            <h3 className="text-lg font-semibold dark:text-white text-gray-900">Horários das Aulas</h3>
-          </div>
-          <button
-            onClick={() => setShowEditScheduleModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
-          >
-            <Edit size={18} />
-            Editar Horários
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {scheduleData.map((day, index) => (
-            <div key={index} className="dark:bg-[#0D1117] bg-gray-50 rounded-xl p-4">
-              <h4 className="font-semibold dark:text-white text-gray-900 mb-3">{day.day}</h4>
-              <div className="space-y-2">
-                {day.periods.slice(0, 3).map((period, periodIndex) => (
-                  <div key={periodIndex} className="text-sm">
-                    <div className="flex justify-between items-center">
-                      <span
-                        className={`font-medium ${
-                          period.isBreak
-                            ? "text-[#8C43FF]"
-                            : period.isVacant
-                              ? "text-yellow-600"
-                              : "dark:text-white text-gray-900"
-                        }`}
-                      >
-                        {period.subject}
-                      </span>
-                      <span className="text-xs dark:text-gray-400 text-gray-600">{period.time}</span>
-                    </div>
-                    {period.teacher && <div className="text-xs dark:text-gray-500 text-gray-500">{period.teacher}</div>}
-                  </div>
-                ))}
-                {day.periods.length > 3 && (
-                  <div className="text-xs dark:text-gray-400 text-gray-600 text-center pt-2">
-                    +{day.periods.length - 3} mais aulas
-                  </div>
-                )}
               </div>
             </div>
           ))}

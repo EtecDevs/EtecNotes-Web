@@ -15,7 +15,8 @@ import CloudPage from "./pages/cloud/CloudPage"
 import LandingPage from "./pages/landing/LandingPage"
 import LoginPage from "./pages/login/LoginPage"
 import Footer from "./Footer"
-import EtecDashboard from "./pages/dashboard/EtecDashboard"
+import EtecDashboard from "./pages/dashboards/EtecDashboard"
+import TeacherDashboard from "./pages/dashboards/TeacherDashboard"
 
 
 function App() {
@@ -25,7 +26,8 @@ function App() {
   const [activeContentTab, setActiveContentTab] = useState("Jornal Etec")
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [userType, setUserType] = useState(null) // 'student' or 'etec'
+  const [userType, setUserType] = useState(null) // 'aluno' | 'professor' | 'etec'
+  const [user, setUser] = useState(null)
 
   // Função para lidar com a mudança de abas principais
   const handleMainTabChange = (tab) => {
@@ -63,24 +65,9 @@ function App() {
     }
   }
 
-  
-  // Função para fazer login
-  const handleLogin = (userData) => {
-    setUser(userData)
-    // Simular diferentes tipos de usuário baseado no email
-    if (userData.email && userData.email.includes("@etec.sp.gov.br") && userData.email.includes("admin")) {
-      setUserType("etec")
-      setActiveTab("Dashboard")
-    } else {
-      setUserType("student")
-      setActiveTab("Início")
-    }
-  }
-
-    // Função para fazer registro
   const handleRegister = (userData) => {
     setUser(userData)
-    setUserType("student")
+    setUserType("aluno")
     setActiveTab("Início")
   }
 
@@ -88,6 +75,7 @@ function App() {
   const handleLogout = () => {
     setUser(null)
     setUserType(null)
+    setIsAuthenticated(false)
     setActiveTab("Landing")
   }
 
@@ -123,23 +111,55 @@ function App() {
   // Renderizar a página correta com base na aba ativa
   const renderActivePage = () => {
     switch (activeTab) {
+      case "TeacherDashboard":
+        return <TeacherDashboard onLogout={handleLogout} />
       case "Dashboard":
         return <EtecDashboard onLogout={handleLogout} />
       case "Landing":
         return <LandingPage onGetStarted={() => setActiveTab("Login")} />
       case "Login":
-        return <LoginPage onLogin={() => { setIsAuthenticated(true); setActiveTab("Início"); }} onCancel={() => setActiveTab("Landing")} />
+        return (
+          <LoginPage
+            onLogin={(payload) => {
+              // payload may contain role from LoginPage
+              if (payload && payload.role) {
+                setUserType(payload.role) // 'aluno' | 'professor' | 'etec'
+              }
+              setIsAuthenticated(true)
+              setActiveTab("Início")
+            }}
+            onCancel={() => setActiveTab("Landing")}
+          />
+        )
       case "Patch Notes":
-        return <PatchNotesPage activeTab="Patch Notes" onTabChange={handleContentTabChange} navigateToEvents={() => { setActiveTab('Eventos'); setActiveContentTab('Eventos'); }} />
+        return (
+          <PatchNotesPage
+            activeTab="Patch Notes"
+            onTabChange={handleContentTabChange}
+            navigateToEvents={() => {
+              setActiveTab("Eventos")
+              setActiveContentTab("Eventos")
+            }}
+          />
+        )
       case "Horários":
-        return <SchedulePage activeTab="Horários" onTabChange={handleContentTabChange} navigateToEvents={() => { setActiveTab('Eventos'); setActiveContentTab('Eventos'); }} />
+        return (
+          <SchedulePage
+            activeTab="Horários"
+            onTabChange={handleContentTabChange}
+            navigateToEvents={() => {
+              setActiveTab("Eventos")
+              setActiveContentTab("Eventos")
+            }}
+          />
+        )
       case "Eventos":
         // Renderiza HomePage com activeTab = "Eventos" para mostrar EventsPage
         return <HomePage activeTab="Eventos" onTabChange={handleContentTabChange} />
       case "Calendário":
         return <CalendarPage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
       case "Chat":
-        return <EtecDashboard activeTab="Chat" onTabChange={handleContentTabChange} />
+        return <ChatPage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
       case "Perfil":
         return <ProfilePage activeTab="Perfil" onTabChange={handleContentTabChange} />
       case "Cloud":
@@ -216,9 +236,21 @@ function App() {
                 </button>
                 <button
                   className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                    activeTab === "Perfil" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
+                    (userType === "professor" && activeTab === "TeacherDashboard") ||
+                    (userType === "etec" && activeTab === "Dashboard") ||
+                    (userType === "aluno" && activeTab === "Perfil")
+                      ? "text-[#8C43FF]"
+                      : "dark:text-gray-400 text-gray-500 cursor-pointer"
                   }`}
-                  onClick={() => handleMainTabChange("Perfil")}
+                  onClick={() => {
+                    if (userType === "professor") {
+                      setActiveTab("TeacherDashboard")
+                    } else if (userType === "etec") {
+                      setActiveTab("Dashboard")
+                    } else {
+                      setActiveTab("Perfil")
+                    }
+                  }}
                   aria-label="Perfil"
                 >
                   <User size={28} />
@@ -237,8 +269,19 @@ function App() {
               {/* Right Icons */}
               <div className="flex items-center space-x-4">
                 <ThemeToggle />
-                <button className="p-1.5 rounded-full border dark:border-gray-600 border-gray-300 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]">
+                <button
+                  className="p-1.5 rounded-full border dark:border-gray-600 border-gray-300 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]"
+                  aria-label="Ajuda"
+                  title="Ajuda"
+                >
                   <HelpCircle size={20} className="dark:text-gray-400 text-gray-500" />
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="px-3 py-1.5 rounded-full bg-red-500/90 hover:bg-red-600 text-white text-sm font-medium transition-colors"
+                  title="Sair"
+                >
+                  Sair
                 </button>
               </div>
             </>
