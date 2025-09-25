@@ -10,6 +10,7 @@ import ProfilePage from "./pages/profile/ProfilePage"
 import ChatPage from "./pages/chat/ChatPage"
 import ThemeToggle from "./ThemeToggle"
 import { ThemeProvider } from "../context/ThemeContext"
+import { AuthProvider } from "../hooks/useAuth"
 import LogoEtecNotes from "../assets/LogoEtecNotes.png"
 import CloudPage from "./pages/cloud/CloudPage"
 import LandingPage from "./pages/landing/LandingPage"
@@ -17,6 +18,7 @@ import LoginPage from "./pages/login/LoginPage"
 import Footer from "./Footer"
 import EtecDashboard from "./pages/dashboards/EtecDashboard"
 import TeacherDashboard from "./pages/dashboards/TeacherDashboard"
+import TestAPI from "./TestAPI"
 
 
 function App() {
@@ -111,6 +113,8 @@ function App() {
   // Renderizar a página correta com base na aba ativa
   const renderActivePage = () => {
     switch (activeTab) {
+      case "TestAPI":
+        return <TestAPI />
       case "TeacherDashboard":
         return <TeacherDashboard onLogout={handleLogout} />
       case "Dashboard":
@@ -172,7 +176,8 @@ function App() {
 
   return (
     <ThemeProvider>
-      <div className="flex flex-col min-h-screen dark:bg-[#121212] bg-white transition-colors duration-300">
+      <AuthProvider>
+        <div className="flex flex-col min-h-screen dark:bg-[#121212] bg-white transition-colors duration-300">
         {/* Header */}
         <header className="h-[60px] dark:bg-[#1E1E1E] bg-white border-b dark:border-[#333333] border-gray-200 flex items-center justify-between px-6 transition-colors duration-300">
           {/* Logo */}
@@ -195,6 +200,13 @@ function App() {
                 {!isAuthenticated ? (
                 <div className="flex items-center space-x-4">
                   <ThemeToggle />
+                  <button
+                    onClick={() => setActiveTab("TestAPI")}
+                    className="px-3 py-1.5 rounded-full bg-blue-500/90 hover:bg-blue-600 text-white text-sm font-medium transition-colors"
+                    title="Testar API"
+                  >
+                    Test API
+                  </button>
                   <button
                   onClick={() => setActiveTab("Login")}
                   className="px-4 py-2 bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD] text-white rounded-full font-medium"
@@ -270,6 +282,13 @@ function App() {
               <div className="flex items-center space-x-4">
                 <ThemeToggle />
                 <button
+                  onClick={() => setActiveTab("TestAPI")}
+                  className="px-3 py-1.5 rounded-full bg-blue-500/90 hover:bg-blue-600 text-white text-sm font-medium transition-colors"
+                  title="Testar API"
+                >
+                  Test API
+                </button>
+                <button
                   className="p-1.5 rounded-full border dark:border-gray-600 border-gray-300 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]"
                   aria-label="Ajuda"
                   title="Ajuda"
@@ -309,7 +328,8 @@ function App() {
             setActiveTab(target)
           }} />
         )}
-      </div>
+        </div>
+      </AuthProvider>
     </ThemeProvider>
   )
 }
