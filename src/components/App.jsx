@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Home, Calendar, MessageCircle, User, Cloud, HelpCircle, Menu } from "lucide-react"
+import { useAuth } from "../hooks/useAuth"
 import CalendarPage from "./pages/calendar/CalendarPage"
 import HomePage from "./pages/inicio/HomePage"
 import PatchNotesPage from "./pages/inicio/PatchNotesPage"
@@ -18,18 +19,27 @@ import LoginPage from "./pages/login/LoginPage"
 import Footer from "./Footer"
 import EtecDashboard from "./pages/dashboards/EtecDashboard"
 import TeacherDashboard from "./pages/dashboards/TeacherDashboard"
-import TestAPI from "./TestAPI"
 
 
-function App() {
-  // Track simple auth state: false = guest, true = logged in
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+function AppContent() {
+  const { user, isAuthenticated, logout, loading } = useAuth()
   const [activeTab, setActiveTab] = useState("Landing")
   const [activeContentTab, setActiveContentTab] = useState("Jornal Etec")
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [userType, setUserType] = useState(null) // 'aluno' | 'professor' | 'etec'
-  const [user, setUser] = useState(null)
+
+  // Mostrar loading enquanto verifica autenticação
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-[#121212]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Carregando...</p>
+        </div>
+      </div>
+    )
+  }
 
   // Função para lidar com a mudança de abas principais
   const handleMainTabChange = (tab) => {
@@ -42,7 +52,7 @@ function App() {
    // Função para entrar na aplicação
   const handleGetStarted = () => {
     if (user) {
-      if (userType === "etec") {
+      if (user.role === "ADM") {
         setActiveTab("Dashboard")
       } else {
         setActiveTab("Início")
@@ -67,17 +77,9 @@ function App() {
     }
   }
 
-  const handleRegister = (userData) => {
-    setUser(userData)
-    setUserType("aluno")
-    setActiveTab("Início")
-  }
-
-    // Função para logout
-  const handleLogout = () => {
-    setUser(null)
-    setUserType(null)
-    setIsAuthenticated(false)
+  // Função para logout
+  const handleLogout = async () => {
+    await logout()
     setActiveTab("Landing")
   }
 
@@ -113,8 +115,7 @@ function App() {
   // Renderizar a página correta com base na aba ativa
   const renderActivePage = () => {
     switch (activeTab) {
-      case "TestAPI":
-        return <TestAPI />
+
       case "TeacherDashboard":
         return <TeacherDashboard onLogout={handleLogout} />
       case "Dashboard":
@@ -124,12 +125,7 @@ function App() {
       case "Login":
         return (
           <LoginPage
-            onLogin={(payload) => {
-              // payload may contain role from LoginPage
-              if (payload && payload.role) {
-                setUserType(payload.role) // 'aluno' | 'professor' | 'etec'
-              }
-              setIsAuthenticated(true)
+            onLogin={() => {
               setActiveTab("Início")
             }}
             onCancel={() => setActiveTab("Landing")}
@@ -175,9 +171,7 @@ function App() {
   }
 
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <div className="flex flex-col min-h-screen dark:bg-[#121212] bg-white transition-colors duration-300">
+    <div className="flex flex-col min-h-screen dark:bg-[#121212] bg-white transition-colors duration-300">
         {/* Header */}
         <header className="h-[60px] dark:bg-[#1E1E1E] bg-white border-b dark:border-[#333333] border-gray-200 flex items-center justify-between px-6 transition-colors duration-300">
           {/* Logo */}
@@ -200,13 +194,7 @@ function App() {
                 {!isAuthenticated ? (
                 <div className="flex items-center space-x-4">
                   <ThemeToggle />
-                  <button
-                    onClick={() => setActiveTab("TestAPI")}
-                    className="px-3 py-1.5 rounded-full bg-blue-500/90 hover:bg-blue-600 text-white text-sm font-medium transition-colors"
-                    title="Testar API"
-                  >
-                    Test API
-                  </button>
+
                   <button
                   onClick={() => setActiveTab("Login")}
                   className="px-4 py-2 bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD] text-white rounded-full font-medium"
@@ -248,16 +236,16 @@ function App() {
                 </button>
                 <button
                   className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                    (userType === "professor" && activeTab === "TeacherDashboard") ||
-                    (userType === "etec" && activeTab === "Dashboard") ||
-                    (userType === "aluno" && activeTab === "Perfil")
+                    (user?.role === "professor" && activeTab === "TeacherDashboard") ||
+                    (user?.role === "ADM" && activeTab === "Dashboard") ||
+                    (user?.role === "aluno" && activeTab === "Perfil")
                       ? "text-[#8C43FF]"
                       : "dark:text-gray-400 text-gray-500 cursor-pointer"
                   }`}
                   onClick={() => {
-                    if (userType === "professor") {
+                    if (user?.role === "professor") {
                       setActiveTab("TeacherDashboard")
-                    } else if (userType === "etec") {
+                    } else if (user?.role === "ADM") {
                       setActiveTab("Dashboard")
                     } else {
                       setActiveTab("Perfil")
@@ -281,13 +269,7 @@ function App() {
               {/* Right Icons */}
               <div className="flex items-center space-x-4">
                 <ThemeToggle />
-                <button
-                  onClick={() => setActiveTab("TestAPI")}
-                  className="px-3 py-1.5 rounded-full bg-blue-500/90 hover:bg-blue-600 text-white text-sm font-medium transition-colors"
-                  title="Testar API"
-                >
-                  Test API
-                </button>
+
                 <button
                   className="p-1.5 rounded-full border dark:border-gray-600 border-gray-300 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]"
                   aria-label="Ajuda"
@@ -328,7 +310,16 @@ function App() {
             setActiveTab(target)
           }} />
         )}
-        </div>
+    </div>
+  )
+}
+
+// Componente principal que envolve tudo com os providers
+function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <AppContent />
       </AuthProvider>
     </ThemeProvider>
   )

@@ -1,21 +1,31 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Eye, EyeOff, GraduationCap, Users, Building2, Calendar } from "lucide-react"
+import { useAuth } from "../../../hooks/useAuth"
 
 export default function LoginPage({ onLogin, onCancel }) {
+  const { login, loading, isAuthenticated } = useAuth()
   const [userType, setUserType] = useState("aluno")
   const [showPassword, setShowPassword] = useState(false)
+  const [loginError, setLoginError] = useState("")
   const [formData, setFormData] = useState({
     codigoEtec: "",
     rm: "",
-    login: "",
+    email: "",
     senha: "",
   })
+
+  // Redirecionar se já estiver logado
+  useEffect(() => {
+    if (isAuthenticated && onLogin) {
+      onLogin()
+    }
+  }, [isAuthenticated, onLogin])
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -24,15 +34,30 @@ export default function LoginPage({ onLogin, onCancel }) {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("Login attempt:", { userType, ...formData })
-    // If parent provided an onLogin handler (App), pass role and switch to Início there
-    if (typeof onLogin === "function") {
-      onLogin({ role: userType, ...formData })
-    } else {
-      // Fallback: navigate to root
-      window.location.href = "/"
+    setLoginError("")
+    
+    if (!formData.email || !formData.senha) {
+      setLoginError("Por favor, preencha email e senha.")
+      return
+    }
+
+    try {
+      const result = await login(formData.email, formData.senha)
+      
+      if (result.success) {
+        console.log("Login realizado com sucesso:", result.user)
+        // Chama o callback do App para mudar de tela
+        if (typeof onLogin === "function") {
+          onLogin()
+        }
+      } else {
+        setLoginError(result.error || "Erro ao fazer login")
+      }
+    } catch (error) {
+      console.error("Erro no login:", error)
+      setLoginError("Erro inesperado. Tente novamente.")
     }
   }
 
@@ -92,56 +117,30 @@ export default function LoginPage({ onLogin, onCancel }) {
               })}
             </div>
 
+            {/* Error Message */}
+            {loginError && (
+              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-4">
+                <p className="text-red-400 text-sm">{loginError}</p>
+              </div>
+            )}
+
             {/* Login Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Código ETEC - Always shown */}
+              {/* Email Field */}
               <div className="space-y-2">
-                <Label htmlFor="codigoEtec" className="text-white font-medium">
-                  Código ETEC
+                <Label htmlFor="email" className="text-white font-medium">
+                  Email
                 </Label>
                 <Input
-                  id="codigoEtec"
-                  type="text"
-                  value={formData.codigoEtec}
-                  onChange={(e) => handleInputChange("codigoEtec", e.target.value)}
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
                   className="bg-gray-700/50 border-gray-500 text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20"
-                  placeholder="Digite o código da ETEC"
+                  placeholder="seu-email@etec.sp.gov.br"
                   required
                 />
               </div>
-
-              {/* Conditional Fields */}
-              {userType === "aluno" ? (
-                <div className="space-y-2">
-                  <Label htmlFor="rm" className="text-white font-medium">
-                    RM (Registro do Aluno)
-                  </Label>
-                  <Input
-                    id="rm"
-                    type="text"
-                    value={formData.rm}
-                    onChange={(e) => handleInputChange("rm", e.target.value)}
-                    className="bg-gray-700/50 border-gray-500 text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20"
-                    placeholder="Digite seu RM"
-                    required
-                  />
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <Label htmlFor="login" className="text-white font-medium">
-                    Login
-                  </Label>
-                  <Input
-                    id="login"
-                    type="text"
-                    value={formData.login}
-                    onChange={(e) => handleInputChange("login", e.target.value)}
-                    className="bg-gray-700/50 border-gray-500 text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20"
-                    placeholder="Digite seu login"
-                    required
-                  />
-                </div>
-              )}
 
               {/* Password Field */}
               <div className="space-y-2">
@@ -171,9 +170,10 @@ export default function LoginPage({ onLogin, onCancel }) {
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                Entrar
+                {loading ? "Entrando..." : "Entrar"}
               </Button>
             </form>
 
