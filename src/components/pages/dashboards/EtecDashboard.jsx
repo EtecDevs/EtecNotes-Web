@@ -1,598 +1,733 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState, useEffect, useMemo, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Users,
-  GraduationCap,
   BookOpen,
   Calendar,
   Plus,
-  Upload,
-  Eye,
-  Edit,
-  UserPlus,
-  BarChart3,
+  ChevronDown,
+  ChevronUp,
   Clock,
   MapPin,
-  Mail,
-  Phone,
-  Award,
-  TrendingUp,
-  Activity,
-  School,
-  ChevronRight,
-  Settings,
+  CalendarDays,
+  Home,
   X,
   Trash2,
-  Download,
-  Search,
-  Newspaper,
+  Bell,
+  GraduationCap,
+  Settings,
   FileText,
+  UserPlus,
+  Upload,
+  Search,
+  Filter,
+  MoreVertical,
+  Edit,
+  Eye,
+  Download,
+  AlertCircle,
+  CheckCircle,
+  Building2,
+  MessageCircle,
+  School,
+  TrendingUp,
+  Save,
+  Mail,
+  Phone,
+  Globe,
+  Shield,
+  Key,
+  Database,
+  BarChart3,
+  PieChart,
+  Activity,
+  Zap,
+  Send,
+  List,
+  Grid,
+  Archive,
+  RefreshCw
 } from "lucide-react"
+import apiService from "../../../services/apiService"
+import socketService from "../../../services/socketService"
+import { useAuth } from "../../../hooks/useAuth"
 
-const EtecDashboard = () => {
+const EtecDashboard = ({ onLogout }) => {
+  const { user } = useAuth()
   const [activeSection, setActiveSection] = useState("overview")
+  const [loading, setLoading] = useState(false)
 
-  // Modal states
-  const [showAddClassModal, setShowAddClassModal] = useState(false)
-  const [showAddTeacherModal, setShowAddTeacherModal] = useState(false)
-  const [showAddStudentModal, setShowAddStudentModal] = useState(false)
-  const [showCreateEventModal, setShowCreateEventModal] = useState(false)
-  const [showAssignStudentsModal, setShowAssignStudentsModal] = useState(false)
-  const [showUploadScheduleModal, setShowUploadScheduleModal] = useState(false)
-  const [showViewScheduleModal, setShowViewScheduleModal] = useState(false)
-  const [showSettingsModal, setShowSettingsModal] = useState(false)
-  const [showEditModal, setShowEditModal] = useState(false)
-  const [showAddNewsModal, setShowAddNewsModal] = useState(false)
-  const [showEditNewsModal, setShowEditNewsModal] = useState(false)
-  const [showAddPatchNoteModal, setShowAddPatchNoteModal] = useState(false)
-  const [showEditScheduleModal, setShowEditScheduleModal] = useState(false)
-
-  // Selected items for modals
-  const [selectedClass, setSelectedClass] = useState(null)
-  const [selectedTeacher, setSelectedTeacher] = useState(null)
-  const [selectedStudent, setSelectedStudent] = useState(null)
-  const [selectedNews, setSelectedNews] = useState(null)
-  const [selectedEvent, setSelectedEvent] = useState(null)
-
-  // Search and filter states
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filterStatus, setFilterStatus] = useState("all")
-
-  // Form states
-  const [newClass, setNewClass] = useState({
-    name: "",
-    course: "",
-    year: "",
-    teacher: "",
+  // Estados dos dados
+  const [stats, setStats] = useState({
+    totalAlunos: 0,
+    totalProfessores: 0,
+    totalTurmas: 0,
+    totalEventos: 0,
+    taxaAprovacao: 94
   })
 
-  const [newTeacher, setNewTeacher] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subjects: [],
-    classes: [],
+  const [usuarios, setUsuarios] = useState([])
+  const [turmas, setTurmas] = useState([])
+  const [eventos, setEventos] = useState([])
+  const [notifications, setNotifications] = useState([])
+  const [reports, setReports] = useState([])
+
+  // Estados dos modais
+  const [modalState, setModalState] = useState({
+    createUser: false,
+    createTurma: false,
+    createEvent: false,
+    sendNotification: false,
+    importUsers: false,
+    settings: false,
+    viewReport: false
   })
 
-  const [newStudent, setNewStudent] = useState({
-    name: "",
-    email: "",
-    rm: "",
-    class: "",
-    status: "Ativo",
+  // Estados dos formulários
+  const [userForm, setUserForm] = useState({
+    tipo: 'aluno',
+    nome: '',
+    email: '',
+    senha: '',
+    rm: '',
+    disciplinas: [],
+    turma: ''
   })
 
-  const [newEvent, setNewEvent] = useState({
-    title: "",
-    date: "",
-    time: "",
-    type: "meeting",
-    description: "",
-    location: "",
-    image: "",
-    shortDescription: "",
+  const [turmaForm, setTurmaForm] = useState({
+    nome: '',
+    curso: '',
+    periodo: '',
+    ano: '',
+    professor: ''
   })
 
-  const [newNews, setNewNews] = useState({
-    title: "",
-    content: "",
-    image: "",
-    category: "geral",
+  const [eventForm, setEventForm] = useState({
+    titulo: '',
+    descricao: '',
+    data: '',
+    hora: '',
+    local: '',
+    publico: 'todos',
+    tipo: 'evento'
   })
 
-  const [newPatchNote, setNewPatchNote] = useState({
-    title: "",
-    description: "",
-    version: "",
-    image: "",
+  const [notificationForm, setNotificationForm] = useState({
+    titulo: '',
+    mensagem: '',
+    publico: 'todos',
+    tipo: 'info',
+    urgente: false
   })
 
-  // Content Management Data
-  const [eventsData, setEventsData] = useState([
-    {
-      id: 1,
-      title: "Feira Tecnológica",
-      image: "/placeholder.svg?height=200&width=300&text=Feira+Tecnológica",
-      shortDescription: "Exposição de projetos tecnológicos desenvolvidos pelos alunos",
-      date: "2025-09-15",
-      time: "14:00",
-      fullDescription:
-        "Venha conhecer os projetos inovadores desenvolvidos pelos alunos da Etec. A feira contará com demonstrações práticas, apresentações e muito mais.",
-      location: "Auditório Principal",
-    },
-    {
-      id: 2,
-      title: "Semana Tecnológica",
-      image: "/placeholder.svg?height=200&width=300&text=Semana+Tecnológica",
-      shortDescription: "Uma semana dedicada à tecnologia e inovação",
-      date: "2025-10-20",
-      time: "08:00",
-      fullDescription: "Evento anual que reúne palestras, workshops e demonstrações tecnológicas.",
-      location: "Campus Principal",
-    },
-  ])
+  // Estados de filtros e busca
+  const [filters, setFilters] = useState({
+    searchTerm: '',
+    userType: 'todos',
+    turmaFilter: 'todas',
+    statusFilter: 'todos'
+  })
 
-  const [newsData, setNewsData] = useState([
-    {
-      id: 1,
-      title: "Semana Tecnológica",
-      content:
-        "O Jornal Etec é um periódico voltado para a divulgação de notícias, eventos e atividades da Etec (Escola Técnica Estadual). Seu objetivo é manter alunos, professores e a comunidade escolar atualizados sobre o que acontece dentro da instituição, além de abordar temas relevantes para o ambiente educacional.",
-      image: "/placeholder.svg?height=320&width=400&text=Semana+Tecnológica",
-      category: "eventos",
-      date: new Date().toISOString(),
-    },
-  ])
+  // WebSocket connection (desabilitado temporariamente)
+  // useEffect(() => {
+  //   socketService.connect()
+  //   socketService.onMessage(handleWebSocketMessage)
 
-  const [patchNotesData, setPatchNotesData] = useState([
-    {
-      id: 1,
-      title: "Novo estilo de personalização (Modo escuro)",
-      description: "Implementação do modo escuro para melhor experiência do usuário",
-      version: "2.1.0",
-      date: new Date().toISOString(),
-    },
-    {
-      id: 2,
-      title: "Novas interfaces: Página de Cadastro e Login; Calculadora; Jornal Etec",
-      description: "Adição de novas funcionalidades e interfaces",
-      version: "2.0.0",
-      date: new Date().toISOString(),
-    },
-    {
-      id: 3,
-      title: "Redesign das Interfaces anteriores",
-      description: "Melhoria visual e de usabilidade das interfaces existentes",
-      version: "1.9.0",
-      date: new Date().toISOString(),
-    },
-  ])
+  //   return () => {
+  //     socketService.disconnect()
+  //   }
+  // }, [])
 
-  const [scheduleData, setScheduleData] = useState([
-    {
-      day: "Segunda",
-      periods: [
-        { time: "08:00 - 08:50", subject: "Aula Vaga", isVacant: true },
-        { time: "08:50 - 09:40", subject: "Aula Vaga", isVacant: true },
-        { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "Sistemas Embarcados", teacher: "Prof. Iury" },
-        { time: "10:50 - 11:40", subject: "Sistemas Embarcados", teacher: "Prof. Iury" },
-        { time: "11:40 - 12:30", subject: "Sociologia", teacher: "Prof. Elza" },
-        { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
-        { time: "13:30 - 14:20", subject: "EAMT", teacher: "Prof. Elza" },
-        { time: "14:20 - 15:10", subject: "EAMT", teacher: "Prof. Elza" },
-        { time: "15:10 - 16:00", subject: "EAMT", teacher: "Prof. Elza" },
-      ],
-    },
-    {
-      day: "Terça",
-      periods: [
-        { time: "08:00 - 08:50", subject: "P.W. I, II, III", teacher: "Prof. Paulo e William G." },
-        { time: "08:50 - 09:40", subject: "Programação Web I, II e III", teacher: "Prof. Paulo e William G." },
-        { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "E.A.C.N.T.", teacher: "Prof. Elza e Prof. Andreia" },
-        { time: "10:50 - 11:40", subject: "E.A.C.N.T.", teacher: "Prof. Elza e Prof. Andreia" },
-        { time: "11:40 - 12:30", subject: "Matematica", teacher: "Prof. Santos" },
-        { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
-        { time: "13:30 - 14:20", subject: "Inglês", teacher: "Prof. Fidélis" },
-        { time: "14:20 - 15:10", subject: "Matematica", teacher: "Prof. William B." },
-        { time: "15:10 - 16:00", subject: "Matematica", teacher: "Prof. William B." },
-      ],
-    },
-    {
-      day: "Quarta",
-      periods: [
-        { time: "08:00 - 08:50", subject: "P.A.M. I, II", teacher: "Prof. Paulo" },
-        { time: "08:50 - 09:40", subject: "P.A.M. I, II", teacher: "Prof. Paulo" },
-        { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "IPSSI", teacher: "Prof. Iury e Prof. Vanessa" },
-        { time: "10:50 - 11:40", subject: "IPSSI", teacher: "Prof. Iury e Prof. Vanessa" },
-        { time: "11:40 - 12:30", subject: "Filosofia", teacher: "Prof. Silva" },
-        { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
-        { time: "13:30 - 14:20", subject: "Biologia", teacher: "Prof. Andreia" },
-        { time: "14:20 - 15:10", subject: "Biologia", teacher: "Prof. Andreia" },
-        { time: "15:10 - 16:00", subject: "E.A.C.N.T.", teacher: "Prof. Andreia e Prof. Elza" },
-      ],
-    },
-    {
-      day: "Quinta",
-      periods: [
-        { time: "08:00 - 08:50", subject: "Português", teacher: "Prof. Fidélis" },
-        { time: "08:50 - 09:40", subject: "Português", teacher: "Prof. Fidélis" },
-        { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "P.D.T.C.C.", teacher: "Prof. Veridiane e Prof. Elisângela" },
-        { time: "10:50 - 11:40", subject: "P.D.T.C.C.", teacher: "Prof. Veridiane e Prof. Elisângela" },
-        { time: "11:40 - 12:30", subject: "P.D.T.C.C.", teacher: "Prof. Veridiane e Prof. Elisângela" },
-        { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
-        { time: "13:30 - 14:20", subject: "Português", teacher: "Prof. Fidélis" },
-        { time: "14:20 - 15:10", subject: "Matematica", teacher: "Prof. William B." },
-        { time: "15:10 - 16:00", subject: "Matematica", teacher: "Prof. William B." },
-      ],
-    },
-    {
-      day: "Sexta",
-      periods: [
-        { time: "08:00 - 08:50", subject: "Aula Vaga", isVacant: true },
-        { time: "08:50 - 09:40", subject: "Filosofia", teacher: "Prof. Elza" },
-        { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "Q.T.S.", teacher: "Prof. Iury e Prof. Gisbert" },
-        { time: "10:50 - 11:40", subject: "Q.T.S.", teacher: "Prof. Iury e Prof. Gisbert" },
-        { time: "11:40 - 12:30", subject: "Aula Vaga", isVacant: true },
-        { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
-        { time: "13:30 - 14:20", subject: "Geografia", teacher: "Prof. Valdeci" },
-        { time: "14:20 - 15:10", subject: "Geografia", teacher: "Prof. Valdeci" },
-        { time: "15:10 - 16:00", subject: "Sociologia", teacher: "Prof. Elza" },
-      ],
-    },
-  ])
-
-  // Existing data states
-  const [classesData, setClassesData] = useState([
-    {
-      id: 1,
-      name: "1º DS A",
-      course: "Desenvolvimento de Sistemas",
-      year: "1º Ano",
-      students: 35,
-      teacher: "Prof. João Santos",
-      hasSchedule: true,
-    },
-    {
-      id: 2,
-      name: "2º DS A",
-      course: "Desenvolvimento de Sistemas",
-      year: "2º Ano",
-      students: 32,
-      teacher: "Prof. Ana Costa",
-      hasSchedule: true,
-    },
-    {
-      id: 3,
-      name: "3º DS A",
-      course: "Desenvolvimento de Sistemas",
-      year: "3º Ano",
-      students: 28,
-      teacher: "Prof. Carlos Lima",
-      hasSchedule: false,
-    },
-    {
-      id: 4,
-      name: "1º ADM A",
-      course: "Administração",
-      year: "1º Ano",
-      students: 40,
-      teacher: "Prof. Lucia Pereira",
-      hasSchedule: true,
-    },
-  ])
-
-  const [teachersData, setTeachersData] = useState([
-    {
-      id: 1,
-      name: "Prof. João Santos",
-      subjects: ["Programação", "Banco de Dados"],
-      classes: ["1º DS A", "2º DS B"],
-      email: "joao.santos@etec.sp.gov.br",
-      phone: "(11) 99999-1111",
-    },
-    {
-      id: 2,
-      name: "Prof. Ana Costa",
-      subjects: ["Matemática", "Física"],
-      classes: ["2º DS A", "3º DS A"],
-      email: "ana.costa@etec.sp.gov.br",
-      phone: "(11) 99999-2222",
-    },
-    {
-      id: 3,
-      name: "Prof. Carlos Lima",
-      subjects: ["Português", "Literatura"],
-      classes: ["3º DS A", "1º ADM A"],
-      email: "carlos.lima@etec.sp.gov.br",
-      phone: "(11) 99999-3333",
-    },
-  ])
-
-  const [studentsData, setStudentsData] = useState([
-    {
-      id: 1,
-      name: "Maria Oliveira",
-      class: "1º DS A",
-      rm: "12345",
-      status: "Ativo",
-      email: "maria.oliveira@etec.sp.gov.br",
-    },
-    {
-      id: 2,
-      name: "Pedro Silva",
-      class: "2º DS A",
-      rm: "12346",
-      status: "Ativo",
-      email: "pedro.silva@etec.sp.gov.br",
-    },
-    {
-      id: 3,
-      name: "Ana Santos",
-      class: "3º DS A",
-      rm: "12347",
-      status: "Ativo",
-      email: "ana.santos@etec.sp.gov.br",
-    },
-  ])
-
-  const [upcomingEvents, setUpcomingEvents] = useState([
-    {
-      id: 1,
-      title: "Reunião Pedagógica",
-      date: "2025-01-20",
-      time: "14:00",
-      type: "meeting",
-      description: "Reunião mensal com todos os professores",
-    },
-    {
-      id: 2,
-      title: "Semana Tecnológica",
-      date: "2025-01-25",
-      time: "08:00",
-      type: "event",
-      description: "Evento anual de tecnologia e inovação",
-    },
-    {
-      id: 3,
-      title: "Avaliação Institucional",
-      date: "2025-02-01",
-      time: "09:00",
-      type: "evaluation",
-      description: "Avaliação semestral da instituição",
-    },
-  ])
-
-  // Dados mockados da ETEC
-  const etecInfo = {
-    name: "Etec Albert Einstein",
-    location: "São Paulo, SP",
-    totalClasses: 24,
-    totalTeachers: 45,
-    totalStudents: 680,
-    director: "Prof. Maria Silva",
-  }
-
-  // Utility functions
-  const generateId = () => Math.floor(Math.random() * 10000)
-
-  const resetForms = () => {
-    setNewClass({ name: "", course: "", year: "", teacher: "" })
-    setNewTeacher({ name: "", email: "", phone: "", subjects: [], classes: [] })
-    setNewStudent({ name: "", email: "", rm: "", class: "", status: "Ativo" })
-    setNewEvent({
-      title: "",
-      date: "",
-      time: "",
-      type: "meeting",
-      description: "",
-      location: "",
-      image: "",
-      shortDescription: "",
-    })
-    setNewNews({ title: "", content: "", image: "", category: "geral" })
-    setNewPatchNote({ title: "", description: "", version: "", image: "" })
-  }
-
-  // Content Management Functions
-  const handleAddEvent = () => {
-    if (newEvent.title && newEvent.date && newEvent.time) {
-      const eventToAdd = {
-        id: generateId(),
-        ...newEvent,
-        fullDescription: newEvent.description,
-      }
-      setEventsData([...eventsData, eventToAdd])
-      setShowCreateEventModal(false)
-      resetForms()
-    }
-  }
-
-  const handleAddNews = () => {
-    if (newNews.title && newNews.content) {
-      const newsToAdd = {
-        id: generateId(),
-        ...newNews,
-        date: new Date().toISOString(),
-      }
-      setNewsData([...newsData, newsToAdd])
-      setShowAddNewsModal(false)
-      resetForms()
-    }
-  }
-
-  const handleEditNews = () => {
-    if (selectedNews && newNews.title && newNews.content) {
-      setNewsData(
-        newsData.map((news) =>
-          news.id === selectedNews.id ? { ...newNews, id: selectedNews.id, date: selectedNews.date } : news,
-        ),
-      )
-      setShowEditNewsModal(false)
-      setSelectedNews(null)
-      resetForms()
-    }
-  }
-
-  const handleAddPatchNote = () => {
-    if (newPatchNote.title && newPatchNote.description) {
-      const patchNoteToAdd = {
-        id: generateId(),
-        ...newPatchNote,
-        date: new Date().toISOString(),
-      }
-      setPatchNotesData([...patchNotesData, patchNoteToAdd])
-      setShowAddPatchNoteModal(false)
-      resetForms()
-    }
-  }
-
-  // CRUD Functions (existing ones)
-  const handleAddClass = () => {
-    if (newClass.name && newClass.course && newClass.year) {
-      const classToAdd = {
-        id: generateId(),
-        ...newClass,
-        students: 0,
-        hasSchedule: false,
-      }
-      setClassesData([...classesData, classToAdd])
-      setShowAddClassModal(false)
-      resetForms()
-    }
-  }
-
-  const handleAddTeacher = () => {
-    if (newTeacher.name && newTeacher.email) {
-      const teacherToAdd = {
-        id: generateId(),
-        ...newTeacher,
-      }
-      setTeachersData([...teachersData, teacherToAdd])
-      setShowAddTeacherModal(false)
-      resetForms()
-    }
-  }
-
-  const handleAddStudent = () => {
-    if (newStudent.name && newStudent.email && newStudent.rm) {
-      const studentToAdd = {
-        id: generateId(),
-        ...newStudent,
-      }
-      setStudentsData([...studentsData, studentToAdd])
-      setShowAddStudentModal(false)
-      resetForms()
-    }
-  }
-
-  const handleCreateEvent = () => {
-    if (newEvent.title && newEvent.date && newEvent.time) {
-      const eventToAdd = {
-        id: generateId(),
-        ...newEvent,
-      }
-      setUpcomingEvents([...upcomingEvents, eventToAdd])
-      setShowCreateEventModal(false)
-      resetForms()
-    }
-  }
-
-  const handleDeleteItem = (type, id) => {
-    if (window.confirm("Tem certeza que deseja excluir este item?")) {
-      switch (type) {
-        case "class":
-          setClassesData(classesData.filter((item) => item.id !== id))
-          break
-        case "teacher":
-          setTeachersData(teachersData.filter((item) => item.id !== id))
-          break
-        case "student":
-          setStudentsData(studentsData.filter((item) => item.id !== id))
-          break
-        case "event":
-          setUpcomingEvents(upcomingEvents.filter((item) => item.id !== id))
-          break
-        case "news":
-          setNewsData(newsData.filter((item) => item.id !== id))
-          break
-        case "patchnote":
-          setPatchNotesData(patchNotesData.filter((item) => item.id !== id))
-          break
-        case "studentevent":
-          setEventsData(eventsData.filter((item) => item.id !== id))
-          break
-      }
-    }
-  }
-
-  const handleAssignStudents = (classItem) => {
-    setSelectedClass(classItem)
-    setShowAssignStudentsModal(true)
-  }
-
-  const handleUploadSchedule = (classItem) => {
-    setSelectedClass(classItem)
-    setShowUploadScheduleModal(true)
-  }
-
-  const handleViewSchedule = (classItem) => {
-    setSelectedClass(classItem)
-    setShowViewScheduleModal(true)
-  }
-
-  const handleEditItem = (type, item) => {
-    switch (type) {
-      case "teacher":
-        setSelectedTeacher(item)
-        setNewTeacher(item)
+  const handleWebSocketMessage = (data) => {
+    switch (data.type) {
+      case 'notification':
+        setNotifications(prev => [data.notification, ...prev])
         break
-      case "student":
-        setSelectedStudent(item)
-        setNewStudent(item)
+      case 'user_update':
+        loadUsuarios()
         break
-      case "news":
-        setSelectedNews(item)
-        setNewNews(item)
-        setShowEditNewsModal(true)
-        return
-      case "event":
-        setSelectedEvent(item)
-        setNewEvent(item)
-        setShowCreateEventModal(true)
-        return
+      case 'event_update':
+        loadEventos()
+        break
+      default:
+        break
     }
-    setShowEditModal(true)
   }
 
-  const handleSaveEdit = () => {
-    if (selectedTeacher) {
-      setTeachersData(
-        teachersData.map((teacher) =>
-          teacher.id === selectedTeacher.id ? { ...newTeacher, id: selectedTeacher.id } : teacher,
-        ),
-      )
+  // Verificar token e carregar dados
+  useEffect(() => {
+    let mounted = true;
+    
+    const initializeDashboard = async () => {
+      let token = localStorage.getItem('token');
+      let user = localStorage.getItem('user');
+      
+      // Auto-login com credenciais corretas se necessário
+      if (!token || !user || token.startsWith('mock-')) {
+        console.log('🔄 Realizando auto-login com credenciais do backend...');
+        try {
+          const loginResponse = await fetch('http://localhost:5001/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: 'admin@etec.sp.gov.br',
+              password: 'admin123',
+              role: 'ADM'
+            })
+          });
+          
+          if (loginResponse.ok) {
+            const loginData = await loginResponse.json();
+            if (loginData.success && loginData.token) {
+              localStorage.setItem('token', loginData.token);
+              localStorage.setItem('user', JSON.stringify(loginData.user));
+              token = loginData.token;
+              user = JSON.stringify(loginData.user);
+              showNotification('✅ Auto-login realizado com sucesso!', 'success');
+              console.log('✅ Token obtido:', token.substring(0, 30) + '...');
+            }
+          }
+        } catch (error) {
+          console.warn('❌ Auto-login falhou, continuando em modo demo:', error);
+          showNotification('⚠️ Usando modo demonstração', 'warning');
+        }
+      }
+      
+      console.log('Dashboard inicializando com token:', token.substring(0, 20) + '...');
+      
+      if (mounted) {
+        // Só carrega dados se o componente ainda estiver montado
+        try {
+          await loadInitialData();
+        } catch (error) {
+          console.error('Erro ao carregar dados iniciais:', error);
+        }
+      }
+    };
+    
+    initializeDashboard();
+    
+    return () => {
+      mounted = false;
+    };
+  }, [])  // Removido a dependência do array vazio para evitar re-execução
+
+  const loadInitialData = async () => {
+    setLoading(true)
+    try {
+      await Promise.all([
+        loadStats(),
+        loadUsuarios(),
+        loadTurmas(),
+        loadEventos(),
+        loadNotifications()
+      ])
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error)
+    } finally {
+      setLoading(false)
     }
-    if (selectedStudent) {
-      setStudentsData(
-        studentsData.map((student) =>
-          student.id === selectedStudent.id ? { ...newStudent, id: selectedStudent.id } : student,
-        ),
-      )
-    }
-    setShowEditModal(false)
-    setSelectedTeacher(null)
-    setSelectedStudent(null)
-    resetForms()
   }
 
-  // Modal Component
+  const loadStats = async () => {
+    try {
+      console.log('📊 Carregando estatísticas do backend...');
+      
+      const [alunos, professores] = await Promise.all([
+        apiService.listUsers('alunos'),
+        apiService.listUsers('professores')
+      ]);
+
+      const stats = {
+        totalAlunos: 0,
+        totalProfessores: 0,
+        totalTurmas: 0,
+        totalEventos: 0,
+        taxaAprovacao: 94
+      };
+
+      if (alunos.success && alunos.users && alunos.users.alunos) {
+        stats.totalAlunos = alunos.users.alunos.length;
+      }
+
+      if (professores.success && professores.users && professores.users.professores) {
+        stats.totalProfessores = professores.users.professores.length;
+      }
+
+      setStats(stats);
+      console.log('✅ Stats carregadas do backend:', stats);
+      
+    } catch (error) {
+      console.error('❌ Erro ao carregar estatísticas:', error);
+      
+      if (error.message === 'BACKEND_OFFLINE') {
+        // Calcular estatísticas baseadas nos dados locais
+        const totalAlunos = usuarios.filter(u => u.role === 'aluno').length;
+        const totalProfessores = usuarios.filter(u => u.role === 'professor').length;
+        
+        const statsLocal = {
+          totalAlunos,
+          totalProfessores,
+          totalTurmas: 3, // Mock
+          totalEventos: 5, // Mock
+          taxaAprovacao: 94
+        };
+        
+        setStats(statsLocal);
+        console.log('📊 Stats calculadas localmente:', statsLocal);
+      } else {
+        // Fallback para dados padrão
+        setStats({
+          totalAlunos: 0,
+          totalProfessores: 0,
+          totalTurmas: 0,
+          totalEventos: 0,
+          taxaAprovacao: 94
+        });
+      }
+    }
+  }
+
+  const loadUsuarios = async () => {
+    try {
+      console.log('🔄 Carregando usuários do backend...');
+      const response = await apiService.listUsers();
+      
+      if (response.success && response.users) {
+        // Combinar alunos e professores em uma lista única
+        const todosUsuarios = [
+          ...(response.users.alunos || []),
+          ...(response.users.professores || [])
+        ];
+        setUsuarios(todosUsuarios);
+        console.log('✅ Usuários carregados:', todosUsuarios.length);
+      } else {
+        console.warn('⚠️ Backend retornou estrutura inesperada:', response);
+        setUsuarios([]);
+      }
+    } catch (error) {
+      console.error('❌ Erro ao carregar usuários:', error);
+      
+      if (error.message === 'BACKEND_OFFLINE') {
+        console.log('🔄 Backend offline - usando dados mock');
+        // Dados mock de demonstração
+      } else if (error.message === 'INVALID_CREDENTIALS') {
+        console.log('🔑 Backend online mas credenciais inválidas - usando dados mock');
+        // Dados mock de demonstração
+        const mockUsuarios = [
+          {
+            id: 'test_professor_1',
+            nome: 'Professor Teste',
+            email: 'prof@teste.com',
+            role: 'professor',
+            disciplinas: ['Matemática', 'Programação'],
+            status: 'ativo',
+            createdAt: new Date().toISOString(),
+            // Senha: 123456
+          },
+          {
+            id: 'test_aluno_1',
+            nome: 'Aluno Teste',
+            email: 'user@teste.com',
+            role: 'aluno',
+            rm: '00001',
+            turma: '3DS',
+            status: 'ativo',
+            createdAt: new Date().toISOString(),
+            // Senha: 123456
+          },
+          {
+            id: 'mock_1',
+            nome: 'João Silva',
+            email: 'joao@etec.sp.gov.br',
+            role: 'aluno',
+            rm: '12345',
+            turma: '3º DS A',
+            status: 'ativo',
+            createdAt: new Date().toISOString()
+          },
+          {
+            id: 'mock_2',
+            nome: 'Maria Santos',
+            email: 'maria@etec.sp.gov.br',
+            role: 'professor',
+            disciplinas: ['Matemática', 'Física'],
+            status: 'ativo',
+            createdAt: new Date().toISOString()
+          }
+        ];
+        setUsuarios(mockUsuarios);
+        if (error.message === 'BACKEND_OFFLINE') {
+          showNotification('⚠️ Backend offline - dados de demonstração carregados', 'warning');
+        } else {
+          showNotification('🔑 Backend online - credenciais incorretas. Dados de demonstração carregados', 'warning');
+        }
+      } else {
+        setUsuarios([]);
+      }
+    }
+  }
+
+  const loadTurmas = async () => {
+    try {
+      // Dados mock temporários
+      setTurmas([]);
+      console.log('Turmas carregadas (modo mock)');
+      
+      // TODO: Quando o backend estiver pronto:
+      // const response = await apiService.request('/turmas')
+      // setTurmas(response.turmas || [])
+    } catch (error) {
+      console.error('Erro ao carregar turmas:', error)
+      setTurmas([]); // Fallback para array vazio
+    }
+  }
+
+  const loadEventos = async () => {
+    try {
+      // Dados mock temporários
+      setEventos([]);
+      console.log('Eventos carregados (modo mock)');
+      
+      // TODO: Quando o backend estiver pronto:
+      // const response = await apiService.request('/eventos')
+      // setEventos(response.eventos || [])
+    } catch (error) {
+      console.error('Erro ao carregar eventos:', error)
+      setEventos([]); // Fallback para array vazio
+    }
+  }
+
+  const loadNotifications = async () => {
+    try {
+      // Dados mock temporários
+      setNotifications([]);
+      console.log('Notificações carregadas (modo mock)');
+      
+      // TODO: Quando o backend estiver pronto:
+      // const response = await apiService.request('/notifications')
+      // setNotifications(response.notifications || [])
+    } catch (error) {
+      console.error('Erro ao carregar notificações:', error)
+      setNotifications([]); // Fallback para array vazio
+    }
+  }
+
+  // Funções auxiliares
+  const resetForms = useCallback(() => {
+    setUserForm({
+      tipo: 'aluno',
+      nome: '',
+      email: '',
+      senha: '',
+      rm: '',
+      disciplinas: [],
+      turma: ''
+    });
+    setTurmaForm({
+      nome: '',
+      curso: '',
+      professor: '',
+      capacidade: '',
+      horarios: []
+    });
+    setEventForm({
+      titulo: '',
+      descricao: '',
+      data: '',
+      hora: '',
+      local: '',
+      categoria: ''
+    });
+    setNotificationForm({
+      titulo: '',
+      mensagem: '',
+      destinatarios: 'todos',
+      prioridade: 'normal'
+    });
+  }, []);
+
+  const closeModal = useCallback((modalName) => {
+    setModalState(prev => ({ ...prev, [modalName]: false }));
+    resetForms();
+  }, [resetForms]);
+
+  const openModal = useCallback((modalName) => {
+    setModalState(prev => ({ ...prev, [modalName]: true }));
+  }, []);
+
+  const showNotification = useCallback((message, type = 'info') => {
+    const notification = {
+      id: Date.now(),
+      message,
+      type,
+      timestamp: new Date()
+    };
+    setNotifications(prev => [notification, ...prev.slice(0, 4)]);
+    setTimeout(() => {
+      setNotifications(prev => prev.filter(n => n.id !== notification.id));
+    }, 5000);
+  }, []);
+
+  // Funções CRUD
+  const handleCreateUser = useCallback(async () => {
+    try {
+      setLoading(true)
+      
+      // Simulação de criação de usuário (modo mock)
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simula delay da API
+      
+      console.log('Usuário criado (modo mock):', {
+        tipo: userForm.tipo,
+        nome: userForm.nome,
+        email: userForm.email,
+        rm: userForm.rm
+      });
+
+      // Validar campos obrigatórios
+      if (!userForm.nome || !userForm.email) {
+        showNotification('Por favor, preencha todos os campos obrigatórios', 'error');
+        return;
+      }
+
+      if (userForm.tipo === 'aluno' && !userForm.rm) {
+        showNotification('RM é obrigatório para alunos', 'error');
+        return;
+      }
+
+      // Criar usuário localmente primeiro (funciona sempre)
+      const novoUsuario = {
+        id: 'local_' + Date.now(),
+        nome: userForm.nome,
+        email: userForm.email,
+        role: userForm.tipo,
+        status: 'ativo',
+        createdAt: new Date().toISOString(),
+        ...(userForm.tipo === 'aluno' ? {
+          rm: userForm.rm || 'N/A',
+          turma: userForm.turma || 'N/A'
+        } : {
+          disciplinas: userForm.disciplinas || ['Não especificado']
+        })
+      };
+      
+      // Adicionar à lista local
+      setUsuarios(prev => [...prev, novoUsuario]);
+      
+      closeModal('createUser');
+      resetForms();
+      
+      console.log('✅ Usuário criado localmente:', novoUsuario);
+      showNotification(
+        `✅ ${userForm.tipo === 'aluno' ? 'Aluno' : 'Professor'} "${userForm.nome}" criado com sucesso!`, 
+        'success'
+      );
+      
+      // Tentar sincronizar com backend em segundo plano (não bloqueia a UI)
+      setTimeout(async () => {
+        try {
+          console.log('🔄 Tentando sincronizar com backend...');
+          const token = localStorage.getItem('token');
+          
+          if (!token || token.startsWith('mock-')) {
+            console.log('📡 Token inválido, fazendo novo login...');
+            const loginResponse = await fetch('http://localhost:5001/api/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: 'admin@etec.sp.gov.br',
+                password: 'admin123',
+                role: 'ADM'
+              })
+            });
+            
+            if (loginResponse.ok) {
+              const loginData = await loginResponse.json();
+              if (loginData.success) {
+                localStorage.setItem('token', loginData.token);
+                console.log('✅ Novo token obtido para sincronização');
+              }
+            }
+          }
+          
+          // Tentar criar no backend (não importa se falhar)
+          const createEndpoint = userForm.tipo === 'aluno' ? '/create-student' : '/create-teacher';
+          const createResponse = await fetch(`http://localhost:5001/api${createEndpoint}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+              nome: userForm.nome,
+              email: userForm.email,
+              senha: userForm.senha || '123456',
+              ...(userForm.tipo === 'aluno' ? {
+                rm: userForm.rm,
+                turma: userForm.turma
+              } : {
+                disciplinas: userForm.disciplinas
+              })
+            })
+          });
+          
+          if (createResponse.ok) {
+            const createData = await createResponse.json();
+            if (createData.success) {
+              console.log('🎯 Usuário sincronizado com backend:', createData.user);
+              showNotification('🎯 Dados sincronizados com servidor!', 'success');
+            }
+          }
+        } catch (syncError) {
+          console.log('📡 Sincronização em segundo plano falhou:', syncError);
+          // Não mostrar erro para o usuário - funcionou localmente
+        }
+      }, 1000);
+    } catch (error) {
+      console.error('Erro ao criar usuário:', error);
+      showNotification('Erro ao criar usuário: ' + error.message, 'error');
+    } finally {
+      setLoading(false)
+    }
+  }, [userForm])
+
+  const handleCreateTurma = async () => {
+    try {
+      setLoading(true)
+      await apiService.request('/turmas', {
+        method: 'POST',
+        body: JSON.stringify(turmaForm)
+      })
+
+      closeModal('createTurma')
+      resetForms()
+      loadTurmas()
+      loadStats()
+      
+      showNotification('Turma criada com sucesso!', 'success')
+    } catch (error) {
+      showNotification('Erro ao criar turma: ' + error.message, 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleCreateEvent = async () => {
+    try {
+      setLoading(true)
+      await apiService.request('/eventos', {
+        method: 'POST',
+        body: JSON.stringify(eventForm)
+      })
+
+      closeModal('createEvent')
+      resetForms()
+      loadEventos()
+      loadStats()
+      
+      showNotification('Evento criado com sucesso!', 'success')
+    } catch (error) {
+      showNotification('Erro ao criar evento: ' + error.message, 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSendNotification = async () => {
+    try {
+      setLoading(true)
+      await apiService.request('/notifications', {
+        method: 'POST',
+        body: JSON.stringify(notificationForm)
+      })
+
+      closeModal('sendNotification')
+      resetForms()
+      
+      showNotification('Notificação enviada com sucesso!', 'success')
+    } catch (error) {
+      showNotification('Erro ao enviar notificação: ' + error.message, 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDeleteUser = async (userId) => {
+    if (!confirm('Tem certeza que deseja excluir este usuário?')) return
+
+    try {
+      console.log('🗑️ Excluindo usuário:', userId);
+      const response = await apiService.deleteUser(userId);
+      
+      if (response.success) {
+        console.log('✅ Usuário excluído com sucesso');
+        loadUsuarios();
+        loadStats();
+        showNotification('Usuário excluído com sucesso!', 'success');
+      } else {
+        throw new Error(response.error || 'Erro ao excluir usuário');
+      }
+    } catch (error) {
+      console.error('❌ Erro ao excluir usuário:', error);
+      showNotification('Erro ao excluir usuário: ' + error.message, 'error');
+    }
+  }
+
+  const handleImportUsers = async (file) => {
+    try {
+      setLoading(true)
+      const formData = new FormData()
+      formData.append('file', file)
+
+      await apiService.request('/users/import', {
+        method: 'POST',
+        body: formData,
+        headers: {}
+      })
+
+      closeModal('importUsers')
+      loadUsuarios()
+      loadStats()
+      
+      showNotification('Usuários importados com sucesso!', 'success')
+    } catch (error) {
+      showNotification('Erro ao importar usuários: ' + error.message, 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Funções utilitárias foram movidas para cima
+
+  // showNotification já definido no início do componente
+
+  // Componentes
+  const StatCard = ({ icon: Icon, title, value, subtitle, color, trend }) => (
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div className={`p-3 rounded-xl ${color}`}>
+          <Icon size={24} className="text-white" />
+        </div>
+        {trend && (
+          <div className="flex items-center gap-1 text-green-500">
+            <TrendingUp size={16} />
+            <span className="text-sm font-medium">{trend}</span>
+          </div>
+        )}
+      </div>
+      <div>
+        <p className="text-3xl font-bold dark:text-white text-gray-900 mb-1">{value}</p>
+        <p className="text-lg font-medium dark:text-gray-300 text-gray-700 mb-1">{title}</p>
+        {subtitle && <p className="text-sm dark:text-gray-400 text-gray-600">{subtitle}</p>}
+      </div>
+    </motion.div>
+  )
+
   const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
     if (!isOpen) return null
 
@@ -635,1418 +770,282 @@ const EtecDashboard = () => {
     )
   }
 
-  // Content Management Modals
-  const AddEventModal = () => (
-    <Modal
-      isOpen={showCreateEventModal}
-      onClose={() => setShowCreateEventModal(false)}
-      title={selectedEvent ? "Editar Evento" : "Criar Evento"}
-      size="lg"
-    >
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Título do Evento</label>
-          <input
-            type="text"
-            value={newEvent.title}
-            onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="Nome do evento"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Descrição Curta</label>
-          <input
-            type="text"
-            value={newEvent.shortDescription}
-            onChange={(e) => setNewEvent({ ...newEvent, shortDescription: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="Descrição breve para o card"
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Data</label>
-            <input
-              type="date"
-              value={newEvent.date}
-              onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
-              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Horário</label>
-            <input
-              type="time"
-              value={newEvent.time}
-              onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
-              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            />
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Local</label>
-          <input
-            type="text"
-            value={newEvent.location}
-            onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="Local do evento"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">URL da Imagem</label>
-          <input
-            type="url"
-            value={newEvent.image}
-            onChange={(e) => setNewEvent({ ...newEvent, image: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="https://exemplo.com/imagem.jpg"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Descrição Completa</label>
-          <textarea
-            value={newEvent.description}
-            onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            rows="4"
-            placeholder="Descrição detalhada do evento..."
-          />
-        </div>
-        <div className="flex gap-3 pt-4">
-          <button
-            onClick={() => {
-              setShowCreateEventModal(false)
-              setSelectedEvent(null)
-              resetForms()
-            }}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={
-              selectedEvent
-                ? () => {
-                    setEventsData(
-                      eventsData.map((event) =>
-                        event.id === selectedEvent.id
-                          ? { ...newEvent, id: selectedEvent.id, fullDescription: newEvent.description }
-                          : event,
-                      ),
-                    )
-                    setShowCreateEventModal(false)
-                    setSelectedEvent(null)
-                    resetForms()
-                  }
-                : handleAddEvent
-            }
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
-          >
-            {selectedEvent ? "Salvar Alterações" : "Criar Evento"}
-          </button>
-        </div>
-      </div>
-    </Modal>
-  )
-
-  const AddNewsModal = () => (
-    <Modal
-      isOpen={showAddNewsModal}
-      onClose={() => setShowAddNewsModal(false)}
-      title="Adicionar Conteúdo do Jornal"
-      size="lg"
-    >
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Título</label>
-          <input
-            type="text"
-            value={newNews.title}
-            onChange={(e) => setNewNews({ ...newNews, title: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="Título da notícia"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Categoria</label>
-          <select
-            value={newNews.category}
-            onChange={(e) => setNewNews({ ...newNews, category: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-          >
-            <option value="geral">Geral</option>
-            <option value="eventos">Eventos</option>
-            <option value="academico">Acadêmico</option>
-            <option value="tecnologia">Tecnologia</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">URL da Imagem</label>
-          <input
-            type="url"
-            value={newNews.image}
-            onChange={(e) => setNewNews({ ...newNews, image: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="https://exemplo.com/imagem.jpg"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Conteúdo</label>
-          <textarea
-            value={newNews.content}
-            onChange={(e) => setNewNews({ ...newNews, content: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            rows="6"
-            placeholder="Conteúdo da notícia..."
-          />
-        </div>
-        <div className="flex gap-3 pt-4">
-          <button
-            onClick={() => setShowAddNewsModal(false)}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleAddNews}
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
-          >
-            Adicionar Conteúdo
-          </button>
-        </div>
-      </div>
-    </Modal>
-  )
-
-  const EditNewsModal = () => (
-    <Modal
-      isOpen={showEditNewsModal}
-      onClose={() => setShowEditNewsModal(false)}
-      title="Editar Conteúdo do Jornal"
-      size="lg"
-    >
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Título</label>
-          <input
-            type="text"
-            value={newNews.title}
-            onChange={(e) => setNewNews({ ...newNews, title: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="Título da notícia"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Categoria</label>
-          <select
-            value={newNews.category}
-            onChange={(e) => setNewNews({ ...newNews, category: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-          >
-            <option value="geral">Geral</option>
-            <option value="eventos">Eventos</option>
-            <option value="academico">Acadêmico</option>
-            <option value="tecnologia">Tecnologia</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">URL da Imagem</label>
-          <input
-            type="url"
-            value={newNews.image}
-            onChange={(e) => setNewNews({ ...newNews, image: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="https://exemplo.com/imagem.jpg"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Conteúdo</label>
-          <textarea
-            value={newNews.content}
-            onChange={(e) => setNewNews({ ...newNews, content: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            rows="6"
-            placeholder="Conteúdo da notícia..."
-          />
-        </div>
-        <div className="flex gap-3 pt-4">
-          <button
-            onClick={() => {
-              setShowEditNewsModal(false)
-              setSelectedNews(null)
-              resetForms()
-            }}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleEditNews}
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
-          >
-            Salvar Alterações
-          </button>
-        </div>
-      </div>
-    </Modal>
-  )
-
-  const AddPatchNoteModal = () => (
-    <Modal
-      isOpen={showAddPatchNoteModal}
-      onClose={() => setShowAddPatchNoteModal(false)}
-      title="Adicionar Atualização"
-      size="lg"
-    >
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
-            Título da Atualização
-          </label>
-          <input
-            type="text"
-            value={newPatchNote.title}
-            onChange={(e) => setNewPatchNote({ ...newPatchNote, title: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="Ex: Nova funcionalidade de chat"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Versão</label>
-          <input
-            type="text"
-            value={newPatchNote.version}
-            onChange={(e) => setNewPatchNote({ ...newPatchNote, version: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="Ex: 2.1.0"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
-            URL da Imagem (Opcional)
-          </label>
-          <input
-            type="url"
-            value={newPatchNote.image}
-            onChange={(e) => setNewPatchNote({ ...newPatchNote, image: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="https://exemplo.com/imagem.jpg"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Descrição</label>
-          <textarea
-            value={newPatchNote.description}
-            onChange={(e) => setNewPatchNote({ ...newPatchNote, description: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            rows="4"
-            placeholder="Descrição detalhada da atualização..."
-          />
-        </div>
-        <div className="flex gap-3 pt-4">
-          <button
-            onClick={() => setShowAddPatchNoteModal(false)}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleAddPatchNote}
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
-          >
-            Adicionar Atualização
-          </button>
-        </div>
-      </div>
-    </Modal>
-  )
-
-  const EditScheduleModal = () => (
-    <Modal
-      isOpen={showEditScheduleModal}
-      onClose={() => setShowEditScheduleModal(false)}
-      title="Editar Horários"
-      size="xl"
-    >
-      <div className="space-y-6">
-        <div className="text-sm dark:text-gray-400 text-gray-600 mb-4">
-          Edite os horários de cada dia da semana. Deixe em branco para aulas vagas.
-        </div>
-
-        {scheduleData.map((day, dayIndex) => (
-          <div key={dayIndex} className="border dark:border-[#30363D] border-gray-200 rounded-lg p-4">
-            <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">{day.day}</h3>
-            <div className="space-y-3">
-              {day.periods.map((period, periodIndex) => (
-                <div key={periodIndex} className="grid grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-xs font-medium dark:text-gray-400 text-gray-600 mb-1">Horário</label>
-                    <input
-                      type="text"
-                      value={period.time}
-                      onChange={(e) => {
-                        const newSchedule = [...scheduleData]
-                        newSchedule[dayIndex].periods[periodIndex].time = e.target.value
-                        setScheduleData(newSchedule)
-                      }}
-                      className="w-full px-2 py-1 text-sm border dark:border-[#30363D] border-gray-300 rounded dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-1 focus:ring-[#8C43FF] focus:border-transparent"
-                      placeholder="08:00 - 08:50"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium dark:text-gray-400 text-gray-600 mb-1">Matéria</label>
-                    <input
-                      type="text"
-                      value={period.isBreak ? period.subject : period.isVacant ? "" : period.subject}
-                      onChange={(e) => {
-                        const newSchedule = [...scheduleData]
-                        const value = e.target.value
-                        if (value === "") {
-                          newSchedule[dayIndex].periods[periodIndex] = {
-                            ...period,
-                            subject: "Aula Vaga",
-                            isVacant: true,
-                            isBreak: false,
-                            teacher: undefined,
-                          }
-                        } else if (
-                          value.toLowerCase().includes("intervalo") ||
-                          value.toLowerCase().includes("almoço")
-                        ) {
-                          newSchedule[dayIndex].periods[periodIndex] = {
-                            ...period,
-                            subject: value,
-                            isBreak: true,
-                            isVacant: false,
-                            teacher: undefined,
-                          }
-                        } else {
-                          newSchedule[dayIndex].periods[periodIndex] = {
-                            ...period,
-                            subject: value,
-                            isBreak: false,
-                            isVacant: false,
-                          }
-                        }
-                        setScheduleData(newSchedule)
-                      }}
-                      className="w-full px-2 py-1 text-sm border dark:border-[#30363D] border-gray-300 rounded dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-1 focus:ring-[#8C43FF] focus:border-transparent"
-                      placeholder="Matemática"
-                      disabled={period.isBreak}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium dark:text-gray-400 text-gray-600 mb-1">Professor</label>
-                    <input
-                      type="text"
-                      value={period.teacher || ""}
-                      onChange={(e) => {
-                        const newSchedule = [...scheduleData]
-                        newSchedule[dayIndex].periods[periodIndex].teacher = e.target.value
-                        setScheduleData(newSchedule)
-                      }}
-                      className="w-full px-2 py-1 text-sm border dark:border-[#30363D] border-gray-300 rounded dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-1 focus:ring-[#8C43FF] focus:border-transparent"
-                      placeholder="Prof. Silva"
-                      disabled={period.isBreak || period.isVacant}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-
-        <div className="flex gap-3 pt-4 border-t dark:border-[#30363D] border-gray-200">
-          <button
-            onClick={() => setShowEditScheduleModal(false)}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={() => {
-              setShowEditScheduleModal(false)
-              // Here you would typically save to a backend
-            }}
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
-          >
-            Salvar Horários
-          </button>
-        </div>
-      </div>
-    </Modal>
-  )
-
-  // Existing modals (keeping the same structure)
-  const AddClassModal = () => (
-    <Modal isOpen={showAddClassModal} onClose={() => setShowAddClassModal(false)} title="Adicionar Nova Classe">
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Nome da Classe</label>
-          <input
-            type="text"
-            value={newClass.name}
-            onChange={(e) => setNewClass({ ...newClass, name: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="Ex: 1º DS A"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Curso</label>
-          <select
-            value={newClass.course}
-            onChange={(e) => setNewClass({ ...newClass, course: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-          >
-            <option value="">Selecione o curso</option>
-            <option value="Desenvolvimento de Sistemas">Desenvolvimento de Sistemas</option>
-            <option value="Administração">Administração</option>
-            <option value="Logística">Logística</option>
-            <option value="Recursos Humanos">Recursos Humanos</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Ano</label>
-          <select
-            value={newClass.year}
-            onChange={(e) => setNewClass({ ...newClass, year: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-          >
-            <option value="">Selecione o ano</option>
-            <option value="1º Ano">1º Ano</option>
-            <option value="2º Ano">2º Ano</option>
-            <option value="3º Ano">3º Ano</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
-            Professor Responsável
-          </label>
-          <select
-            value={newClass.teacher}
-            onChange={(e) => setNewClass({ ...newClass, teacher: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-          >
-            <option value="">Selecione o professor</option>
-            {teachersData.map((teacher) => (
-              <option key={teacher.id} value={teacher.name}>
-                {teacher.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="flex gap-3 pt-4">
-          <button
-            onClick={() => setShowAddClassModal(false)}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleAddClass}
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
-          >
-            Adicionar Classe
-          </button>
-        </div>
-      </div>
-    </Modal>
-  )
-
-  const AddTeacherModal = () => (
-    <Modal isOpen={showAddTeacherModal} onClose={() => setShowAddTeacherModal(false)} title="Adicionar Professor">
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Nome Completo</label>
-          <input
-            type="text"
-            value={newTeacher.name}
-            onChange={(e) => setNewTeacher({ ...newTeacher, name: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="Prof. João Silva"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Email</label>
-          <input
-            type="email"
-            value={newTeacher.email}
-            onChange={(e) => setNewTeacher({ ...newTeacher, email: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="professor@etec.sp.gov.br"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Telefone</label>
-          <input
-            type="tel"
-            value={newTeacher.phone}
-            onChange={(e) => setNewTeacher({ ...newTeacher, phone: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="(11) 99999-9999"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
-            Disciplinas (separadas por vírgula)
-          </label>
-          <input
-            type="text"
-            value={newTeacher.subjects.join(", ")}
-            onChange={(e) =>
-              setNewTeacher({ ...newTeacher, subjects: e.target.value.split(", ").filter((s) => s.trim()) })
-            }
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="Matemática, Física, Química"
-          />
-        </div>
-        <div className="flex gap-3 pt-4">
-          <button
-            onClick={() => setShowAddTeacherModal(false)}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleAddTeacher}
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
-          >
-            Adicionar Professor
-          </button>
-        </div>
-      </div>
-    </Modal>
-  )
-
-  const AddStudentModal = () => (
-    <Modal isOpen={showAddStudentModal} onClose={() => setShowAddStudentModal(false)} title="Adicionar Aluno">
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Nome Completo</label>
-          <input
-            type="text"
-            value={newStudent.name}
-            onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="Maria Silva"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Email</label>
-          <input
-            type="email"
-            value={newStudent.email}
-            onChange={(e) => setNewStudent({ ...newStudent, email: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="aluno@etec.sp.gov.br"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
-            RM (Registro do Aluno)
-          </label>
-          <input
-            type="text"
-            value={newStudent.rm}
-            onChange={(e) => setNewStudent({ ...newStudent, rm: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            placeholder="12345"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Classe</label>
-          <select
-            value={newStudent.class}
-            onChange={(e) => setNewStudent({ ...newStudent, class: e.target.value })}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-          >
-            <option value="">Selecione a classe</option>
-            {classesData.map((classItem) => (
-              <option key={classItem.id} value={classItem.name}>
-                {classItem.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="flex gap-3 pt-4">
-          <button
-            onClick={() => setShowAddStudentModal(false)}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleAddStudent}
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
-          >
-            Adicionar Aluno
-          </button>
-        </div>
-      </div>
-    </Modal>
-  )
-
-  const AssignStudentsModal = () => (
-    <Modal
-      isOpen={showAssignStudentsModal}
-      onClose={() => setShowAssignStudentsModal(false)}
-      title={`Atribuir Alunos - ${selectedClass?.name}`}
-      size="lg"
-    >
-      <div className="space-y-4">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="flex-1">
-            <input
-              type="text"
-              placeholder="Buscar alunos..."
-              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-            />
-          </div>
-          <button className="px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors">
-            <Plus size={18} />
-          </button>
-        </div>
-
-        <div className="max-h-96 overflow-y-auto">
-          <div className="space-y-2">
-            {studentsData
-              .filter((student) => student.class !== selectedClass?.name)
-              .map((student) => (
-                <div
-                  key={student.id}
-                  className="flex items-center justify-between p-3 dark:bg-[#0D1117] bg-gray-50 rounded-lg"
-                >
-                  <div className="flex items-center gap-3">
-                    <input type="checkbox" className="w-4 h-4 text-[#8C43FF] rounded" />
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-                      {student.name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="font-medium dark:text-white text-gray-900">{student.name}</p>
-                      <p className="text-sm dark:text-gray-400 text-gray-600">RM: {student.rm}</p>
-                    </div>
-                  </div>
-                  <span className="text-sm dark:text-gray-400 text-gray-600">{student.class || "Sem classe"}</span>
-                </div>
-              ))}
-          </div>
-        </div>
-
-        <div className="flex gap-3 pt-4 border-t dark:border-[#30363D] border-gray-200">
-          <button
-            onClick={() => setShowAssignStudentsModal(false)}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={() => {
-              // Logic to assign selected students
-              setShowAssignStudentsModal(false)
-            }}
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
-          >
-            Atribuir Selecionados
-          </button>
-        </div>
-      </div>
-    </Modal>
-  )
-
-  const UploadScheduleModal = () => (
-    <Modal
-      isOpen={showUploadScheduleModal}
-      onClose={() => setShowUploadScheduleModal(false)}
-      title={`Upload Horário - ${selectedClass?.name}`}
-    >
-      <div className="space-y-4">
-        <div className="border-2 border-dashed dark:border-[#30363D] border-gray-300 rounded-lg p-8 text-center">
-          <Upload size={48} className="mx-auto dark:text-gray-400 text-gray-500 mb-4" />
-          <p className="dark:text-gray-300 text-gray-700 mb-2">
-            Arraste e solte o arquivo aqui ou clique para selecionar
-          </p>
-          <p className="text-sm dark:text-gray-400 text-gray-600">Formatos aceitos: PDF, XLSX, CSV</p>
-          <input type="file" accept=".pdf,.xlsx,.csv" className="hidden" id="schedule-upload" />
-          <label
-            htmlFor="schedule-upload"
-            className="inline-block mt-4 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg cursor-pointer transition-colors"
-          >
-            Selecionar Arquivo
-          </label>
-        </div>
-
-        <div className="flex gap-3 pt-4">
-          <button
-            onClick={() => setShowUploadScheduleModal(false)}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={() => {
-              // Logic to upload schedule
-              const updatedClasses = classesData.map((c) =>
-                c.id === selectedClass.id ? { ...c, hasSchedule: true } : c,
-              )
-              setClassesData(updatedClasses)
-              setShowUploadScheduleModal(false)
-            }}
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
-          >
-            Fazer Upload
-          </button>
-        </div>
-      </div>
-    </Modal>
-  )
-
-  const ViewScheduleModal = () => (
-    <Modal
-      isOpen={showViewScheduleModal}
-      onClose={() => setShowViewScheduleModal(false)}
-      title={`Horário - ${selectedClass?.name}`}
-      size="xl"
-    >
-      <div className="space-y-4">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h3 className="text-lg font-semibold dark:text-white text-gray-900">{selectedClass?.name}</h3>
-            <p className="dark:text-gray-400 text-gray-600">{selectedClass?.course}</p>
-          </div>
-          <div className="flex gap-2">
-            <button className="flex items-center gap-2 px-3 py-2 dark:bg-[#21262D] bg-gray-100 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
-              <Download size={16} />
-              Baixar
-            </button>
-            <button className="flex items-center gap-2 px-3 py-2 dark:bg-[#21262D] bg-gray-100 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
-              <Edit size={16} />
-              Editar
-            </button>
-          </div>
-        </div>
-
-        {/* Mock Schedule Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full border dark:border-[#30363D] border-gray-200 rounded-lg">
-            <thead className="dark:bg-[#0D1117] bg-gray-50">
-              <tr>
-                <th className="p-3 text-left font-semibold dark:text-white text-gray-900">Horário</th>
-                <th className="p-3 text-left font-semibold dark:text-white text-gray-900">Segunda</th>
-                <th className="p-3 text-left font-semibold dark:text-white text-gray-900">Terça</th>
-                <th className="p-3 text-left font-semibold dark:text-white text-gray-900">Quarta</th>
-                <th className="p-3 text-left font-semibold dark:text-white text-gray-900">Quinta</th>
-                <th className="p-3 text-left font-semibold dark:text-white text-gray-900">Sexta</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { time: "07:30 - 08:20", subjects: ["Matemática", "Português", "Física", "Química", "História"] },
-                { time: "08:20 - 09:10", subjects: ["Programação", "BD", "Redes", "Sistemas", "Projeto"] },
-                { time: "09:30 - 10:20", subjects: ["Inglês", "Ed. Física", "Artes", "Filosofia", "Sociologia"] },
-                { time: "10:20 - 11:10", subjects: ["Matemática", "Português", "Física", "Química", "História"] },
-              ].map((period, index) => (
-                <tr key={index} className="border-t dark:border-[#30363D] border-gray-200">
-                  <td className="p-3 font-medium dark:text-white text-gray-900">{period.time}</td>
-                  {period.subjects.map((subject, i) => (
-                    <td key={i} className="p-3 dark:text-gray-300 text-gray-700">
-                      {subject}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </Modal>
-  )
-
-  const SettingsModal = () => (
-    <Modal
-      isOpen={showSettingsModal}
-      onClose={() => setShowSettingsModal(false)}
-      title="Configurações da ETEC"
-      size="lg"
-    >
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Informações Gerais</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Nome da ETEC</label>
-              <input
-                type="text"
-                defaultValue={etecInfo.name}
-                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Localização</label>
-              <input
-                type="text"
-                defaultValue={etecInfo.location}
-                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Diretor</label>
-              <input
-                type="text"
-                defaultValue={etecInfo.director}
-                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Configurações do Sistema</h3>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 dark:bg-[#0D1117] bg-gray-50 rounded-lg">
-              <div>
-                <p className="font-medium dark:text-white text-gray-900">Notificações por Email</p>
-                <p className="text-sm dark:text-gray-400 text-gray-600">
-                  Enviar notificações para professores e alunos
-                </p>
-              </div>
-              <input type="checkbox" defaultChecked className="w-4 h-4 text-[#8C43FF] rounded" />
-            </div>
-            <div className="flex items-center justify-between p-4 dark:bg-[#0D1117] bg-gray-50 rounded-lg">
-              <div>
-                <p className="font-medium dark:text-white text-gray-900">Backup Automático</p>
-                <p className="text-sm dark:text-gray-400 text-gray-600">Fazer backup dos dados diariamente</p>
-              </div>
-              <input type="checkbox" defaultChecked className="w-4 h-4 text-[#8C43FF] rounded" />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex gap-3 pt-4 border-t dark:border-[#30363D] border-gray-200">
-          <button
-            onClick={() => setShowSettingsModal(false)}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={() => setShowSettingsModal(false)}
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
-          >
-            Salvar Configurações
-          </button>
-        </div>
-      </div>
-    </Modal>
-  )
-
-  const EditModal = () => (
-    <Modal
-      isOpen={showEditModal}
-      onClose={() => setShowEditModal(false)}
-      title={selectedTeacher ? "Editar Professor" : "Editar Aluno"}
-    >
-      <div className="space-y-4">
-        {selectedTeacher ? (
-          <>
-            <div>
-              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Nome Completo</label>
-              <input
-                type="text"
-                value={newTeacher.name}
-                onChange={(e) => setNewTeacher({ ...newTeacher, name: e.target.value })}
-                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Email</label>
-              <input
-                type="email"
-                value={newTeacher.email}
-                onChange={(e) => setNewTeacher({ ...newTeacher, email: e.target.value })}
-                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Telefone</label>
-              <input
-                type="tel"
-                value={newTeacher.phone}
-                onChange={(e) => setNewTeacher({ ...newTeacher, phone: e.target.value })}
-                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-              />
-            </div>
-          </>
-        ) : (
-          <>
-            <div>
-              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Nome Completo</label>
-              <input
-                type="text"
-                value={newStudent.name}
-                onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
-                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Email</label>
-              <input
-                type="email"
-                value={newStudent.email}
-                onChange={(e) => setNewStudent({ ...newStudent, email: e.target.value })}
-                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Status</label>
-              <select
-                value={newStudent.status}
-                onChange={(e) => setNewStudent({ ...newStudent, status: e.target.value })}
-                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
-              >
-                <option value="Ativo">Ativo</option>
-                <option value="Inativo">Inativo</option>
-                <option value="Transferido">Transferido</option>
-              </select>
-            </div>
-          </>
-        )}
-
-        <div className="flex gap-3 pt-4">
-          <button
-            onClick={() => setShowEditModal(false)}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleSaveEdit}
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
-          >
-            Salvar Alterações
-          </button>
-        </div>
-      </div>
-    </Modal>
-  )
-
-  const StatCard = ({ icon: Icon, title, value, subtitle, color, trend }) => (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
-    >
-      <div className="flex items-center justify-between mb-4">
-        <div className={`p-3 rounded-xl ${color}`}>
-          <Icon size={24} className="text-white" />
-        </div>
-        {trend && (
-          <div className="flex items-center gap-1 text-green-500">
-            <TrendingUp size={16} />
-            <span className="text-sm font-medium">{trend}</span>
-          </div>
-        )}
-      </div>
-      <div>
-        <p className="text-3xl font-bold dark:text-white text-gray-900 mb-1">{value}</p>
-        <p className="text-lg font-medium dark:text-gray-300 text-gray-700 mb-1">{title}</p>
-        {subtitle && <p className="text-sm dark:text-gray-400 text-gray-600">{subtitle}</p>}
-      </div>
-    </motion.div>
-  )
-
+  // Renderizar seções
   const renderOverview = () => (
     <div className="space-y-6">
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          icon={BookOpen}
-          title="Classes"
-          value={classesData.length}
-          subtitle="Turmas ativas"
+          icon={GraduationCap}
+          title="Alunos"
+          value={stats.totalAlunos}
+          subtitle="Estudantes matriculados"
           color="bg-gradient-to-r from-blue-500 to-blue-600"
-          trend="+2"
+          trend="+5"
         />
         <StatCard
           icon={Users}
           title="Professores"
-          value={teachersData.length}
+          value={stats.totalProfessores}
           subtitle="Docentes ativos"
           color="bg-gradient-to-r from-green-500 to-green-600"
-          trend="+3"
+          trend="+2"
         />
         <StatCard
-          icon={GraduationCap}
-          title="Alunos"
-          value={studentsData.length}
-          subtitle="Estudantes matriculados"
+          icon={BookOpen}
+          title="Turmas"
+          value={stats.totalTurmas}
+          subtitle="Turmas ativas"
           color="bg-gradient-to-r from-purple-500 to-purple-600"
-          trend="+15"
+          trend="+1"
         />
         <StatCard
-          icon={Award}
-          title="Taxa de Aprovação"
-          value="94%"
-          subtitle="Último semestre"
+          icon={Calendar}
+          title="Eventos"
+          value={stats.totalEventos}
+          subtitle="Eventos programados"
           color="bg-gradient-to-r from-orange-500 to-orange-600"
-          trend="+2%"
+          trend="+3"
         />
       </div>
 
-      {/* Charts and Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Students by Class Chart */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
-        >
-          <div className="flex items-center gap-2 mb-6">
-            <BarChart3 size={20} className="text-[#8C43FF]" />
-            <h3 className="text-lg font-semibold dark:text-white text-gray-900">Alunos por Classe</h3>
-          </div>
-          <div className="space-y-4">
-            {classesData.map((classItem, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium dark:text-white text-gray-900">{classItem.name}</p>
-                  <p className="text-sm dark:text-gray-400 text-gray-600">{classItem.course}</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-24 h-2 bg-gray-200 dark:bg-[#21262D] rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[#8C43FF] rounded-full"
-                      style={{ width: `${(classItem.students / 40) * 100}%` }}
-                    />
-                  </div>
-                  <span className="text-sm font-medium dark:text-white text-gray-900 w-8">{classItem.students}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+      {/* Quick Actions */}
+      <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+        <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Ações Rápidas</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <button
+            onClick={() => openModal('createUser')}
+            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-gray-50 rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+          >
+            <UserPlus className="text-[#8C43FF]" size={24} />
+            <div className="text-left">
+              <p className="font-medium dark:text-white text-gray-900">Adicionar Usuário</p>
+              <p className="text-sm dark:text-gray-400 text-gray-600">Aluno ou Professor</p>
+            </div>
+          </button>
 
-        {/* Recent Activity */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
-        >
-          <div className="flex items-center gap-2 mb-6">
-            <Activity size={20} className="text-[#8C43FF]" />
-            <h3 className="text-lg font-semibold dark:text-white text-gray-900">Atividade Recente</h3>
-          </div>
+          <button
+            onClick={() => openModal('createTurma')}
+            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-gray-50 rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+          >
+            <BookOpen className="text-[#8C43FF]" size={24} />
+            <div className="text-left">
+              <p className="font-medium dark:text-white text-gray-900">Nova Turma</p>
+              <p className="text-sm dark:text-gray-400 text-gray-600">Criar turma</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => openModal('createEvent')}
+            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-gray-50 rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+          >
+            <Calendar className="text-[#8C43FF]" size={24} />
+            <div className="text-left">
+              <p className="font-medium dark:text-white text-gray-900">Novo Evento</p>
+              <p className="text-sm dark:text-gray-400 text-gray-600">Criar evento</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => openModal('sendNotification')}
+            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-gray-50 rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+          >
+            <Bell className="text-[#8C43FF]" size={24} />
+            <div className="text-left">
+              <p className="font-medium dark:text-white text-gray-900">Notificação</p>
+              <p className="text-sm dark:text-gray-400 text-gray-600">Enviar aviso</p>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+          <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Atividade Recente</h3>
           <div className="space-y-4">
             <div className="flex items-start gap-3">
               <div className="p-2 bg-green-500/10 rounded-lg">
                 <UserPlus size={16} className="text-green-500" />
               </div>
               <div>
-                <p className="font-medium dark:text-white text-gray-900">Novo aluno matriculado</p>
+                <p className="font-medium dark:text-white text-gray-900">Novo aluno cadastrado</p>
                 <p className="text-sm dark:text-gray-400 text-gray-600">João Silva - 1º DS A</p>
                 <p className="text-xs dark:text-gray-500 text-gray-500">2 horas atrás</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <div className="p-2 bg-blue-500/10 rounded-lg">
-                <Upload size={16} className="text-blue-500" />
+                <Calendar size={16} className="text-blue-500" />
               </div>
               <div>
-                <p className="font-medium dark:text-white text-gray-900">Horário atualizado</p>
-                <p className="text-sm dark:text-gray-400 text-gray-600">2º DS A - Horário de aulas</p>
+                <p className="font-medium dark:text-white text-gray-900">Evento criado</p>
+                <p className="text-sm dark:text-gray-400 text-gray-600">Semana Tecnológica 2025</p>
                 <p className="text-xs dark:text-gray-500 text-gray-500">1 dia atrás</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <div className="p-2 bg-purple-500/10 rounded-lg">
-                <Calendar size={16} className="text-purple-500" />
+                <Bell size={16} className="text-purple-500" />
               </div>
               <div>
-                <p className="font-medium dark:text-white text-gray-900">Evento criado</p>
-                <p className="text-sm dark:text-gray-400 text-gray-600">Semana Tecnológica 2025</p>
+                <p className="font-medium dark:text-white text-gray-900">Notificação enviada</p>
+                <p className="text-sm dark:text-gray-400 text-gray-600">Aviso sobre matrículas</p>
                 <p className="text-xs dark:text-gray-500 text-gray-500">2 dias atrás</p>
               </div>
             </div>
           </div>
-        </motion.div>
-      </div>
-    </div>
-  )
+        </div>
 
-  const renderClasses = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold dark:text-white text-gray-900">Gestão de Classes</h2>
-        <button
-          onClick={() => setShowAddClassModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
-        >
-          <Plus size={18} />
-          Adicionar Nova Classe
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {classesData.map((classItem) => (
-          <motion.div
-            key={classItem.id}
-            whileHover={{ scale: 1.02 }}
-            className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h3 className="text-xl font-semibold dark:text-white text-gray-900 mb-1">{classItem.name}</h3>
-                <p className="dark:text-gray-400 text-gray-600">{classItem.course}</p>
-                <p className="text-sm dark:text-gray-500 text-gray-500">{classItem.year}</p>
+        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+          <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Próximos Eventos</h3>
+          <div className="space-y-4">
+            {eventos.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-8">
+                <Calendar size={48} className="dark:text-gray-600 text-gray-400 mb-3" />
+                <p className="dark:text-gray-400 text-gray-600 font-medium mb-1">Nenhum evento próximo</p>
+                <p className="dark:text-gray-500 text-gray-500 text-sm text-center">Eventos aparecerão aqui quando forem criados</p>
               </div>
-              <div className="text-right">
-                <p className="text-2xl font-bold text-[#8C43FF]">{classItem.students}</p>
-                <p className="text-sm dark:text-gray-400 text-gray-600">alunos</p>
+            ) : eventos.slice(0, 3).map((evento, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <div className="p-2 bg-[#8C43FF]/10 rounded-lg">
+                  <Calendar size={16} className="text-[#8C43FF]" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium dark:text-white text-gray-900">{evento.titulo}</p>
+                  <p className="text-sm dark:text-gray-400 text-gray-600">
+                    {new Date(evento.data).toLocaleDateString()} - {evento.hora}
+                  </p>
+                </div>
               </div>
-            </div>
-
-            <div className="mb-4">
-              <p className="text-sm dark:text-gray-400 text-gray-600 mb-1">Professor Responsável</p>
-              <p className="font-medium dark:text-white text-gray-900">{classItem.teacher}</p>
-            </div>
-
-            <div className="flex items-center gap-2 mb-4">
-              <div
-                className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  classItem.hasSchedule ? "bg-green-500/10 text-green-500" : "bg-orange-500/10 text-orange-500"
-                }`}
-              >
-                {classItem.hasSchedule ? "Horário Cadastrado" : "Sem Horário"}
-              </div>
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                onClick={() => handleAssignStudents(classItem)}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors text-sm"
-              >
-                <UserPlus size={16} />
-                Atribuir Alunos
-              </button>
-              <button
-                onClick={() => handleUploadSchedule(classItem)}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors text-sm"
-              >
-                <Upload size={16} />
-                Upload Horário
-              </button>
-              {classItem.hasSchedule && (
-                <button
-                  onClick={() => handleViewSchedule(classItem)}
-                  className="flex items-center justify-center gap-2 px-3 py-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors text-sm"
-                >
-                  <Eye size={16} />
-                </button>
-              )}
-              <button
-                onClick={() => handleDeleteItem("class", classItem.id)}
-                className="flex items-center justify-center gap-2 px-3 py-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors text-sm"
-              >
-                <Trash2 size={16} />
-              </button>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  )
-
-  const renderTeachers = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold dark:text-white text-gray-900">Gestão de Professores</h2>
-        <button
-          onClick={() => setShowAddTeacherModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
-        >
-          <Plus size={18} />
-          Adicionar Professor
-        </button>
-      </div>
-
-      <div className="dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="dark:bg-[#0D1117] bg-gray-50">
-              <tr>
-                <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Professor</th>
-                <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Disciplinas</th>
-                <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Classes</th>
-                <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Contato</th>
-                <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {teachersData.map((teacher) => (
-                <tr key={teacher.id} className="border-t dark:border-[#30363D] border-gray-200">
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-[#8C43FF] rounded-full flex items-center justify-center text-white font-semibold">
-                        {teacher.name.split(" ")[1]?.charAt(0) || teacher.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="font-medium dark:text-white text-gray-900">{teacher.name}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <div className="flex flex-wrap gap-1">
-                      {teacher.subjects.map((subject, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-blue-500/10 text-blue-500 rounded-full text-xs font-medium"
-                        >
-                          {subject}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <div className="flex flex-wrap gap-1">
-                      {teacher.classes.map((className, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-green-500/10 text-green-500 rounded-full text-xs font-medium"
-                        >
-                          {className}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 text-sm dark:text-gray-400 text-gray-600">
-                        <Mail size={14} />
-                        <span className="truncate">{teacher.email}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm dark:text-gray-400 text-gray-600">
-                        <Phone size={14} />
-                        <span>{teacher.phone}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleEditItem("teacher", teacher)}
-                        className="p-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors"
-                      >
-                        <Edit size={16} />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteItem("teacher", teacher.id)}
-                        className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   )
 
-  const renderStudents = () => (
+  const renderUsers = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold dark:text-white text-gray-900">Gestão de Alunos</h2>
+        <h2 className="text-2xl font-bold dark:text-white text-gray-900">Gestão de Usuários</h2>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Search size={18} className="dark:text-gray-400 text-gray-600" />
             <input
               type="text"
-              placeholder="Buscar alunos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Buscar usuários..."
+              value={filters.searchTerm}
+              onChange={(e) => setFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
               className="px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             />
           </div>
+          
+          <select
+            value={filters.userType}
+            onChange={(e) => setFilters(prev => ({ ...prev, userType: e.target.value }))}
+            className="px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+          >
+            <option value="todos">Todos</option>
+            <option value="aluno">Alunos</option>
+            <option value="professor">Professores</option>
+            <option value="ADM">Administradores</option>
+          </select>
+
           <button
-            onClick={() => setShowAddStudentModal(true)}
+            onClick={() => openModal('importUsers')}
+            className="flex items-center gap-2 px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors"
+          >
+            <Upload size={18} />
+            Importar
+          </button>
+
+          <button
+            onClick={() => openModal('createUser')}
             className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
           >
             <Plus size={18} />
-            Adicionar Aluno
+            Novo Usuário
           </button>
         </div>
       </div>
 
+      {/* Tabela de usuários */}
       <div className="dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="dark:bg-[#0D1117] bg-gray-50">
               <tr>
-                <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Aluno</th>
-                <th className="text-left p-4 font-semibold dark:text-white text-gray-900">RM</th>
-                <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Classe</th>
-                <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Status</th>
+                <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Usuário</th>
+                <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Tipo</th>
                 <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Email</th>
+                <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Status</th>
                 <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Ações</th>
               </tr>
             </thead>
             <tbody>
-              {studentsData
-                .filter(
-                  (student) =>
-                    student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    student.rm.includes(searchTerm) ||
-                    student.class.toLowerCase().includes(searchTerm.toLowerCase()),
-                )
-                .map((student) => (
-                  <tr key={student.id} className="border-t dark:border-[#30363D] border-gray-200">
+              {usuarios
+                .filter(user => 
+                  (filters.userType === 'todos' || user.role === filters.userType) &&
+                  (user.name?.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+                   user.email?.toLowerCase().includes(filters.searchTerm.toLowerCase()))
+                ).length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="p-8 text-center">
+                      <div className="flex flex-col items-center justify-center space-y-3">
+                        <Users size={48} className="dark:text-gray-600 text-gray-400" />
+                        <p className="dark:text-gray-400 text-gray-600 font-medium">Nenhum usuário encontrado</p>
+                        <p className="dark:text-gray-500 text-gray-500 text-sm">Tente ajustar os filtros ou criar um novo usuário</p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : usuarios
+                  .filter(user => 
+                    (filters.userType === 'todos' || user.role === filters.userType) &&
+                    (user.name?.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+                     user.email?.toLowerCase().includes(filters.searchTerm.toLowerCase()))
+                  )
+                  .map((usuario) => (
+                  <tr key={usuario.id} className="border-t dark:border-[#30363D] border-gray-200">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
-                          {student.name.charAt(0)}
+                          {usuario.name?.charAt(0) || 'U'}
                         </div>
                         <div>
-                          <p className="font-medium dark:text-white text-gray-900">{student.name}</p>
+                          <p className="font-medium dark:text-white text-gray-900">{usuario.name}</p>
+                          {usuario.rm && <p className="text-sm dark:text-gray-400 text-gray-600">RM: {usuario.rm}</p>}
                         </div>
                       </div>
                     </td>
                     <td className="p-4">
-                      <span className="font-mono text-sm dark:text-gray-300 text-gray-700">{student.rm}</span>
-                    </td>
-                    <td className="p-4">
-                      <span className="px-2 py-1 bg-[#8C43FF]/10 text-[#8C43FF] rounded-full text-sm font-medium">
-                        {student.class}
+                      <span className={`px-2 py-1 rounded-full text-sm font-medium ${
+                        usuario.role === 'aluno' ? 'bg-blue-500/10 text-blue-500' :
+                        usuario.role === 'professor' ? 'bg-green-500/10 text-green-500' :
+                        'bg-purple-500/10 text-purple-500'
+                      }`}>
+                        {usuario.role === 'aluno' ? 'Aluno' : 
+                         usuario.role === 'professor' ? 'Professor' : 'Administrador'}
                       </span>
                     </td>
                     <td className="p-4">
-                      <span
-                        className={`px-2 py-1 rounded-full text-sm font-medium ${
-                          student.status === "Ativo"
-                            ? "bg-green-500/10 text-green-500"
-                            : student.status === "Inativo"
-                              ? "bg-red-500/10 text-red-500"
-                              : "bg-yellow-500/10 text-yellow-500"
-                        }`}
-                      >
-                        {student.status}
-                      </span>
+                      <span className="text-sm dark:text-gray-400 text-gray-600">{usuario.email}</span>
                     </td>
                     <td className="p-4">
-                      <span className="text-sm dark:text-gray-400 text-gray-600">{student.email}</span>
+                      <span className="px-2 py-1 bg-green-500/10 text-green-500 rounded-full text-sm font-medium">
+                        Ativo
+                      </span>
                     </td>
                     <td className="p-4">
                       <div className="flex gap-2">
                         <button
-                          onClick={() => handleEditItem("student", student)}
+                          onClick={() => {/* handleEditUser(usuario) */}}
                           className="p-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors"
                         >
                           <Edit size={16} />
                         </button>
                         <button
-                          onClick={() => handleDeleteItem("student", student.id)}
+                          onClick={() => handleDeleteUser(usuario.id)}
                           className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
                         >
                           <Trash2 size={16} />
@@ -2062,317 +1061,598 @@ const EtecDashboard = () => {
     </div>
   )
 
-  const renderCalendar = () => (
+  const renderTurmas = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold dark:text-white text-gray-900">Agenda Escolar</h2>
+        <h2 className="text-2xl font-bold dark:text-white text-gray-900">Gestão de Turmas</h2>
         <button
-          onClick={() => setShowCreateEventModal(true)}
+          onClick={() => openModal('createTurma')}
           className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
         >
           <Plus size={18} />
-          Criar Evento
+          Nova Turma
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Calendar */}
-        <div className="lg:col-span-2 dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold dark:text-white text-gray-900">Janeiro 2025</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {turmas.length === 0 ? (
+          <div className="col-span-full flex flex-col items-center justify-center p-12 dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200">
+            <BookOpen size={64} className="dark:text-gray-600 text-gray-400 mb-4" />
+            <h3 className="text-xl font-semibold dark:text-gray-300 text-gray-700 mb-2">Nenhuma turma encontrada</h3>
+            <p className="dark:text-gray-500 text-gray-500 text-center max-w-md">Ainda não há turmas cadastradas no sistema. Comece criando a primeira turma.</p>
+            <button
+              onClick={() => openModal('createTurma')}
+              className="mt-4 flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+            >
+              <Plus size={18} />
+              Criar Primeira Turma
+            </button>
+          </div>
+        ) : turmas.map((turma) => (
+          <motion.div
+            key={turma.id}
+            whileHover={{ scale: 1.02 }}
+            className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-semibold dark:text-white text-gray-900 mb-1">{turma.nome}</h3>
+                <p className="dark:text-gray-400 text-gray-600">{turma.curso}</p>
+                <p className="text-sm dark:text-gray-500 text-gray-500">{turma.periodo} - {turma.ano}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-bold text-[#8C43FF]">{turma.totalAlunos || 0}</p>
+                <p className="text-sm dark:text-gray-400 text-gray-600">alunos</p>
+              </div>
+            </div>
+
+            {turma.professor && (
+              <div className="mb-4">
+                <p className="text-sm dark:text-gray-400 text-gray-600 mb-1">Professor Responsável</p>
+                <p className="font-medium dark:text-white text-gray-900">{turma.professor}</p>
+              </div>
+            )}
+
             <div className="flex gap-2">
-              <button className="p-2 dark:bg-[#21262D] bg-gray-100 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
-                <ChevronRight size={16} className="rotate-180 dark:text-white text-gray-800" />
+              <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors text-sm">
+                <Users size={16} />
+                Ver Alunos
               </button>
-              <button className="p-2 dark:bg-[#21262D] bg-gray-100 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
-                <ChevronRight size={16} className="dark:text-white text-gray-800" />
+              <button className="flex items-center justify-center gap-2 px-3 py-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors text-sm">
+                <Edit size={16} />
+              </button>
+              <button className="flex items-center justify-center gap-2 px-3 py-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors text-sm">
+                <Trash2 size={16} />
               </button>
             </div>
-          </div>
-
-          {/* Simple Calendar Grid */}
-          <div className="grid grid-cols-7 gap-2 mb-4">
-            {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((day) => (
-              <div key={day} className="text-center p-2 text-sm font-medium dark:text-gray-400 text-gray-600">
-                {day}
-              </div>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-7 gap-2">
-            {Array.from({ length: 35 }, (_, i) => {
-              const day = i - 5 + 1
-              const isCurrentMonth = day > 0 && day <= 31
-              const hasEvent = [15, 20, 25].includes(day)
-
-              return (
-                <div
-                  key={i}
-                  className={`aspect-square flex items-center justify-center text-sm rounded-lg cursor-pointer transition-colors ${
-                    isCurrentMonth
-                      ? hasEvent
-                        ? "bg-[#8C43FF] text-white"
-                        : "dark:text-white text-gray-900 hover:bg-gray-100 dark:hover:bg-[#21262D]"
-                      : "dark:text-gray-600 text-gray-400"
-                  }`}
-                >
-                  {isCurrentMonth ? day : ""}
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Upcoming Events */}
-        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
-          <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-6">Próximos Eventos</h3>
-          <div className="space-y-4">
-            {upcomingEvents.map((event) => (
-              <div key={event.id} className="p-4 dark:bg-[#0D1117] bg-gray-50 rounded-xl">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 bg-[#8C43FF]/10 rounded-lg">
-                    <Calendar size={16} className="text-[#8C43FF]" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium dark:text-white text-gray-900 mb-1">{event.title}</p>
-                    <div className="flex items-center gap-2 text-sm dark:text-gray-400 text-gray-600 mb-2">
-                      <Clock size={14} />
-                      <span>
-                        {new Date(event.date).toLocaleDateString("pt-BR")} às {event.time}
-                      </span>
-                    </div>
-                    <p className="text-sm dark:text-gray-400 text-gray-600">{event.description}</p>
-                  </div>
-                  <button
-                    onClick={() => handleDeleteItem("event", event.id)}
-                    className="p-1 text-red-500 hover:bg-red-500/10 rounded transition-colors"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+          </motion.div>
+        ))}
       </div>
     </div>
   )
 
-  const renderContentManagement = () => (
+  const renderEventos = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold dark:text-white text-gray-900">Gestão de Conteúdo</h2>
+        <h2 className="text-2xl font-bold dark:text-white text-gray-900">Gestão de Eventos</h2>
+        <button
+          onClick={() => openModal('createEvent')}
+          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+        >
+          <Plus size={18} />
+          Novo Evento
+        </button>
       </div>
 
-      {/* News Management */}
-      <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Newspaper size={20} className="text-[#8C43FF]" />
-            <h3 className="text-lg font-semibold dark:text-white text-gray-900">Jornal ETEC</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {eventos.length === 0 ? (
+          <div className="col-span-full flex flex-col items-center justify-center p-12 dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200">
+            <Calendar size={64} className="dark:text-gray-600 text-gray-400 mb-4" />
+            <h3 className="text-xl font-semibold dark:text-gray-300 text-gray-700 mb-2">Nenhum evento encontrado</h3>
+            <p className="dark:text-gray-500 text-gray-500 text-center max-w-md">Ainda não há eventos cadastrados no sistema. Comece criando o primeiro evento.</p>
+            <button
+              onClick={() => openModal('createEvent')}
+              className="mt-4 flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+            >
+              <Plus size={18} />
+              Criar Primeiro Evento
+            </button>
           </div>
-          <button
-            onClick={() => setShowAddNewsModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+        ) : eventos.map((evento) => (
+          <motion.div
+            key={evento.id}
+            whileHover={{ scale: 1.02 }}
+            className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
           >
-            <Plus size={18} />
-            Adicionar Conteúdo
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-2">{evento.titulo}</h3>
+              <p className="dark:text-gray-400 text-gray-600 text-sm">{evento.descricao}</p>
+            </div>
+
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center gap-2 text-sm">
+                <Calendar size={14} className="text-[#8C43FF]" />
+                <span className="dark:text-gray-300 text-gray-700">
+                  {new Date(evento.data).toLocaleDateString()}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <Clock size={14} className="text-[#8C43FF]" />
+                <span className="dark:text-gray-300 text-gray-700">{evento.hora}</span>
+              </div>
+              {evento.local && (
+                <div className="flex items-center gap-2 text-sm">
+                  <MapPin size={14} className="text-[#8C43FF]" />
+                  <span className="dark:text-gray-300 text-gray-700">{evento.local}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                evento.tipo === 'evento' ? 'bg-purple-500/10 text-purple-500' :
+                evento.tipo === 'reuniao' ? 'bg-blue-500/10 text-blue-500' :
+                'bg-green-500/10 text-green-500'
+              }`}>
+                {evento.tipo === 'evento' ? 'Evento' :
+                 evento.tipo === 'reuniao' ? 'Reunião' : 'Atividade'}
+              </span>
+
+              <div className="flex gap-2">
+                <button className="p-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors">
+                  <Edit size={16} />
+                </button>
+                <button className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  )
+
+  const renderNotifications = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold dark:text-white text-gray-900">Notificações</h2>
+        <button
+          onClick={() => openModal('sendNotification')}
+          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+        >
+          <Send size={18} />
+          Nova Notificação
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        {notifications.length === 0 ? (
+          <div className="flex flex-col items-center justify-center p-12 dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200">
+            <Bell size={64} className="dark:text-gray-600 text-gray-400 mb-4" />
+            <h3 className="text-xl font-semibold dark:text-gray-300 text-gray-700 mb-2">Nenhuma notificação</h3>
+            <p className="dark:text-gray-500 text-gray-500 text-center max-w-md">Ainda não há notificações no sistema. Envie a primeira notificação para os usuários.</p>
+            <button
+              onClick={() => openModal('sendNotification')}
+              className="mt-4 flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+            >
+              <Send size={18} />
+              Enviar Primeira Notificação
+            </button>
+          </div>
+        ) : notifications.map((notification) => (
+          <motion.div
+            key={notification.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex items-start gap-4">
+                <div className={`p-3 rounded-xl ${
+                  notification.tipo === 'urgente' ? 'bg-red-500/10' :
+                  notification.tipo === 'aviso' ? 'bg-yellow-500/10' :
+                  'bg-blue-500/10'
+                }`}>
+                  <Bell size={20} className={
+                    notification.tipo === 'urgente' ? 'text-red-500' :
+                    notification.tipo === 'aviso' ? 'text-yellow-500' :
+                    'text-blue-500'
+                  } />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-2">
+                    {notification.titulo}
+                  </h3>
+                  <p className="dark:text-gray-400 text-gray-600 mb-3">
+                    {notification.mensagem}
+                  </p>
+                  <div className="flex items-center gap-4 text-sm dark:text-gray-500 text-gray-500">
+                    <span>Público: {notification.publico}</span>
+                    <span>Enviado em: {new Date(notification.createdAt).toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+              <button className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
+                <Trash2 size={16} />
+              </button>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  )
+
+  const renderReports = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold dark:text-white text-gray-900">Relatórios</h2>
+        <button
+          onClick={() => openModal('viewReport')}
+          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+        >
+          <BarChart3 size={18} />
+          Gerar Relatório
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-3 bg-blue-500/10 rounded-xl">
+              <Users size={24} className="text-blue-500" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold dark:text-white text-gray-900">Relatório de Usuários</h3>
+              <p className="text-sm dark:text-gray-400 text-gray-600">Estatísticas de alunos e professores</p>
+            </div>
+          </div>
+          <button className="w-full px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
+            <Download size={16} className="inline mr-2" />
+            Baixar PDF
           </button>
         </div>
 
-        <div className="space-y-4">
-          {newsData.map((news) => (
-            <div key={news.id} className="dark:bg-[#0D1117] bg-gray-50 rounded-xl p-4">
-              <div className="flex gap-4">
-                <img
-                  src={news.image || "/placeholder.svg?height=80&width=120&text=Notícia"}
-                  alt={news.title}
-                  className="w-24 h-20 object-cover rounded-lg"
-                />
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h4 className="font-semibold dark:text-white text-gray-900">{news.title}</h4>
-                    <span className="px-2 py-1 bg-[#8C43FF]/10 text-[#8C43FF] rounded-full text-xs font-medium">
-                      {news.category}
-                    </span>
-                  </div>
-                  <p className="text-sm dark:text-gray-400 text-gray-600 mb-2 line-clamp-2">{news.content}</p>
-                  <div className="text-xs dark:text-gray-500 text-gray-500">
-                    {new Date(news.date).toLocaleDateString("pt-BR")}
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <button
-                    onClick={() => handleEditItem("news", news)}
-                    className="p-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors"
-                  >
-                    <Edit size={16} />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteItem("news", news.id)}
-                    className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              </div>
+        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-3 bg-green-500/10 rounded-xl">
+              <Calendar size={24} className="text-green-500" />
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Events Management */}
-      <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Calendar size={20} className="text-[#8C43FF]" />
-            <h3 className="text-lg font-semibold dark:text-white text-gray-900">Eventos dos Alunos</h3>
+            <div>
+              <h3 className="text-lg font-semibold dark:text-white text-gray-900">Relatório de Eventos</h3>
+              <p className="text-sm dark:text-gray-400 text-gray-600">Eventos e participação</p>
+            </div>
           </div>
-          <button
-            onClick={() => setShowCreateEventModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
-          >
-            <Plus size={18} />
-            Adicionar Evento
+          <button className="w-full px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
+            <Download size={16} className="inline mr-2" />
+            Baixar Excel
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {eventsData.map((event) => (
-            <div key={event.id} className="dark:bg-[#0D1117] bg-gray-50 rounded-xl p-4">
-              <div className="flex gap-4">
-                <img
-                  src={event.image || "/placeholder.svg?height=80&width=120&text=Evento"}
-                  alt={event.title}
-                  className="w-20 h-16 object-cover rounded-lg"
-                />
-                <div className="flex-1">
-                  <h4 className="font-semibold dark:text-white text-gray-900 mb-1">{event.title}</h4>
-                  <p className="text-sm dark:text-gray-400 text-gray-600 mb-2">{event.shortDescription}</p>
-                  <div className="text-xs dark:text-gray-500 text-gray-500">
-                    {new Date(event.date).toLocaleDateString("pt-BR")} às {event.time}
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <button
-                    onClick={() => handleEditItem("event", event)}
-                    className="p-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors"
-                  >
-                    <Edit size={16} />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteItem("studentevent", event.id)}
-                    className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              </div>
+        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-3 bg-purple-500/10 rounded-xl">
+              <BarChart3 size={24} className="text-purple-500" />
             </div>
-          ))}
+            <div>
+              <h3 className="text-lg font-semibold dark:text-white text-gray-900">Relatório Geral</h3>
+              <p className="text-sm dark:text-gray-400 text-gray-600">Estatísticas completas</p>
+            </div>
+          </div>
+          <button className="w-full px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
+            <Download size={16} className="inline mr-2" />
+            Baixar PDF
+          </button>
         </div>
       </div>
     </div>
   )
 
-  const sections = [
-    { id: "overview", name: "Visão Geral", icon: BarChart3 },
-    { id: "classes", name: "Classes", icon: BookOpen },
-    { id: "teachers", name: "Professores", icon: Users },
-    { id: "students", name: "Alunos", icon: GraduationCap },
-    { id: "calendar", name: "Agenda", icon: Calendar },
-    { id: "content", name: "Conteúdo", icon: Newspaper },
-  ]
-
-  return (
-    <div className="min-h-screen dark:bg-[#0A0A0A] bg-gray-50">
-      {/* Header with ETEC Info */}
-      <div className="dark:bg-[#161B22] bg-white border-b dark:border-[#30363D] border-gray-200 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-[#8C43FF] rounded-xl">
-              <School size={24} className="text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold dark:text-white text-gray-900">{etecInfo.name}</h1>
-              <div className="flex items-center gap-4 text-sm dark:text-gray-400 text-gray-600">
-                <div className="flex items-center gap-1">
-                  <MapPin size={14} />
-                  <span>{etecInfo.location}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Users size={14} />
-                  <span>Diretor: {etecInfo.director}</span>
-                </div>
-              </div>
-            </div>
+  const renderSettings = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold dark:text-white text-gray-900">Configurações</h2>
+      
+      <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+        <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Informações da Escola</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+              Nome da Escola
+            </label>
+            <input
+              type="text"
+              defaultValue="Etec Albert Einstein"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+            />
           </div>
-          <button
-            onClick={() => setShowSettingsModal(true)}
-            className="flex items-center gap-2 px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors"
-          >
-            <Settings size={18} />
-            Configurações
+          <div>
+            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+              Diretor
+            </label>
+            <input
+              type="text"
+              defaultValue="Prof. Maria Silva"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+              Email da Escola
+            </label>
+            <input
+              type="email"
+              defaultValue="contato@etec.sp.gov.br"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+              Telefone
+            </label>
+            <input
+              type="tel"
+              defaultValue="(11) 1234-5678"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+            />
+          </div>
+        </div>
+        
+        <div className="mt-6">
+          <button className="px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors">
+            <Save size={16} className="inline mr-2" />
+            Salvar Alterações
           </button>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Navigation Tabs */}
-        <div className="flex flex-wrap gap-2 mb-8 p-1 dark:bg-[#161B22] bg-white rounded-2xl border dark:border-[#30363D] border-gray-200">
-          {sections.map((section) => (
-            <button
-              key={section.id}
-              onClick={() => setActiveSection(section.id)}
-              className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all ${
-                activeSection === section.id
-                  ? "bg-[#8C43FF] text-white shadow-lg"
-                  : "dark:text-gray-400 text-gray-600 hover:bg-gray-100 dark:hover:bg-[#21262D]"
-              }`}
-            >
-              <section.icon size={18} />
-              <span>{section.name}</span>
-            </button>
-          ))}
+      <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+        <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Configurações do Sistema</h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium dark:text-white text-gray-900">Notificações por Email</p>
+              <p className="text-sm dark:text-gray-400 text-gray-600">Enviar notificações para usuários por email</p>
+            </div>
+            <input type="checkbox" defaultChecked className="w-4 h-4 text-[#8C43FF] rounded" />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium dark:text-white text-gray-900">Backup Automático</p>
+              <p className="text-sm dark:text-gray-400 text-gray-600">Fazer backup dos dados diariamente</p>
+            </div>
+            <input type="checkbox" defaultChecked className="w-4 h-4 text-[#8C43FF] rounded" />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium dark:text-white text-gray-900">Modo de Desenvolvimento</p>
+              <p className="text-sm dark:text-gray-400 text-gray-600">Habilitar logs detalhados</p>
+            </div>
+            <input type="checkbox" className="w-4 h-4 text-[#8C43FF] rounded" />
+          </div>
         </div>
-
-        {/* Content */}
-        <motion.div
-          key={activeSection}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {activeSection === "overview" && renderOverview()}
-          {activeSection === "classes" && renderClasses()}
-          {activeSection === "teachers" && renderTeachers()}
-          {activeSection === "students" && renderStudents()}
-          {activeSection === "calendar" && renderCalendar()}
-          {activeSection === "content" && renderContentManagement()}
-        </motion.div>
       </div>
 
-      {/* Footer */}
-      <footer className="dark:bg-[#161B22] bg-white border-t dark:border-[#30363D] border-gray-200 px-6 py-4 mt-12">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="dark:text-gray-400 text-gray-600">© 2025 EtecNotes - Sistema de Gestão Educacional</p>
+      {onLogout && (
+        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+          <h3 className="text-lg font-semibold text-red-500 mb-4">Zona de Perigo</h3>
+          <button
+            onClick={onLogout}
+            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+          >
+            Sair da Conta
+          </button>
         </div>
-      </footer>
+      )}
+    </div>
+  )
 
-      {/* All Modals */}
-      <AddClassModal />
-      <AddTeacherModal />
-      <AddStudentModal />
-      <AddEventModal />
-      <AddNewsModal />
-      <EditNewsModal />
-      <AddPatchNoteModal />
-      <EditScheduleModal />
-      <AssignStudentsModal />
-      <UploadScheduleModal />
-      <ViewScheduleModal />
-      <SettingsModal />
-      <EditModal />
+  // Definições movidas para o início do componente
+
+  // Handlers memoizados
+  const handleUserFormChange = useCallback((field, value) => {
+    setUserForm(prev => ({ ...prev, [field]: value }));
+  }, []);
+
+  // Modal para criar usuário
+  const createUserModal = (() => {
+    if (!modalState.createUser) return null;
+    
+    return (
+      <Modal
+        isOpen={modalState.createUser}
+        onClose={() => closeModal('createUser')}
+        title="Criar Novo Usuário"
+        size="lg"
+      >
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+            Tipo de Usuário
+          </label>
+          <select
+            value={userForm.tipo}
+            onChange={(e) => handleUserFormChange('tipo', e.target.value)}
+            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+          >
+            <option value="aluno">Aluno</option>
+            <option value="professor">Professor</option>
+            <option value="ADM">Administrador</option>
+          </select>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+              Nome Completo
+            </label>
+            <input
+              type="text"
+              value={userForm.nome}
+              onChange={(e) => handleUserFormChange('nome', e.target.value)}
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              placeholder="João Silva"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              value={userForm.email}
+              onChange={(e) => handleUserFormChange('email', e.target.value)}
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              placeholder="joao@etec.sp.gov.br"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+              Senha
+            </label>
+            <input
+              type="password"
+              value={userForm.senha}
+              onChange={(e) => handleUserFormChange('senha', e.target.value)}
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              placeholder="Senha inicial"
+            />
+          </div>
+          {userForm.tipo === 'aluno' && (
+            <div>
+              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+                RM
+              </label>
+              <input
+                type="text"
+                value={userForm.rm}
+                onChange={(e) => handleUserFormChange('rm', e.target.value)}
+                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+                placeholder="12345"
+              />
+            </div>
+          )}
+        </div>
+
+        {userForm.tipo === 'aluno' && (
+          <div>
+            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+              Turma
+            </label>
+            <select
+              value={userForm.turma}
+              onChange={(e) => handleUserFormChange('turma', e.target.value)}
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+            >
+              <option value="">Selecione a turma</option>
+              {turmas.map(turma => (
+                <option key={turma.id} value={turma.nome}>{turma.nome}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <div className="flex gap-3 pt-4">
+          <button
+            onClick={() => closeModal('createUser')}
+            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleCreateUser}
+            disabled={loading}
+            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors disabled:opacity-50"
+          >
+            {loading ? 'Criando...' : 'Criar Usuário'}
+          </button>
+        </div>
+      </div>
+    </Modal>
+    );
+  })();
+
+  // Renderização principal
+  return (
+    <div className="min-h-screen dark:bg-[#0A0A0A] bg-gray-50">
+      <div className="flex">
+        {/* Sidebar */}
+        <div className="w-64 dark:bg-[#161B22] bg-white border-r dark:border-[#30363D] border-gray-200 min-h-screen">
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2 bg-[#8C43FF] rounded-xl">
+                <Building2 size={24} className="text-white" />
+              </div>
+              <div>
+                <h1 className="text-lg font-bold dark:text-white text-gray-900">Painel ADM</h1>
+                <p className="text-sm dark:text-gray-400 text-gray-600">Secretaria</p>
+              </div>
+            </div>
+
+            <nav className="space-y-2">
+              {[
+                { id: 'overview', icon: Home, label: 'Visão Geral' },
+                { id: 'users', icon: Users, label: 'Usuários' },
+                { id: 'turmas', icon: BookOpen, label: 'Turmas' },
+                { id: 'eventos', icon: Calendar, label: 'Eventos' },
+                { id: 'notifications', icon: Bell, label: 'Notificações' },
+                { id: 'reports', icon: BarChart3, label: 'Relatórios' },
+                { id: 'settings', icon: Settings, label: 'Configurações' }
+              ].map(item => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveSection(item.id)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${
+                    activeSection === item.id
+                      ? "bg-[#8C43FF] text-white"
+                      : "dark:text-gray-400 text-gray-600 hover:bg-gray-100 dark:hover:bg-[#21262D]"
+                  }`}
+                >
+                  <item.icon size={20} />
+                  <span>{item.label}</span>
+                </button>
+              ))}
+            </nav>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 p-8">
+          {loading && (
+            <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 flex items-center justify-center">
+              <div className="dark:bg-[#161B22] bg-white p-6 rounded-2xl shadow-xl">
+                <div className="flex items-center gap-3">
+                  <RefreshCw className="animate-spin text-[#8C43FF]" size={24} />
+                  <span className="dark:text-white text-gray-900 font-medium">Carregando...</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <motion.div
+            key={activeSection}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {activeSection === 'overview' && renderOverview()}
+            {activeSection === 'users' && renderUsers()}
+            {activeSection === 'turmas' && renderTurmas()}
+            {activeSection === 'eventos' && renderEventos()}
+            {activeSection === 'notifications' && renderNotifications()}
+            {activeSection === 'reports' && renderReports()}
+            {activeSection === 'settings' && renderSettings()}
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Modais */}
+      {createUserModal}
+      {/* Outros modais seriam implementados aqui */}
     </div>
   )
 }

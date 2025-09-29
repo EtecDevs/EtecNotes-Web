@@ -3,7 +3,8 @@ export const APP_CONFIG = {
   name: 'EtecNotes',
   version: '0.0.0',
   description: 'EtecNotes - Plataforma de notícias e recursos para a Etec',
-  themeColor: '#8C43FF'
+  themeColor: '#8C43FF',
+  apiBaseUrl: 'http://localhost:5001/api'
 }
 
 export const NAVIGATION_TABS = {

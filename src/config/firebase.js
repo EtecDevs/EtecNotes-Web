@@ -8,9 +8,9 @@ const firebaseConfig = {
     authDomain: "etecnotes.firebaseapp.com",
     projectId: "etecnotes",
     storageBucket: "etecnotes.firebasestorage.app",
-    messagingSenderId: "924625537431",
-    appId: "1:924625537431:web:e2d48df0d1595ebd07dcd2",
-    measurementId: "G-Z60JPWRNX6"
+    messagingSenderId: "268058028102",
+    appId: "1:268058028102:web:4d953d3a48b7f2e6dff8bf",
+    measurementId: "G-GNHEMZSM1L"
 };
 
 // Initialize Firebase
@@ -20,5 +20,7 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
+
 
 export default app;

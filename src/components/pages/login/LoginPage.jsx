@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
-import { Eye, EyeOff, GraduationCap, Users, Building2, Calendar } from "lucide-react"
+import { Eye, EyeOff, GraduationCap, Users, Building2, Calendar, AlertCircle } from "lucide-react"
 import { useAuth } from "../../../hooks/useAuth"
 
 export default function LoginPage({ onLogin, onCancel }) {
-  const { login, loading, isAuthenticated } = useAuth()
+  const { login, loading } = useAuth()
+  const [localLoading, setLocalLoading] = useState(false)
   const [userType, setUserType] = useState("aluno")
   const [showPassword, setShowPassword] = useState(false)
   const [loginError, setLoginError] = useState("")
@@ -20,13 +21,6 @@ export default function LoginPage({ onLogin, onCancel }) {
     senha: "",
   })
 
-  // Redirecionar se já estiver logado
-  useEffect(() => {
-    if (isAuthenticated && onLogin) {
-      onLogin()
-    }
-  }, [isAuthenticated, onLogin])
-
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -35,29 +29,42 @@ export default function LoginPage({ onLogin, onCancel }) {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoginError("")
-    
+    e.preventDefault();
+    setLoginError("");
+    setLocalLoading(true);
+
     if (!formData.email || !formData.senha) {
-      setLoginError("Por favor, preencha email e senha.")
-      return
+      setLoginError("Por favor, preencha o email e a senha corretamente.");
+      setLocalLoading(false);
+      return;
+    }
+    if (userType === "aluno" && !formData.rm) {
+      setLoginError("Por favor, preencha o RM corretamente.");
+      setLocalLoading(false);
+      return;
     }
 
     try {
-      const result = await login(formData.email, formData.senha)
-      
-      if (result.success) {
-        console.log("Login realizado com sucesso:", result.user)
-        // Chama o callback do App para mudar de tela
-        if (typeof onLogin === "function") {
-          onLogin()
+      const result = await login(
+        formData.email.trim(),
+        formData.senha,
+        userType === "etec" ? "ADM" : userType,
+        userType === "aluno" ? formData.rm : null
+      );
+      if (result.success && typeof onLogin === "function") {
+        onLogin();
+      } else if (!result.success) {
+        // Mensagens personalizadas
+        if (result.error?.toLowerCase().includes("senha") || result.error?.toLowerCase().includes("dados")) {
+          setLoginError("Usuário ou senha incorretos. Confira seus dados e tente novamente.");
+        } else {
+          setLoginError(result.error || "Ocorreu um erro desconhecido ao tentar logar. Tente novamente ou contate o suporte.");
         }
-      } else {
-        setLoginError(result.error || "Erro ao fazer login")
       }
     } catch (error) {
-      console.error("Erro no login:", error)
-      setLoginError("Erro inesperado. Tente novamente.")
+      setLoginError("Ocorreu um erro inesperado ao tentar logar. Tente novamente ou contate o suporte.");
+    } finally {
+      setLocalLoading(false);
     }
   }
 
@@ -119,10 +126,14 @@ export default function LoginPage({ onLogin, onCancel }) {
 
             {/* Error Message */}
             {loginError && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 mb-4">
-                <p className="text-red-400 text-sm">{loginError}</p>
+              <div className="bg-red-500/20 border border-red-500/40 rounded-lg p-3 mb-4 flex items-center gap-2 animate-shake">
+                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                <span className="text-red-500 text-sm font-semibold">{loginError}</span>
               </div>
             )}
+
+
+
 
             {/* Login Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -141,6 +152,24 @@ export default function LoginPage({ onLogin, onCancel }) {
                   required
                 />
               </div>
+
+              {/* RM Field (only for aluno) */}
+              {userType === "aluno" && (
+                <div className="space-y-2">
+                  <Label htmlFor="rm" className="text-white font-medium">
+                    RM
+                  </Label>
+                  <Input
+                    id="rm"
+                    type="text"
+                    value={formData.rm}
+                    onChange={(e) => handleInputChange("rm", e.target.value)}
+                    className="bg-gray-700/50 border-gray-500 text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20"
+                    placeholder="Digite seu RM"
+                    required
+                  />
+                </div>
+              )}
 
               {/* Password Field */}
               <div className="space-y-2">
@@ -170,10 +199,10 @@ export default function LoginPage({ onLogin, onCancel }) {
               {/* Submit Button */}
               <Button
                 type="submit"
-                disabled={loading}
+                disabled={localLoading || loading}
                 className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                {loading ? "Entrando..." : "Entrar"}
+                {(localLoading || loading) ? "Entrando..." : "Entrar"}
               </Button>
             </form>
 
@@ -181,6 +210,14 @@ export default function LoginPage({ onLogin, onCancel }) {
             <div className="mt-6 text-center space-y-2">
               <button className="text-white hover:text-purple-300 text-sm transition-colors block w-full">
                 Esqueceu sua senha?
+              </button>
+              <button
+                type="button"
+                onClick={onCancel}
+                className="mt-2 text-gray-300 hover:text-white text-xs px-3 py-1 rounded transition-colors bg-transparent border-none"
+                style={{textDecoration: 'underline', opacity: 0.8}}
+              >
+                Voltar ao início
               </button>
             </div>
           </CardContent>

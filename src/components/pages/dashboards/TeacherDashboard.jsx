@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useAuth } from "../../../hooks/useAuth"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Users,
@@ -19,7 +20,8 @@ import {
   GraduationCap,
 } from "lucide-react"
 
-const TeacherDashboard = ({ teacherData }) => {
+  const TeacherDashboard = ({ teacherData }) => {
+    const { logout } = useAuth();
   const [activeSection, setActiveSection] = useState("home")
   const [expandedClass, setExpandedClass] = useState(null)
   const [selectedClassCalendar, setSelectedClassCalendar] = useState(null)
@@ -747,6 +749,18 @@ const TeacherDashboard = ({ teacherData }) => {
               >
                 <Calendar size={20} />
                 <span>Calendário</span>
+              </button>
+
+              {/* Logout button for professor */}
+              <button
+                onClick={async () => {
+                  await logout();
+                  window.location.href = "/";
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all dark:text-gray-400 text-gray-600 hover:bg-red-100 dark:hover:bg-red-900/20 mt-8"
+              >
+                <X size={20} className="text-red-500" />
+                <span className="text-red-500">Sair</span>
               </button>
             </nav>
           </div>

@@ -149,7 +149,7 @@ const CloudPage = () => {
 
   return (
     <div className="flex flex-col h-full dark:bg-[#121212] bg-white">
-      <style jsx>{`
+  <style>{`
         .custom-scrollbar {
           --sb-size: 8px;
         }

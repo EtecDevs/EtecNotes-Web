@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import BootstrapPage from "./BootstrapPage"
+import { useSystemStatus } from "../hooks/useSystemStatus"
 import { Home, Calendar, MessageCircle, User, Cloud, HelpCircle, Menu } from "lucide-react"
-import { useAuth } from "../hooks/useAuth"
 import CalendarPage from "./pages/calendar/CalendarPage"
 import HomePage from "./pages/inicio/HomePage"
 import PatchNotesPage from "./pages/inicio/PatchNotesPage"
@@ -11,7 +12,7 @@ import ProfilePage from "./pages/profile/ProfilePage"
 import ChatPage from "./pages/chat/ChatPage"
 import ThemeToggle from "./ThemeToggle"
 import { ThemeProvider } from "../context/ThemeContext"
-import { AuthProvider } from "../hooks/useAuth"
+import { AuthProvider, useAuth } from "../hooks/useAuth"
 import LogoEtecNotes from "../assets/LogoEtecNotes.png"
 import CloudPage from "./pages/cloud/CloudPage"
 import LandingPage from "./pages/landing/LandingPage"
@@ -19,27 +20,22 @@ import LoginPage from "./pages/login/LoginPage"
 import Footer from "./Footer"
 import EtecDashboard from "./pages/dashboards/EtecDashboard"
 import TeacherDashboard from "./pages/dashboards/TeacherDashboard"
-
-
-
+import AdminDashboard from "./pages/admin/AdminDashboard"
 function AppContent() {
   const { user, isAuthenticated, logout, loading } = useAuth()
+  const { checkingSystem, systemNeedsBootstrap, checkSystemStatus } = useSystemStatus()
+
   const [activeTab, setActiveTab] = useState("Landing")
   const [activeContentTab, setActiveContentTab] = useState("Jornal Etec")
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  // Mostrar loading enquanto verifica autenticação
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-[#121212]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Carregando...</p>
-        </div>
-      </div>
-    )
-  }
+  // Redirecionar automaticamente após login bem-sucedido
+  useEffect(() => {
+    if (user && user.role && activeTab === "Login") {
+      setActiveTab("Início");
+    }
+  }, [user, activeTab]);
 
   // Função para lidar com a mudança de abas principais
   const handleMainTabChange = (tab) => {
@@ -49,14 +45,9 @@ function AppContent() {
     }
   }
 
-   // Função para entrar na aplicação
   const handleGetStarted = () => {
     if (user) {
-      if (user.role === "ADM") {
-        setActiveTab("Dashboard")
-      } else {
-        setActiveTab("Início")
-      }
+      setActiveTab("AdminDashboard")
     } else {
       setActiveTab("Login")
     }
@@ -70,8 +61,6 @@ function AppContent() {
       setActiveTab("Patch Notes")
     } else if (tab === "Horários") {
       setActiveTab("Horários")
-    } else if (tab === "Eventos") {
-      setActiveTab("Eventos")
     } else if (tab === "Jornal Etec") {
       setActiveTab("Início")
     }
@@ -112,14 +101,37 @@ function AppContent() {
     if (typeof window !== 'undefined') window.scrollTo(0, 0)
   }, [activeTab])
 
-  // Renderizar a página correta com base na aba ativa
+  // Mostrar loading enquanto verifica autenticação ou status do sistema
+  if (loading || checkingSystem) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-[#121212]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Carregando sistema...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Se usuário não está logado ou não tem role definida, mostra LoginPage
+  if (!user || !user?.role) {
+    // Mostra LandingPage primeiro, depois LoginPage ao clicar em 'Começar'
+    if (activeTab === 'Login') {
+      return <LoginPage onCancel={() => setActiveTab('Landing')} />;
+    }
+    return <LandingPage onGetStarted={() => setActiveTab('Login')} />;
+  }
+
+  // Roteamento normal por role
+  // Para ADM, navegação padrão entre páginas, mas Perfil abre EtecDashboard
+  // Para professor, navegação padrão entre páginas, mas Perfil abre TeacherDashboard
+  // Para alunos, segue navegação normal pelas páginas já existentes
+  // (Home, Calendário, Chat, Perfil, Cloud/Relaxar)
+  // Não retorna dashboard, apenas mantém navegação padrão
+
+  // Renderizar a página correta com base na aba ativa (fallback)
   const renderActivePage = () => {
     switch (activeTab) {
-
-      case "TeacherDashboard":
-        return <TeacherDashboard onLogout={handleLogout} />
-      case "Dashboard":
-        return <EtecDashboard onLogout={handleLogout} />
       case "Landing":
         return <LandingPage onGetStarted={() => setActiveTab("Login")} />
       case "Login":
@@ -154,13 +166,18 @@ function AppContent() {
           />
         )
       case "Eventos":
-        // Renderiza HomePage com activeTab = "Eventos" para mostrar EventsPage
         return <HomePage activeTab="Eventos" onTabChange={handleContentTabChange} />
       case "Calendário":
         return <CalendarPage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
       case "Chat":
         return <ChatPage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
       case "Perfil":
+        if (user?.role === "professor") {
+          return <TeacherDashboard onLogout={handleLogout} />
+        }
+        if (user?.role === "ADM") {
+          return <EtecDashboard onLogout={handleLogout} />
+        }
         return <ProfilePage activeTab="Perfil" onTabChange={handleContentTabChange} />
       case "Cloud":
         return <CloudPage activeTab="Cloud" onTabChange={handleContentTabChange} />
@@ -236,17 +253,17 @@ function AppContent() {
                 </button>
                 <button
                   className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                    (user?.role === "professor" && activeTab === "TeacherDashboard") ||
-                    (user?.role === "ADM" && activeTab === "Dashboard") ||
+                    (user?.role === "professor" && activeTab === "Perfil") ||
+                    (user?.role === "ADM" && activeTab === "AdminDashboard") ||
                     (user?.role === "aluno" && activeTab === "Perfil")
                       ? "text-[#8C43FF]"
                       : "dark:text-gray-400 text-gray-500 cursor-pointer"
                   }`}
                   onClick={() => {
                     if (user?.role === "professor") {
-                      setActiveTab("TeacherDashboard")
+                      setActiveTab("Perfil")
                     } else if (user?.role === "ADM") {
-                      setActiveTab("Dashboard")
+                      setActiveTab("Perfil")
                     } else {
                       setActiveTab("Perfil")
                     }
@@ -310,6 +327,7 @@ function AppContent() {
             setActiveTab(target)
           }} />
         )}
+
     </div>
   )
 }
@@ -325,4 +343,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
