@@ -34,7 +34,7 @@ import {
 } from "lucide-react"
 import { useTheme } from "../../../context/ThemeContext"
 
-const ProfilePage = () => {
+const UserDashboard = () => {
   const { theme, toggleTheme } = useTheme()
   const [isEditing, setIsEditing] = useState(false)
   const [notifications, setNotifications] = useState(true)
@@ -49,7 +49,7 @@ const ProfilePage = () => {
     studyStreak: 12,
     lastLogin: "Hoje às 14:30",
     joinDate: "Setembro 2024",
-    totalStudyHours: 240,
+    totalStudyHours: 230,
     averageGrade: 8.7,
   })
 
@@ -259,7 +259,7 @@ const ProfilePage = () => {
                     <div className="flex gap-2">
                       <button
                         onClick={handleSaveProfile}
-                        className="flex items-center gap-2 px-4 py-2 bg-[#4CAF50] hover:bg-[#45A049] text-white rounded-lg transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 bg-[#8c43ff] hover:bg-[#21262D] text-white rounded-lg transition-colors"
                       >
                         <Save size={16} />
                         Salvar
@@ -419,30 +419,6 @@ const ProfilePage = () => {
 
           {/* Right Column - Settings & Info */}
           <div className="space-y-6">
-            {/* Quick Stats */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 p-6"
-            >
-              <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Estatísticas</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="dark:text-gray-400 text-gray-600">Média Geral</span>
-                  <span className="font-semibold dark:text-white text-gray-900">{userStats.averageGrade}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="dark:text-gray-400 text-gray-600">Tarefas Pendentes</span>
-                  <span className="font-semibold text-orange-500">{userStats.pendingTasks}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="dark:text-gray-400 text-gray-600">Último Acesso</span>
-                  <span className="font-semibold dark:text-white text-gray-900 text-sm">{userStats.lastLogin}</span>
-                </div>
-              </div>
-            </motion.div>
-
             {/* Settings */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
@@ -595,4 +571,4 @@ const ProfilePage = () => {
   )
 }
 
-export default ProfilePage
+export default UserDashboard

@@ -7,8 +7,8 @@ import { Home, Calendar, MessageCircle, User, Cloud, HelpCircle, Menu } from "lu
 import CalendarPage from "./pages/calendar/CalendarPage"
 import HomePage from "./pages/inicio/HomePage"
 import PatchNotesPage from "./pages/inicio/PatchNotesPage"
-import SchedulePage from "./pages/inicio/SchedulePage"
-import ProfilePage from "./pages/profile/ProfilePage"
+import SchedulePage from "./pages/calendar/SchedulePage"
+import UserDashboard from "./pages/dashboards/UserDashboard"
 import ChatPage from "./pages/chat/ChatPage"
 import ThemeToggle from "./ThemeToggle"
 import { ThemeProvider } from "../context/ThemeContext"
@@ -59,10 +59,10 @@ function AppContent() {
     // Mapeia cada tab para o activeTab correto
     if (tab === "Patch Notes") {
       setActiveTab("Patch Notes")
-    } else if (tab === "Horários") {
-      setActiveTab("Horários")
     } else if (tab === "Jornal Etec") {
       setActiveTab("Início")
+    } else if (tab === "Eventos") {
+      setActiveTab("Eventos")
     }
   }
 
@@ -148,23 +148,9 @@ function AppContent() {
           <PatchNotesPage
             activeTab="Patch Notes"
             onTabChange={handleContentTabChange}
-            navigateToEvents={() => {
-              setActiveTab("Eventos")
-              setActiveContentTab("Eventos")
-            }}
           />
         )
-      case "Horários":
-        return (
-          <SchedulePage
-            activeTab="Horários"
-            onTabChange={handleContentTabChange}
-            navigateToEvents={() => {
-              setActiveTab("Eventos")
-              setActiveContentTab("Eventos")
-            }}
-          />
-        )
+
       case "Eventos":
         return <HomePage activeTab="Eventos" onTabChange={handleContentTabChange} />
       case "Calendário":
@@ -178,7 +164,7 @@ function AppContent() {
         if (user?.role === "ADM") {
           return <EtecDashboard onLogout={handleLogout} />
         }
-        return <ProfilePage activeTab="Perfil" onTabChange={handleContentTabChange} />
+        return <UserDashboard activeTab="Perfil" onTabChange={handleContentTabChange} />
       case "Cloud":
         return <CloudPage activeTab="Cloud" onTabChange={handleContentTabChange} />
       case "Início":
@@ -226,7 +212,7 @@ function AppContent() {
               <div className="hidden md:flex items-center space-x-6">
                 <button
                   className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                    (activeTab === "Início" || activeTab === "Patch Notes" || activeTab === "Horários") ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
+                    (activeTab === "Início" || activeTab === "Patch Notes") ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
                   }`}
                   onClick={() => handleMainTabChange("Início")}
                   aria-label="Página Inicial"

@@ -1014,16 +1014,6 @@ const ChatPage = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                {activeConversation.type === "dm" && (
-                  <>
-                    <button className="p-3 bg-green-500/10 hover:bg-green-500/20 text-green-600 rounded-2xl transition-all duration-300 hover:scale-110 shadow-lg shadow-green-500/10">
-                      <Phone size={20} />
-                    </button>
-                    <button className="p-3 bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 rounded-2xl transition-all duration-300 hover:scale-110 shadow-lg shadow-blue-500/10">
-                      <Video size={20} />
-                    </button>
-                  </>
-                )}
                 <button
                   onClick={() => setShowContactInfo(!showContactInfo)}
                   className={`p-3 rounded-2xl transition-all duration-300 hover:scale-110 shadow-lg ${
@@ -1320,57 +1310,6 @@ const ChatPage = () => {
                         <span className="text-sm text-gray-600 dark:text-gray-400 font-medium capitalize">
                           {activeConversation.participant.status}
                         </span>
-                      </div>
-                    </div>
-
-                    {/* Ações rápidas */}
-                    <div className="space-y-3">
-                      <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
-                        <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full" />
-                        Ações Rápidas
-                      </h4>
-
-                      {activeConversation.type === "dm" && (
-                        <>
-                          <button className="w-full group flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 hover:from-green-100 hover:to-emerald-100 dark:hover:from-green-900/30 dark:hover:to-emerald-900/30 border border-green-200/50 dark:border-green-700/50 transition-all duration-300 hover:scale-[1.02] text-left">
-                            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/25">
-                              <Phone size={20} className="text-white" />
-                            </div>
-                            <span className="font-semibold text-green-700 dark:text-green-400">Iniciar chamada</span>
-                          </button>
-                          <button className="w-full group flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 hover:from-blue-100 hover:to-cyan-100 dark:hover:from-blue-900/30 dark:hover:to-cyan-900/30 border border-blue-200/50 dark:border-blue-700/50 transition-all duration-300 hover:scale-[1.02] text-left">
-                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/25">
-                              <Video size={20} className="text-white" />
-                            </div>
-                            <span className="font-semibold text-blue-700 dark:text-blue-400">Videochamada</span>
-                          </button>
-                        </>
-                      )}
-
-                      <button className="w-full group flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-700 hover:from-gray-100 hover:to-gray-50 dark:hover:from-gray-700 dark:hover:to-gray-600 border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 hover:scale-[1.02] text-left">
-                        <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-slate-500 rounded-2xl flex items-center justify-center shadow-lg shadow-gray-500/25">
-                          <Archive size={20} className="text-white" />
-                        </div>
-                        <span className="font-semibold text-gray-700 dark:text-gray-300">Arquivar conversa</span>
-                      </button>
-
-                      <button className="w-full group flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 hover:from-yellow-100 hover:to-orange-100 dark:hover:from-yellow-900/30 dark:hover:to-orange-900/30 border border-yellow-200/50 dark:border-yellow-700/50 transition-all duration-300 hover:scale-[1.02] text-left">
-                        <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg shadow-yellow-500/25">
-                          <Star size={20} className="text-white" />
-                        </div>
-                        <span className="font-semibold text-yellow-700 dark:text-yellow-400">Marcar como favorito</span>
-                      </button>
-                    </div>
-
-                    {/* Arquivos compartilhados */}
-                    <div>
-                      <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
-                        <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full" />
-                        Arquivos Recentes
-                      </h4>
-                      <div className="text-center py-8 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-700 rounded-2xl border border-gray-200/50 dark:border-gray-700/50">
-                        <FileText size={32} className="mx-auto text-gray-400 dark:text-gray-500 mb-3" />
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Nenhum arquivo compartilhado</p>
                       </div>
                     </div>
                   </div>

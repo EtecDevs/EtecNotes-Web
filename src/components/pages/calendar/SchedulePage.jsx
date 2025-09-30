@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import TabNavigation from "../../navigation/TabNavigation"
 
 export default function SchedulePage({ activeTab, onTabChange }) {
   const [currentIndex, setCurrentIndex] = useState(1) // Start with Tuesday (index 1)
@@ -107,16 +106,11 @@ export default function SchedulePage({ activeTab, onTabChange }) {
   const weekDays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
 
   // Calculate the transform offset for the carousel
-  const cardWidth = 340 // Width including gap
+  const cardWidth = 350 // Width including gap (otimizado para altura)
   const offset = -currentIndex * cardWidth
 
   return (
-    <div className="flex flex-col h-full dark:bg-[#121212] bg-white">
-      <div className="w-full max-w-7xl mx-auto px-6 py-10">
-        <h1 className="text-4xl font-bold mb-8 dark:text-white text-gray-800">Início</h1>
-
-  {/* Tabs */}
-  <TabNavigation activeTab={defaultActiveTab} onTabChange={(tab) => { if (tab === 'Eventos' && typeof navigateToEvents === 'function') return navigateToEvents(); return onTabChange(tab); }} />
+    <div className="flex flex-col h-full">
 
         {/* Date Navigation Container */}
         <div className="relative flex items-center justify-center">
@@ -130,11 +124,11 @@ export default function SchedulePage({ activeTab, onTabChange }) {
           </button>
 
           {/* Cards Container */}
-          <div className="overflow-hidden w-[1020px]">
+          <div className="overflow-hidden w-[1050px]">
             <motion.div
-              className="flex gap-6"
+              className="flex gap-5"
               animate={{
-                x: offset + 340, // Center the middle card
+                x: offset + 350, // Center the middle card
               }}
               transition={{
                 type: "spring",
@@ -150,90 +144,90 @@ export default function SchedulePage({ activeTab, onTabChange }) {
 
                 return (
                   <motion.div
-                    key={index}
-                    className="flex-shrink-0 w-[320px]"
-                    animate={{
-                      scale: isCenter ? 1 : 0.7,
-                      opacity: isCenter ? 1 : isVisible ? 0.4 : 0,
-                      zIndex: isCenter ? 10 : 1,
-                    }}
-                    transition={{
-                      duration: 0.4,
-                      ease: "easeInOut",
-                    }}
-                    onClick={() => !isCenter && isVisible && navigateToDate(index)}
-                    style={{
-                      cursor: isCenter ? "default" : isVisible ? "pointer" : "default",
-                      pointerEvents: isVisible ? "auto" : "none",
-                    }}
+                  key={index}
+                  className="flex-shrink-0 w-[340px]"
+                  animate={{
+                    scale: isCenter ? 1 : 0.7,
+                    opacity: isCenter ? 1 : isVisible ? 0.4 : 0,
+                    zIndex: isCenter ? 10 : 1,
+                  }}
+                  transition={{
+                    duration: 0.4,
+                    ease: "easeInOut",
+                  }}
+                  onClick={() => !isCenter && isVisible && navigateToDate(index)}
+                  style={{
+                    cursor: isCenter ? "default" : isVisible ? "pointer" : "default",
+                    pointerEvents: isVisible ? "auto" : "none",
+                  }}
                   >
-                    <div
-                      className={`dark:bg-[#1E1E1E] bg-white rounded-3xl p-5 shadow-lg border transition-all duration-400 ${
-                        isCenter
-                          ? isToday
-                            ? "border-4 border-[#8C43FF] shadow-[0_0_15px_rgba(140,67,255,0.15)]"
-                            : "border-2 border-[#8C43FF] shadow-[0_0_10px_rgba(140,67,255,0.1)]"
-                          : "dark:border-[#333333] border-gray-200"
-                      }`}
+                  <div
+                    className={`dark:bg-[#1E1E1E] bg-white rounded-3xl p-4 shadow-lg border transition-all duration-400 ${
+                    isCenter
+                      ? isToday
+                      ? "border-4 border-[#8C43FF] shadow-[0_0_15px_rgba(140,67,255,0.15)]"
+                      : "border-2 border-[#8C43FF] shadow-[0_0_10px_rgba(140,67,255,0.1)]"
+                      : "dark:border-[#333333] border-gray-200"
+                    }`}
+                  >
+                    <h2
+                    className={`text-lg font-semibold mb-4 transition-colors duration-300 ${
+                      isCenter ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-600"
+                    }`}
                     >
-                      <h2
-                        className={`text-xl font-semibold mb-4 transition-colors duration-300 ${
-                          isCenter ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-600"
-                        }`}
+                    {daySchedule.day}
+                    {isToday && isCenter && (
+                      <span className="ml-2 px-2 py-0.5 rounded-full bg-[#8C43FF] text-white text-xs align-middle">
+                      Hoje
+                      </span>
+                    )}
+                    </h2>
+                    <div className="space-y-3 ">
+                    {daySchedule.periods.map((period, periodIndex) => (
+                      <motion.div
+                      key={periodIndex}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{
+                        opacity: isCenter ? 1 : 0.7,
+                        y: 0,
+                      }}
+                      transition={{
+                        duration: 0.3,
+                        delay: isCenter ? periodIndex * 0.03 : 0,
+                      }}
+                      className={`py-0.5 px-3 rounded-xl text-sm transition-all duration-300 ${
+                        period.isBreak
+                        ? "bg-[#F3EFFF] dark:bg-[#2D2D2D] text-[#8C43FF] font-semibold text-center"
+                        : period.isVacant
+                          ? "bg-[#8C43FF] dark:bg-[#8C43FF] text-white font-semibold text-center"
+                          : "dark:bg-[#2D2D2D] bg-gray-50"
+                      }`}
                       >
-                        {daySchedule.day}
-                        {isToday && isCenter && (
-                          <span className="ml-2 px-2 py-0.5 rounded-full bg-[#8C43FF] text-white text-xs align-middle">
-                            Hoje
-                          </span>
+                      <div className="flex justify-between items-center mb-0.5">
+                        <span
+                        className={`font-medium ${
+                          period.isBreak || period.isVacant
+                          ? "w-full text-center"
+                          : "dark:text-white text-gray-800"
+                        }`}
+                        >
+                        {period.subject}
+                        </span>
+                        {!(period.isBreak || period.isVacant) && (
+                        <span className="text-xs dark:text-gray-400 text-gray-500">{period.time}</span>
                         )}
-                      </h2>
-                      <div className="space-y-3">
-                        {daySchedule.periods.map((period, periodIndex) => (
-                          <motion.div
-                            key={periodIndex}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{
-                              opacity: isCenter ? 1 : 0.7,
-                              y: 0,
-                            }}
-                            transition={{
-                              duration: 0.3,
-                              delay: isCenter ? periodIndex * 0.03 : 0,
-                            }}
-                            className={`py-1 px-3 rounded-lg text-sm transition-all duration-300 ${
-                              period.isBreak
-                                ? "bg-[#F3EFFF] dark:bg-[#2D2D2D] text-[#8C43FF] font-semibold text-center"
-                                : period.isVacant
-                                  ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-200 font-semibold text-center"
-                                  : "dark:bg-[#2D2D2D] bg-gray-50"
-                            }`}
-                          >
-                            <div className="flex justify-between items-center mb-1">
-                              <span
-                                className={`font-medium ${
-                                  period.isBreak || period.isVacant
-                                    ? "w-full text-center"
-                                    : "dark:text-white text-gray-800"
-                                }`}
-                              >
-                                {period.subject}
-                              </span>
-                              {!(period.isBreak || period.isVacant) && (
-                                <span className="text-sm dark:text-gray-400 text-gray-500">{period.time}</span>
-                              )}
-                            </div>
-                            {!(period.isBreak || period.isVacant) && (
-                              <div className="text-sm dark:text-gray-400 text-gray-600">{period.teacher}</div>
-                            )}
-                            {period.isBreak && <div className="text-xs text-[#8C43FF]">{period.time}</div>}
-                            {period.isVacant && (
-                              <div className="text-xs text-yellow-700 dark:text-yellow-200">{period.time}</div>
-                            )}
-                          </motion.div>
-                        ))}
                       </div>
+                      {!(period.isBreak || period.isVacant) && (
+                        <div className="text-xs dark:text-gray-400 text-gray-600">{period.teacher}</div>
+                      )}
+                      {period.isBreak && <div className="text-xs text-[#8C43FF]">{period.time}</div>}
+                      {period.isVacant && (
+                        <div className="text-xs text-white">{period.time}</div>
+                      )}
+                      </motion.div>
+                    ))}
                     </div>
+                  </div>
                   </motion.div>
                 )
               })}
@@ -249,7 +243,6 @@ export default function SchedulePage({ activeTab, onTabChange }) {
             <ChevronRight className="h-6 w-6" />
           </button>
         </div>
-      </div>
     </div>
   )
 }

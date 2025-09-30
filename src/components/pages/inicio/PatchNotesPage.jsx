@@ -10,7 +10,7 @@ const PatchNotesPage = ({ activeTab, onTabChange }) => {
         <h1 className="text-4xl font-bold mb-8 dark:text-white text-gray-800">Início</h1>
 
   {/* Tabs */}
-  <TabNavigation activeTab={activeTab} onTabChange={(tab) => { if (tab === 'Eventos' && typeof navigateToEvents === 'function') return navigateToEvents(); return onTabChange(tab); }} />
+  <TabNavigation activeTab={activeTab} onTabChange={onTabChange} />
 
         <div className="flex flex-col md:flex-row gap-8 mb-10">
           {/* Left Card */}

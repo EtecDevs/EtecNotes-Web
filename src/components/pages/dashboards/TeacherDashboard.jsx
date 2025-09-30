@@ -20,7 +20,51 @@ import {
   GraduationCap,
 } from "lucide-react"
 
-  const TeacherDashboard = ({ teacherData }) => {
+// Constantes fora do componente para evitar re-criações
+const MODAL_SIZE_CLASSES = {
+  sm: "max-w-md",
+  md: "max-w-lg", 
+  lg: "max-w-2xl",
+  xl: "max-w-4xl",
+}
+
+// Modal Component fora do componente principal
+const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
+  if (!isOpen) return null
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.95, opacity: 0 }}
+          className={`w-full ${MODAL_SIZE_CLASSES[size]} dark:bg-[#161B22] bg-white rounded-2xl shadow-xl border dark:border-[#30363D] border-gray-200 max-h-[90vh] overflow-y-auto`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between p-6 border-b dark:border-[#30363D] border-gray-200">
+            <h2 className="text-xl font-semibold dark:text-white text-gray-900">{title}</h2>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-[#21262D] rounded-lg transition-colors"
+            >
+              <X size={20} className="dark:text-gray-400 text-gray-600" />
+            </button>
+          </div>
+          <div className="p-6">{children}</div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
+const TeacherDashboard = ({ teacherData }) => {
     const { logout } = useAuth();
   const [activeSection, setActiveSection] = useState("home")
   const [expandedClass, setExpandedClass] = useState(null)
@@ -182,54 +226,23 @@ import {
     return allEvents.sort((a, b) => new Date(a.date) - new Date(b.date))
   }
 
-  // Modal Component
-  const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
-    if (!isOpen) return null
 
-    const sizeClasses = {
-      sm: "max-w-md",
-      md: "max-w-lg",
-      lg: "max-w-2xl",
-      xl: "max-w-4xl",
-    }
 
-    return (
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-          onClick={onClose}
-        >
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            className={`w-full ${sizeClasses[size]} dark:bg-[#161B22] bg-white rounded-2xl shadow-xl border dark:border-[#30363D] border-gray-200 max-h-[90vh] overflow-y-auto`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between p-6 border-b dark:border-[#30363D] border-gray-200">
-              <h2 className="text-xl font-semibold dark:text-white text-gray-900">{title}</h2>
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-[#21262D] rounded-lg transition-colors"
-              >
-                <X size={20} className="dark:text-gray-400 text-gray-600" />
-              </button>
-            </div>
-            <div className="p-6">{children}</div>
-          </motion.div>
-        </motion.div>
-      </AnimatePresence>
-    )
-  }
+  // Função estável para fechar modal
+  const closeModal = () => setShowAddEventModal(false)
 
-  // Modal para adicionar evento
-  const AddEventModal = () => (
+  // Handlers estáveis para campos do formulário
+  const handleTitleChange = (e) => setNewEvent({ ...newEvent, title: e.target.value })
+  const handleDateChange = (e) => setNewEvent({ ...newEvent, date: e.target.value })
+  const handleTimeChange = (e) => setNewEvent({ ...newEvent, time: e.target.value })
+  const handleTypeChange = (e) => setNewEvent({ ...newEvent, type: e.target.value })
+  const handleDescriptionChange = (e) => setNewEvent({ ...newEvent, description: e.target.value })
+
+  // Modal para adicionar evento - apenas JSX, não função
+  const addEventModalElement = showAddEventModal ? (
     <Modal
       isOpen={showAddEventModal}
-      onClose={() => setShowAddEventModal(false)}
+      onClose={closeModal}
       title={`Adicionar Evento - ${selectedClassCalendar?.name}`}
       size="lg"
     >
@@ -239,7 +252,7 @@ import {
           <input
             type="text"
             value={newEvent.title}
-            onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+            onChange={handleTitleChange}
             className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             placeholder="Ex: Prova de JavaScript, Apresentação de Projeto..."
           />
@@ -251,7 +264,7 @@ import {
             <input
               type="date"
               value={newEvent.date}
-              onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
+              onChange={handleDateChange}
               className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             />
           </div>
@@ -260,7 +273,7 @@ import {
             <input
               type="time"
               value={newEvent.time}
-              onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
+              onChange={handleTimeChange}
               className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             />
           </div>
@@ -271,7 +284,7 @@ import {
           <input
             type="text"
             value={newEvent.type}
-            onChange={(e) => setNewEvent({ ...newEvent, type: e.target.value })}
+            onChange={handleTypeChange}
             className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             placeholder="Ex: Prova, Trabalho, Apresentação, Seminário..."
           />
@@ -283,7 +296,7 @@ import {
           </label>
           <textarea
             value={newEvent.description}
-            onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
+            onChange={handleDescriptionChange}
             className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             rows="3"
             placeholder="Detalhes adicionais sobre o evento..."
@@ -292,7 +305,7 @@ import {
 
         <div className="flex gap-3 pt-4">
           <button
-            onClick={() => setShowAddEventModal(false)}
+            onClick={closeModal}
             className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
           >
             Cancelar
@@ -306,7 +319,7 @@ import {
         </div>
       </div>
     </Modal>
-  )
+  ) : null
 
   // Renderizar Home do Professor
   const renderHome = () => (
@@ -782,7 +795,7 @@ import {
       </div>
 
       {/* Modal para adicionar evento */}
-      <AddEventModal />
+      {addEventModalElement}
     </div>
   )
 }

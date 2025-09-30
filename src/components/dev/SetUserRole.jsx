@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { apiService } from '../../services/apiService';
+import authService from '../../services/authService';
 import { auth } from '../../config/firebase';
 
 const SetUserRole = () => {

@@ -3,10 +3,17 @@
 import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight, CalendarIcon, Clock, Edit, Trash2, Bell, BookOpen } from "lucide-react"
 import { motion } from "framer-motion"
+import { useAuth } from "../../../hooks/useAuth"
 import AddEventModal from "./AddEventModal"
 import AddNoteModal from "./AddNoteModal"
+import SchedulePage from "./SchedulePage"
 
 const CalendarPage = ({ activeTab, onTabChange }) => {
+  const { user, isProfessor, isAluno } = useAuth()
+  
+  // Estado para controle das abas internas do calendário
+  const [activeCalendarTab, setActiveCalendarTab] = useState("Calendário")
+  
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [selectedDay, setSelectedDay] = useState(new Date())
   const [events, setEvents] = useState(() => {
@@ -133,6 +140,14 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
 
   // Excluir evento
   const handleDeleteEvent = (eventId) => {
+    const event = events.find(e => e.id === eventId)
+    
+    // Verificar se aluno está tentando deletar um evento
+    if (isAluno && event?.type === 'event') {
+      alert('Apenas professores podem excluir eventos. Você só pode excluir suas próprias notas.')
+      return
+    }
+    
     setEvents((prev) => prev.filter((event) => event.id !== eventId))
   }
 
@@ -151,9 +166,26 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
       <div className="w-full max-w-7xl mx-auto px-6 py-10">
         <h1 className="text-4xl font-bold mb-8 dark:text-white text-gray-800">Calendário</h1>
 
-        {/* Tabs removidas */}
+        {/* Tab Navigation */}
+        <div className="flex border-b border-[#E6DFFF] mb-8 overflow-x-auto">
+          {["Calendário", "Horários"].map((tab) => (
+            <button
+              key={tab}
+              className={`pb-2 mr-8 font-medium whitespace-nowrap transition-all duration-300 cursor-pointer ${
+                activeCalendarTab === tab
+                  ? "text-[#8C43FF] border-b-2 border-[#8C43FF]"
+                  : "dark:text-[#D0B3FF] text-[#8C43FF]/70 hover:text-[#8C43FF] hover:border-b-2 hover:border-[#8C43FF]/50"
+              }`}
+              onClick={() => setActiveCalendarTab(tab)}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
         
-        <div className="flex flex-col lg:flex-row gap-6 h-full">
+        {/* Renderizar conteúdo baseado na aba ativa */}
+        {activeCalendarTab === "Calendário" ? (
+          <div className="flex flex-col lg:flex-row gap-6 h-full">
 
           {/* Calendário */}
           <motion.div
@@ -292,12 +324,29 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
                         )}
                       </div>
                       <div className="flex gap-1">
-                        <button
-                          className="p-1 rounded-full dark:hover:bg-[#3D3D3D] hover:bg-gray-200 transition-colors cursor-pointer"
-                          onClick={() => handleDeleteEvent(item.id)}
-                        >
-                          <Trash2 size={16} className="dark:text-gray-400 text-gray-500" />
-                        </button>
+                        {/* Mostrar botão de deletar apenas se: 
+                            - For professor (pode deletar tudo)
+                            - For aluno mas item for nota (pode deletar apenas suas notas)
+                        */}
+                        {(isProfessor || (isAluno && item.type !== 'event')) && (
+                          <button
+                            className="p-1 rounded-full dark:hover:bg-[#3D3D3D] hover:bg-gray-200 transition-colors cursor-pointer"
+                            onClick={() => handleDeleteEvent(item.id)}
+                            title={isAluno && item.type === 'event' ? 'Apenas professores podem excluir eventos' : 'Excluir'}
+                          >
+                            <Trash2 size={16} className="dark:text-gray-400 text-gray-500" />
+                          </button>
+                        )}
+                        
+                        {/* Indicador visual para alunos em eventos */}
+                        {isAluno && item.type === 'event' && (
+                          <div 
+                            className="p-1 rounded-full opacity-30"
+                            title="Apenas professores podem excluir eventos"
+                          >
+                            <Trash2 size={16} className="dark:text-gray-600 text-gray-400" />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </motion.div>
@@ -318,34 +367,49 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
                 <Edit size={18} />
                 <span>Adicionar nova nota</span>
               </button>
-              <button
-                onClick={openAddEventModal}
-                className="w-full py-3 px-4 dark:bg-[#2D2D2D] bg-gray-100 dark:hover:bg-[#3D3D3D] hover:bg-gray-200 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors dark:text-white text-gray-800 cursor-pointer"
-              >
-                <CalendarIcon size={18} className="text-[#00B2FF]" />
-                <span>Adicionar evento</span>
-              </button>
+              
+              {/* Botão de adicionar evento - apenas para professores */}
+              {isProfessor && (
+                <button
+                  onClick={openAddEventModal}
+                  className="w-full py-3 px-4 dark:bg-[#2D2D2D] bg-gray-100 dark:hover:bg-[#3D3D3D] hover:bg-gray-200 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors dark:text-white text-gray-800 cursor-pointer"
+                >
+                  <CalendarIcon size={18} className="text-[#00B2FF]" />
+                  <span>Adicionar evento</span>
+                </button>
+              )}
             </div>
           </motion.div>
-        </div>
+          </div>
+        ) : (
+          /* Renderizar SchedulePage quando a aba Horários estiver ativa */
+          <div className="mt-6">
+            <SchedulePage 
+              activeTab={activeCalendarTab} 
+              onTabChange={setActiveCalendarTab}
+            />
+          </div>
+        )}
       </div>
 
+      {/* Modais - apenas renderizar quando estiver na aba Calendário */}
+      {activeCalendarTab === "Calendário" && (
+        <>
+          <AddEventModal
+            isOpen={isAddEventModalOpen}
+            onClose={() => setIsAddEventModalOpen(false)}
+            onSave={handleAddEvent}
+            selectedDate={selectedDay}
+          />
 
-
-      {/* Modais */}
-      <AddEventModal
-        isOpen={isAddEventModalOpen}
-        onClose={() => setIsAddEventModalOpen(false)}
-        onSave={handleAddEvent}
-        selectedDate={selectedDay}
-      />
-
-      <AddNoteModal
-        isOpen={isAddNoteModalOpen}
-        onClose={() => setIsAddNoteModalOpen(false)}
-        onSave={handleAddEvent}
-        selectedDate={selectedDay}
-      />
+          <AddNoteModal
+            isOpen={isAddNoteModalOpen}
+            onClose={() => setIsAddNoteModalOpen(false)}
+            onSave={handleAddEvent}
+            selectedDate={selectedDay}
+          />
+        </>
+      )}
     </div>
   )
 }

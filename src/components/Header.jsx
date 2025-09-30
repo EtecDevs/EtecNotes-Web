@@ -19,7 +19,7 @@ function Header({ activeTab, onMainTabChange }) {
       <div className="hidden md:flex items-center space-x-6">
         <button
           className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-            (activeTab === "Início" || activeTab === "Patch Notes" || activeTab === "Horários")
+            (activeTab === "Início" || activeTab === "Patch Notes" || activeTab === "Horários" || activeTab === "Eventos")
               ? "text-[#8C43FF]"
               : "dark:text-gray-400 text-[#D0B3FF]"
           }`}

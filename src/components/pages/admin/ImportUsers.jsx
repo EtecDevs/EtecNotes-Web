@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { ArrowLeft, Upload, Download, FileText, AlertCircle, CheckCircle, X } from 'lucide-react';
-import { apiService } from '../../../services/apiService';
+import authService from '../../../services/authService';
 
 const ImportUsers = ({ onBack, onSuccess }) => {
   const [file, setFile] = useState(null);
@@ -112,7 +112,7 @@ const ImportUsers = ({ onBack, onSuccess }) => {
       setLoading(true);
       setStep('importing');
       
-      const response = await apiService.importUsers(preview);
+      const response = await authService.importUsers(preview);
       
       if (response.success) {
         setResults(response.results);

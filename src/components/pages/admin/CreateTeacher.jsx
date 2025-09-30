@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Save, User, Mail, Key, BookOpen, Building } from 'lucide-react';
-import { apiService } from '../../../services/apiService';
+import authService from '../../../services/authService';
 
 const CreateTeacher = ({ onBack, onSuccess }) => {
   const [formData, setFormData] = useState({
@@ -97,7 +97,7 @@ const CreateTeacher = ({ onBack, onSuccess }) => {
         senha: formData.senha || '123456'
       };
 
-      const response = await apiService.createTeacher(teacherData);
+      const response = await authService.createTeacher(teacherData);
 
       if (response.success) {
         setSuccess({

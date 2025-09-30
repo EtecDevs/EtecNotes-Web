@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, UserPlus, Upload, List, Activity, BarChart3 } from 'lucide-react';
 import { useAuth } from '../../../hooks/useAuth';
-import { apiService } from '../../../services/apiService';
+import authService from '../../../services/authService';
 import CreateStudent from './CreateStudent';
 import CreateTeacher from './CreateTeacher';
 import ImportUsers from './ImportUsers';
@@ -28,7 +28,7 @@ const AdminDashboard = ({ onLogout }) => {
   const loadStats = async () => {
     try {
       setLoading(true);
-      const response = await apiService.listUsers();
+      const response = await authService.listUsers();
       
       if (response.success) {
         const { alunos, professores } = response.users;

@@ -53,7 +53,7 @@ console.log(`
 📡 URL da API: http://localhost:5001/api (corrigida de 5000 para 5001)
 🔑 Firebase Config: Atualizada com credenciais corretas
 🎯 Arquivos corrigidos:
-   - src/services/apiService.js
+   - src/services/authService.js
    - src/services/authService.js
    - src/config/firebase.js
    - src/hooks/useSystemStatus.js

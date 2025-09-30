@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Save, User, Mail, Hash, GraduationCap, Users, Key } from 'lucide-react';
-import { apiService } from '../../../services/apiService';
+import authService from '../../../services/authService';
 
 const TURMAS = ["MDS", "MAD", "JOD", "MDI"];
 const ANOS = ["1º Ano", "2º Ano", "3º Ano"];
@@ -95,7 +95,7 @@ const CreateStudent = ({ onBack, onSuccess }) => {
         senha: formData.senha || '123456'
       };
 
-      const response = await apiService.createStudent(studentData);
+      const response = await authService.createStudent(studentData);
 
       if (response.success) {
         setSuccess({

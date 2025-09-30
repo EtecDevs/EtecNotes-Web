@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Filter, Edit, UserX, Users, GraduationCap, User, Mail, Hash } from 'lucide-react';
-import { apiService } from '../../../services/apiService';
+import authService from '../../../services/authService';
 
 const UsersList = ({ onBack }) => {
   const [users, setUsers] = useState({ alunos: [], professores: [] });
@@ -24,7 +24,7 @@ const UsersList = ({ onBack }) => {
   const loadUsers = async () => {
     try {
       setLoading(true);
-      const response = await apiService.listUsers();
+      const response = await authService.listUsers();
       
       if (response.success) {
         setUsers(response.users);
@@ -72,7 +72,7 @@ const UsersList = ({ onBack }) => {
 
     try {
       const { type, ...userData } = editingUser;
-      await apiService.updateUser(editingUser.id, userData);
+      await authService.updateUser(editingUser.id, userData);
       
       setSuccess('Usuário atualizado com sucesso!');
       setEditingUser(null);
@@ -87,7 +87,7 @@ const UsersList = ({ onBack }) => {
 
   const handleDeactivateUser = async (uid) => {
     try {
-      await apiService.deactivateUser(uid);
+      await authService.deactivateUser(uid);
       
       setSuccess('Usuário desativado com sucesso!');
       setShowConfirmDeactivate(null);

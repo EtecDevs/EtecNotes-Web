@@ -50,9 +50,53 @@ import {
   Archive,
   RefreshCw
 } from "lucide-react"
-import apiService from "../../../services/apiService"
+import authService from "../../../services/authService"
 import socketService from "../../../services/socketService"
 import { useAuth } from "../../../hooks/useAuth"
+
+// Constantes fora do componente para evitar re-criações
+const MODAL_SIZE_CLASSES = {
+  sm: "max-w-md",
+  md: "max-w-lg", 
+  lg: "max-w-2xl",
+  xl: "max-w-4xl",
+}
+
+// Modal Component fora do componente principal
+const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
+  if (!isOpen) return null
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className={`w-full ${MODAL_SIZE_CLASSES[size]} bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h2>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            >
+              <X size={20} className="text-gray-500 dark:text-gray-400" />
+            </button>
+          </div>
+          <div className="p-6">{children}</div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  )
+}
 
 const EtecDashboard = ({ onLogout }) => {
   const { user } = useAuth()
@@ -236,8 +280,8 @@ const EtecDashboard = ({ onLogout }) => {
       console.log('📊 Carregando estatísticas do backend...');
       
       const [alunos, professores] = await Promise.all([
-        apiService.listUsers('alunos'),
-        apiService.listUsers('professores')
+        authService.listUsers('alunos'),
+        authService.listUsers('professores')
       ]);
 
       const stats = {
@@ -293,7 +337,7 @@ const EtecDashboard = ({ onLogout }) => {
   const loadUsuarios = async () => {
     try {
       console.log('🔄 Carregando usuários do backend...');
-      const response = await apiService.listUsers();
+      const response = await authService.listUsers();
       
       if (response.success && response.users) {
         // Combinar alunos e professores em uma lista única
@@ -377,7 +421,7 @@ const EtecDashboard = ({ onLogout }) => {
       console.log('Turmas carregadas (modo mock)');
       
       // TODO: Quando o backend estiver pronto:
-      // const response = await apiService.request('/turmas')
+      // const response = await authService.request('/turmas')
       // setTurmas(response.turmas || [])
     } catch (error) {
       console.error('Erro ao carregar turmas:', error)
@@ -392,7 +436,7 @@ const EtecDashboard = ({ onLogout }) => {
       console.log('Eventos carregados (modo mock)');
       
       // TODO: Quando o backend estiver pronto:
-      // const response = await apiService.request('/eventos')
+      // const response = await authService.request('/eventos')
       // setEventos(response.eventos || [])
     } catch (error) {
       console.error('Erro ao carregar eventos:', error)
@@ -407,7 +451,7 @@ const EtecDashboard = ({ onLogout }) => {
       console.log('Notificações carregadas (modo mock)');
       
       // TODO: Quando o backend estiver pronto:
-      // const response = await apiService.request('/notifications')
+      // const response = await authService.request('/notifications')
       // setNotifications(response.notifications || [])
     } catch (error) {
       console.error('Erro ao carregar notificações:', error)
@@ -596,7 +640,7 @@ const EtecDashboard = ({ onLogout }) => {
   const handleCreateTurma = async () => {
     try {
       setLoading(true)
-      await apiService.request('/turmas', {
+      await authService.request('/turmas', {
         method: 'POST',
         body: JSON.stringify(turmaForm)
       })
@@ -617,7 +661,7 @@ const EtecDashboard = ({ onLogout }) => {
   const handleCreateEvent = async () => {
     try {
       setLoading(true)
-      await apiService.request('/eventos', {
+      await authService.request('/eventos', {
         method: 'POST',
         body: JSON.stringify(eventForm)
       })
@@ -638,7 +682,7 @@ const EtecDashboard = ({ onLogout }) => {
   const handleSendNotification = async () => {
     try {
       setLoading(true)
-      await apiService.request('/notifications', {
+      await authService.request('/notifications', {
         method: 'POST',
         body: JSON.stringify(notificationForm)
       })
@@ -659,7 +703,7 @@ const EtecDashboard = ({ onLogout }) => {
 
     try {
       console.log('🗑️ Excluindo usuário:', userId);
-      const response = await apiService.deleteUser(userId);
+      const response = await authService.deleteUser(userId);
       
       if (response.success) {
         console.log('✅ Usuário excluído com sucesso');
@@ -681,7 +725,7 @@ const EtecDashboard = ({ onLogout }) => {
       const formData = new FormData()
       formData.append('file', file)
 
-      await apiService.request('/users/import', {
+      await authService.request('/users/import', {
         method: 'POST',
         body: formData,
         headers: {}
@@ -728,47 +772,7 @@ const EtecDashboard = ({ onLogout }) => {
     </motion.div>
   )
 
-  const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
-    if (!isOpen) return null
 
-    const sizeClasses = {
-      sm: "max-w-md",
-      md: "max-w-lg",
-      lg: "max-w-2xl",
-      xl: "max-w-4xl",
-    }
-
-    return (
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-          onClick={onClose}
-        >
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            className={`w-full ${sizeClasses[size]} dark:bg-[#161B22] bg-white rounded-2xl shadow-xl border dark:border-[#30363D] border-gray-200 max-h-[90vh] overflow-y-auto`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between p-6 border-b dark:border-[#30363D] border-gray-200">
-              <h2 className="text-xl font-semibold dark:text-white text-gray-900">{title}</h2>
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-[#21262D] rounded-lg transition-colors"
-              >
-                <X size={20} className="dark:text-gray-400 text-gray-600" />
-              </button>
-            </div>
-            <div className="p-6">{children}</div>
-          </motion.div>
-        </motion.div>
-      </AnimatePresence>
-    )
-  }
 
   // Renderizar seções
   const renderOverview = () => (
@@ -1456,7 +1460,7 @@ const EtecDashboard = ({ onLogout }) => {
   }, []);
 
   // Modal para criar usuário
-  const createUserModal = (() => {
+  const createUserModal = useMemo(() => {
     if (!modalState.createUser) return null;
     
     return (
@@ -1572,11 +1576,9 @@ const EtecDashboard = ({ onLogout }) => {
           </button>
         </div>
       </div>
-    </Modal>
+      </Modal>
     );
-  })();
-
-  // Renderização principal
+  }, [modalState.createUser, userForm, handleCreateUser, handleUserFormChange]);  // Renderização principal
   return (
     <div className="min-h-screen dark:bg-[#0A0A0A] bg-gray-50">
       <div className="flex">
