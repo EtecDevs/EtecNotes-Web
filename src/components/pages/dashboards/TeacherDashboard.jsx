@@ -45,7 +45,7 @@ const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          className={`w-full ${MODAL_SIZE_CLASSES[size]} dark:bg-[#161B22] bg-white rounded-2xl shadow-xl border dark:border-[#30363D] border-gray-200 max-h-[90vh] overflow-y-auto`}
+          className={`w-full ${MODAL_SIZE_CLASSES[size]} dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-xl border dark:border-[#30363D] border-gray-200 max-h-[90vh] overflow-y-auto`}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between p-6 border-b dark:border-[#30363D] border-gray-200">
@@ -328,7 +328,7 @@ const TeacherDashboard = ({ teacherData }) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+        className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
       >
         <div className="flex items-center gap-4 mb-6">
           <img
@@ -389,7 +389,7 @@ const TeacherDashboard = ({ teacherData }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+        className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
       >
         <div className="flex items-center gap-2 mb-6">
           <Bell size={20} className="text-[#8C43FF]" />
@@ -434,7 +434,7 @@ const TeacherDashboard = ({ teacherData }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+        className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
       >
         <div className="flex items-center gap-2 mb-6">
           <GraduationCap size={20} className="text-[#8C43FF]" />
@@ -466,7 +466,7 @@ const TeacherDashboard = ({ teacherData }) => {
             key={classItem.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 overflow-hidden"
+            className="dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 overflow-hidden"
           >
             {/* Header da Classe */}
             <div
@@ -603,7 +603,7 @@ const TeacherDashboard = ({ teacherData }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Calendário Simples */}
-          <div className="lg:col-span-2 dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+          <div className="lg:col-span-2 dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold dark:text-white text-gray-900">Janeiro 2025</h3>
               <div className="flex gap-2">
@@ -654,7 +654,7 @@ const TeacherDashboard = ({ teacherData }) => {
           </div>
 
           {/* Lista de Eventos */}
-          <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+          <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
             <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-6">Eventos da Turma</h3>
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {classEvents.length > 0 ? (
@@ -712,10 +712,10 @@ const TeacherDashboard = ({ teacherData }) => {
   }
 
   return (
-    <div className="min-h-screen dark:bg-[#0A0A0A] bg-gray-50">
+    <div className="min-h-screen bg-[#f5ecff ] dark:bg-[#121212]">
       <div className="flex">
         {/* Sidebar */}
-        <div className="w-64 dark:bg-[#161B22] bg-white border-r dark:border-[#30363D] border-gray-200 min-h-screen">
+        <div className="w-64 dark:bg-[#1E1E1E] bg-white border-r dark:border-[#30363D] border-gray-200 min-h-screen">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-8">
               <div className="p-2 bg-[#8C43FF] rounded-xl">

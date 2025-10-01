@@ -1,9 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import {
-  ArrowRight,
   Users,
   Target,
   Lightbulb,
@@ -20,15 +19,11 @@ import {
   BookOpen,
   Brain,
   CheckCircle,
-  Play,
   ChevronDown,
-  Menu,
-  X,
 } from "lucide-react"
 
-const LandingPage = ({ onGetStarted }) => {
+const AboutPage = () => {
   const [activeFeature, setActiveFeature] = useState(0)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
 
   // Scroll effect
@@ -51,87 +46,87 @@ const LandingPage = ({ onGetStarted }) => {
     {
       name: "Gustavo Silva",
       role: "Full Stack Developer & Project Lead",
-      image: "/placeholder.svg?height=300&width=300&text=DP",
+      image: "/placeholder.svg?height=300&width=300&text=GS",
       description:
         "Especialista em React e Node.js, responsável pela arquitetura do sistema e liderança técnica do projeto.",
       skills: ["React", "Node.js", "TypeScript", "MongoDB"],
       social: {
-        github: "https://github.com/danie",
-        linkedin: "https://linkedin.com/in/danie",
-        email: "danie@etecnotes.com",
+        github: "https://github.com/gustavo",
+        linkedin: "https://linkedin.com/in/gustavo",
+        email: "gustavo@etecnotes.com",
       },
     },
     {
       name: "Daniel Pereira",
       role: "UI/UX Designer & Frontend",
-      image: "/placeholder.svg?height=300&width=300&text=AS",
+      image: "/placeholder.svg?height=300&width=300&text=DP",
       description:
-        "Designer focada em experiência do usuário e interfaces modernas, criando designs acessíveis e intuitivos.",
+        "Designer focado em experiência do usuário e interfaces modernas, criando designs acessíveis e intuitivos.",
       skills: ["Figma", "Adobe XD", "CSS", "Design Systems"],
       social: {
-        github: "https://github.com/ana",
-        linkedin: "https://linkedin.com/in/ana",
-        email: "ana@etecnotes.com",
+        github: "https://github.com/daniel",
+        linkedin: "https://linkedin.com/in/daniel",
+        email: "daniel@etecnotes.com",
       },
     },
     {
       name: "Pedro Cruz",
       role: "Backend Developer & DevOps",
-      image: "/placeholder.svg?height=300&width=300&text=CS",
+      image: "/placeholder.svg?height=300&width=300&text=PC",
       description: "Desenvolvedor backend especializado em APIs robustas, banco de dados e infraestrutura em nuvem.",
       skills: ["Python", "PostgreSQL", "Docker", "AWS"],
       social: {
-        github: "https://github.com/carlos",
-        linkedin: "https://linkedin.com/in/carlos",
-        email: "carlos@etecnotes.com",
+        github: "https://github.com/pedro",
+        linkedin: "https://linkedin.com/in/pedro",
+        email: "pedro@etecnotes.com",
       },
     },
     {
       name: "Maykon Sullyvan",
       role: "AI Developer & Data Science",
-      image: "/placeholder.svg?height=300&width=300&text=MO",
+      image: "/placeholder.svg?height=300&width=300&text=MS",
       description: "Responsável pelo desenvolvimento da IATEC AI, machine learning e análise de dados educacionais.",
       skills: ["Python", "TensorFlow", "NLP", "Data Analysis"],
       social: {
-        github: "https://github.com/maria",
-        linkedin: "https://linkedin.com/in/maria",
-        email: "maria@etecnotes.com",
+        github: "https://github.com/maykon",
+        linkedin: "https://linkedin.com/in/maykon",
+        email: "maykon@etecnotes.com",
       },
     },
     {
       name: "Gustavo Paes",
-      role: "AI Developer & Data Science",
-      image: "/placeholder.svg?height=300&width=300&text=MO",
-      description: "Responsável pelo desenvolvimento da IATEC AI, machine learning e análise de dados educacionais.",
-      skills: ["Python", "TensorFlow", "NLP", "Data Analysis"],
+      role: "Frontend Developer & UI/UX",
+      image: "/placeholder.svg?height=300&width=300&text=GP",
+      description: "Especialista em interfaces responsivas e experiência do usuário em aplicações web modernas.",
+      skills: ["React", "CSS", "JavaScript", "Figma"],
       social: {
-        github: "https://github.com/maria",
-        linkedin: "https://linkedin.com/in/maria",
-        email: "maria@etecnotes.com",
+        github: "https://github.com/gustavopaes",
+        linkedin: "https://linkedin.com/in/gustavopaes",
+        email: "gustavopaes@etecnotes.com",
       },
     },
     {
       name: "Pedro Victor",
-      role: "AI Developer & Data Science",
-      image: "/placeholder.svg?height=300&width=300&text=MO",
-      description: "Responsável pelo desenvolvimento da IATEC AI, machine learning e análise de dados educacionais.",
-      skills: ["Python", "TensorFlow", "NLP", "Data Analysis"],
+      role: "Mobile Developer & QA",
+      image: "/placeholder.svg?height=300&width=300&text=PV",
+      description: "Desenvolvedor mobile e responsável pelos testes de qualidade e validação do sistema.",
+      skills: ["React Native", "Flutter", "Testing", "Mobile UX"],
       social: {
-        github: "https://github.com/maria",
-        linkedin: "https://linkedin.com/in/maria",
-        email: "maria@etecnotes.com",
+        github: "https://github.com/pedrovictor",
+        linkedin: "https://linkedin.com/in/pedrovictor",
+        email: "pedrovictor@etecnotes.com",
       },
     },
     {
       name: "Leandro Silva",
-      role: "AI Developer & Data Science",
-      image: "/placeholder.svg?height=300&width=300&text=MO",
-      description: "Responsável pelo desenvolvimento da IATEC AI, machine learning e análise de dados educacionais.",
-      skills: ["Python", "TensorFlow", "NLP", "Data Analysis"],
+      role: "DevOps & Infrastructure",
+      image: "/placeholder.svg?height=300&width=300&text=LS",
+      description: "Especialista em infraestrutura, deploy contínuo e monitoramento de sistemas em produção.",
+      skills: ["AWS", "Docker", "Kubernetes", "CI/CD"],
       social: {
-        github: "https://github.com/maria",
-        linkedin: "https://linkedin.com/in/maria",
-        email: "maria@etecnotes.com",
+        github: "https://github.com/leandro",
+        linkedin: "https://linkedin.com/in/leandro",
+        email: "leandro@etecnotes.com",
       },
     },
   ]
@@ -143,7 +138,7 @@ const LandingPage = ({ onGetStarted }) => {
       title: "Calendário Inteligente",
       description:
         "Organize suas aulas, provas e eventos acadêmicos com lembretes automáticos e sincronização em tempo real.",
-      color: "bg-gradient-to-r from-[#CCA9DD] to-[#CCA9DD]",
+      color: "bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD]",
       image: "/placeholder.svg?height=400&width=600&text=Calendar+Interface",
     },
     {
@@ -158,14 +153,14 @@ const LandingPage = ({ onGetStarted }) => {
       icon: FileText,
       title: "Jornal Etec Digital",
       description: "Fique por dentro das últimas notícias, eventos e oportunidades da sua escola em tempo real.",
-      color: "bg-gradient-to-r from-[#CCA9DD] to-[#CCA9DD]",
+      color: "bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD]",
       image: "/placeholder.svg?height=400&width=600&text=News+Feed",
     },
     {
       icon: Users,
       title: "Comunidade Estudantil",
       description: "Conecte-se com colegas, compartilhe conhecimento e participe de grupos de estudo colaborativos.",
-      color: "bg-gradient-to-r from-[#CCA9DD] to-[#CCA9DD]",
+      color: "bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD]",
       image: "/placeholder.svg?height=400&width=600&text=Community+Hub",
     },
   ]
@@ -237,17 +232,10 @@ const LandingPage = ({ onGetStarted }) => {
     },
   ]
 
-  // Função para ir para a homepage do app
-  const goToHomePage = () => {
-    if (typeof onGetStarted === "function") {
-      onGetStarted()
-    }
-  }
-
   return (
     <div className="min-h-screen bg-[#f5ecff ] dark:bg-[#121212] overflow-x-hidden">
       {/* Hero Section */}
-      <section id="início" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section id="início" className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 w-72 h-72 bg-[#8C43FF]/20 rounded-full blur-3xl"></div>
@@ -263,37 +251,21 @@ const LandingPage = ({ onGetStarted }) => {
             className="mb-8"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 dark:bg-[#1A1A1A]/50 bg-gray-100/50 backdrop-blur-sm rounded-full border dark:border-gray-700 border-gray-200 mb-6">
-              <Zap size={16} className="text-[#CCA9DD]" />
+              <Zap size={16} className="text-[#8C43FF]" />
               <span className="text-sm dark:text-gray-300 text-gray-600">Plataforma educacional do futuro</span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold dark:text-white text-gray-800 mb-6 leading-tight">
-              Transforme sua
+              Sobre o
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#CCA9DD] via-[#CCA9DD] to-[#CCA9DD] animate-pulse">
-                jornada acadêmica
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8C43FF] via-[#CCA9DD] to-[#8C43FF] animate-pulse">
+                EtecNotes
               </span>
             </h1>
 
             <p className="text-xl md:text-2xl dark:text-gray-300 text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              O EtecNotes é a plataforma completa que conecta estudantes da Etec com ferramentas inteligentes para
-              organização, aprendizado e colaboração.
+              Conheça a história, a equipe e a visão por trás da plataforma que está transformando a experiência educacional dos estudantes da Etec.
             </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
-          >
-            <button
-              onClick={goToHomePage}
-              className="group px-8 py-4 bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD] text-white rounded-2xl font-semibold text-lg flex items-center justify-center gap-2 hover:shadow-2xl hover:scale-105 transition-all"
-            >
-              Começar Gratuitamente
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </button>
           </motion.div>
 
           {/* Stats */}
@@ -306,8 +278,8 @@ const LandingPage = ({ onGetStarted }) => {
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="flex items-center justify-center mb-2">
-                  <stat.icon size={24} className="text-[#CCA9DD] mr-2" />
-                  <div className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#CCA9DD] to-[#CCA9DD]">
+                  <stat.icon size={24} className="text-[#8C43FF] mr-2" />
+                  <div className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD]">
                     {stat.number}
                   </div>
                 </div>
@@ -325,14 +297,83 @@ const LandingPage = ({ onGetStarted }) => {
           >
             <div className="flex flex-col items-center">
               <span className="text-sm dark:text-gray-400 text-gray-600 mb-2">Descubra mais</span>
-              <ChevronDown size={24} className="text-[#CCA9DD] animate-bounce" />
+              <ChevronDown size={24} className="text-[#8C43FF] animate-bounce" />
             </div>
           </motion.div>
         </div>
       </section>
 
+      {/* About Project Section */}
+      <section id="sobre" className="py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-4xl md:text-5xl font-bold dark:text-white text-gray-800 mb-6">
+                A ideia por trás do projeto
+              </h2>
+              <div className="space-y-6">
+                <p className="text-lg dark:text-gray-300 text-gray-600 leading-relaxed">
+                  O EtecNotes nasceu da observação direta das dificuldades enfrentadas pelos estudantes das Escolas
+                  Técnicas Estaduais. Percebemos que havia uma lacuna entre as ferramentas disponíveis e as necessidades
+                  específicas do ensino técnico.
+                </p>
+                <p className="text-lg dark:text-gray-300 text-gray-600 leading-relaxed">
+                  Nossa missão é democratizar o acesso a tecnologias educacionais de qualidade, criando uma plataforma
+                  que não apenas organiza a vida acadêmica, mas também potencializa o aprendizado através da
+                  inteligência artificial e colaboração.
+                </p>
+                <div className="grid grid-cols-2 gap-6 mt-8">
+                  {[
+                    {
+                      icon: Target,
+                      title: "Foco no Usuário",
+                      desc: "Desenvolvido com base em feedback real de estudantes",
+                    },
+                    { icon: Zap, title: "Tecnologia Avançada", desc: "IA e automação para simplificar tarefas" },
+                    { icon: Shield, title: "Segurança", desc: "Proteção total dos dados acadêmicos" },
+                    { icon: Globe, title: "Acessibilidade", desc: "Disponível para todos, em qualquer dispositivo" },
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <div className="p-2 bg-[#8C43FF]/20 rounded-lg">
+                        <item.icon size={20} className="text-[#8C43FF]" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold dark:text-white text-gray-800 mb-1">{item.title}</h4>
+                        <p className="text-sm dark:text-gray-400 text-gray-600">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="relative">
+                <img
+                  src="/placeholder.svg?height=500&width=600&text=Project+Vision"
+                  alt="Visão do Projeto"
+                  className="w-full h-96 object-cover rounded-3xl shadow-2xl"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#8C43FF]/20 to-transparent rounded-3xl"></div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
-      <section id="recursos" className="py-20 dark:bg-[#0F0F0F] bg-gray-0">
+      <section id="recursos" className="py-20 dark:bg-[#0F0F0F] bg-[#f8f4ff]">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -393,7 +434,7 @@ const LandingPage = ({ onGetStarted }) => {
                   alt={features[activeFeature].title}
                   className="w-full h-80 object-cover rounded-2xl"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#CCA9DD]/50 to-transparent rounded-2xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#8C43FF]/50 to-transparent rounded-2xl"></div>
                 <div className="absolute bottom-8 left-8 right-8">
                   <h4 className="text-2xl font-bold text-white mb-2">{features[activeFeature].title}</h4>
                   <p className="text-gray-200">{features[activeFeature].description}</p>
@@ -404,77 +445,8 @@ const LandingPage = ({ onGetStarted }) => {
         </div>
       </section>
 
-      {/* About Project Section */}
-      <section id="sobre" className="py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-4xl md:text-5xl font-bold dark:text-white text-gray-800 mb-6">
-                A ideia por trás do projeto
-              </h2>
-              <div className="space-y-6">
-                <p className="text-lg dark:text-gray-300 text-gray-600 leading-relaxed">
-                  O EtecNotes nasceu da observação direta das dificuldades enfrentadas pelos estudantes das Escolas
-                  Técnicas Estaduais. Percebemos que havia uma lacuna entre as ferramentas disponíveis e as necessidades
-                  específicas do ensino técnico.
-                </p>
-                <p className="text-lg dark:text-gray-300 text-gray-600 leading-relaxed">
-                  Nossa missão é democratizar o acesso a tecnologias educacionais de qualidade, criando uma plataforma
-                  que não apenas organiza a vida acadêmica, mas também potencializa o aprendizado através da
-                  inteligência artificial e colaboração.
-                </p>
-                <div className="grid grid-cols-2 gap-6 mt-8">
-                  {[
-                    {
-                      icon: Target,
-                      title: "Foco no Usuário",
-                      desc: "Desenvolvido com base em feedback real de estudantes",
-                    },
-                    { icon: Zap, title: "Tecnologia Avançada", desc: "IA e automação para simplificar tarefas" },
-                    { icon: Shield, title: "Segurança", desc: "Proteção total dos dados acadêmicos" },
-                    { icon: Globe, title: "Acessibilidade", desc: "Disponível para todos, em qualquer dispositivo" },
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-start gap-3">
-                      <div className="p-2 bg-[#CCA9DD]/20 rounded-lg">
-                        <item.icon size={20} className="text-[#CCA9DD]" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold dark:text-white text-gray-800 mb-1">{item.title}</h4>
-                        <p className="text-sm dark:text-gray-400 text-gray-600">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              <div className="relative">
-                <img
-                  src="/placeholder.svg?height=500&width=600&text=Project+Vision"
-                  alt="Visão do Projeto"
-                  className="w-full h-96 object-cover rounded-3xl shadow-2xl"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#CCA9DD]/20 to-transparent rounded-3xl"></div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
       {/* Creation Process Section */}
-      <section className="py-20 dark:bg-[#0F0F0F] bg-[#f8f4ff]">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -507,7 +479,7 @@ const LandingPage = ({ onGetStarted }) => {
                     <div className="w-12 h-12 bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD] rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">
                       {process.step}
                     </div>
-                    <process.icon size={28} className="text-[#CCA9DD]" />
+                    <process.icon size={28} className="text-[#8C43FF]" />
                   </div>
                   <h3 className="text-xl font-semibold dark:text-white text-gray-800 mb-3">{process.title}</h3>
                   <p className="dark:text-gray-400 text-gray-600 leading-relaxed mb-4">{process.description}</p>
@@ -524,7 +496,7 @@ const LandingPage = ({ onGetStarted }) => {
 
                 {/* Connection Line */}
                 {index < creationProcess.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-[#CCA9DD] to-[#CCA9DD] transform -translate-y-1/2 z-10"></div>
+                  <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD] transform -translate-y-1/2 z-10"></div>
                 )}
               </motion.div>
             ))}
@@ -533,7 +505,7 @@ const LandingPage = ({ onGetStarted }) => {
       </section>
 
       {/* Team Section */}
-      <section id="equipe" className="py-20">
+      <section id="equipe" className="py-20 dark:bg-[#0F0F0F] bg-[#f8f4ff]">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -548,7 +520,7 @@ const LandingPage = ({ onGetStarted }) => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {teamMembers.map((member, index) => (
               <motion.div
                 key={index}
@@ -563,25 +535,25 @@ const LandingPage = ({ onGetStarted }) => {
                     <img
                       src={member.image || "/placeholder.svg"}
                       alt={member.name}
-                      className="w-32 h-32 rounded-2xl mx-auto object-cover"
+                      className="w-24 h-24 rounded-2xl mx-auto object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#CCA9DD]/20 to-transparent rounded-2xl"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#8C43FF]/20 to-transparent rounded-2xl"></div>
                   </div>
 
                   <div className="text-center mb-4">
-                    <h3 className="text-xl font-semibold dark:text-white text-gray-800 mb-2">{member.name}</h3>
-                    <p className="text-[#CCA9DD] font-medium mb-3">{member.role}</p>
-                    <p className="dark:text-gray-400 text-gray-600 text-sm leading-relaxed mb-4">
+                    <h3 className="text-lg font-semibold dark:text-white text-gray-800 mb-2">{member.name}</h3>
+                    <p className="text-[#8C43FF] font-medium mb-3 text-sm">{member.role}</p>
+                    <p className="dark:text-gray-400 text-gray-600 text-xs leading-relaxed mb-4">
                       {member.description}
                     </p>
                   </div>
 
                   {/* Skills */}
-                  <div className="flex flex-wrap gap-2 mb-4">
+                  <div className="flex flex-wrap gap-1 mb-4 justify-center">
                     {member.skills.map((skill, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-1 text-xs dark:bg-[#2D2D2D] bg-gray-100 dark:text-gray-300 text-gray-600 rounded-full"
+                        className="px-2 py-0.5 text-xs dark:bg-[#2D2D2D] bg-gray-100 dark:text-gray-300 text-gray-600 rounded-full"
                       >
                         {skill}
                       </span>
@@ -592,25 +564,25 @@ const LandingPage = ({ onGetStarted }) => {
                   <div className="flex justify-center space-x-3">
                     <a
                       href={member.social.github}
-                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#CCA9DD] hover:text-white transition-colors"
+                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#8C43FF] hover:text-white transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <Github size={18} />
+                      <Github size={16} />
                     </a>
                     <a
                       href={member.social.linkedin}
-                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#CCA9DD] hover:text-white transition-colors"
+                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#8C43FF] hover:text-white transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <Linkedin size={18} />
+                      <Linkedin size={16} />
                     </a>
                     <a
                       href={`mailto:${member.social.email}`}
-                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#CCA9DD] hover:text-white transition-colors"
+                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#8C43FF] hover:text-white transition-colors"
                     >
-                      <Mail size={18} />
+                      <Mail size={16} />
                     </a>
                   </div>
                 </div>
@@ -621,7 +593,7 @@ const LandingPage = ({ onGetStarted }) => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 dark:bg-[#0F0F0F] bg-[#f8f4ff]">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -670,46 +642,8 @@ const LandingPage = ({ onGetStarted }) => {
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-[#CCA9DD]/20 to-[#CCA9DD]/20 rounded-3xl blur-3xl"></div>
-            <div className="relative dark:bg-[#1A1A1A]/50 bg-white/50 backdrop-blur-sm rounded-3xl p-12 border dark:border-gray-700 border-gray-200">
-              <h2 className="text-4xl md:text-5xl font-bold dark:text-white text-gray-800 mb-6">
-                Pronto para revolucionar seus estudos?
-              </h2>
-              <p className="text-xl dark:text-gray-300 text-gray-600 mb-8 max-w-2xl mx-auto">
-                Junte-se a milhares de estudantes que já estão usando o EtecNotes para organizar sua vida acadêmica e
-                alcançar seus objetivos educacionais.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  onClick={goToHomePage}
-                  className="group px-8 py-4 bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD] text-white rounded-2xl font-semibold text-lg flex items-center justify-center gap-2 hover:shadow-2xl hover:scale-105 transition-all"
-                >
-                  Começar Gratuitamente
-                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                </button>
-              </div>
-
-              <div className="mt-8 text-sm dark:text-gray-400 text-gray-600">
-                ✨ Sem cartão de crédito • Acesso completo • Suporte 24/7
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
     </div>
   )
 }
 
-export default LandingPage
+export default AboutPage

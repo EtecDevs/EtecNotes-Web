@@ -478,10 +478,10 @@ const EtecDashboard = ({ onLogout }) => {
   }
 
   return (
-    <div className="min-h-screen dark:bg-[#0A0A0A] bg-gray-50">
+    <div className="min-h-screen dark:bg-[#121212] bg-gray-50">
       <div className="flex">
         {/* Sidebar */}
-        <div className="w-64 dark:bg-[#161B22] bg-white border-r dark:border-[#30363D] border-gray-200 min-h-screen">
+        <div className="w-64 dark:bg-[#1E1E1E] bg-white border-r dark:border-[#30363D] border-gray-200 min-h-screen">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-8">
               <div className="p-2 bg-[#8C43FF] rounded-xl">

@@ -7,7 +7,7 @@ function Footer({ isAuthenticated = false, onNavigate, alwaysShowFull = false })
 
   if (shouldShowFull) {
     return (
-      <footer className="dark:bg-[#1E1E1E] bg-white border-t dark:border-[#333333] border-[#E6DFFF] px-6 transition-colors duration-300 py-8">
+      <footer className="dark:bg-[#1E1E1E] bg-[#f3e8ff] border-t dark:border-[#333333] border-[#E6DFFF] px-6 transition-colors duration-300 py-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
           <div>
             <h4 className="text-[#8C43FF] font-semibold mb-2">Links Rápidos</h4>
@@ -38,6 +38,15 @@ function Footer({ isAuthenticated = false, onNavigate, alwaysShowFull = false })
                   className="hover:underline"
                 >
                   Chat
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  onClick={(e) => handleNav(e, "Sobre Nós")}
+                  className="hover:underline"
+                >
+                  Sobre Nós
                 </a>
               </li>
             </ul>

@@ -751,7 +751,7 @@ const EtecDashboard = ({ onLogout }) => {
   const StatCard = ({ icon: Icon, title, value, subtitle, color, trend }) => (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+      className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
     >
       <div className="flex items-center justify-between mb-4">
         <div className={`p-3 rounded-xl ${color}`}>
@@ -814,7 +814,7 @@ const EtecDashboard = ({ onLogout }) => {
       </div>
 
       {/* Quick Actions */}
-      <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+      <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
         <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Ações Rápidas</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <button
@@ -865,7 +865,7 @@ const EtecDashboard = ({ onLogout }) => {
 
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+        <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
           <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Atividade Recente</h3>
           <div className="space-y-4">
             <div className="flex items-start gap-3">
@@ -901,7 +901,7 @@ const EtecDashboard = ({ onLogout }) => {
           </div>
         </div>
 
-        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+        <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
           <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Próximos Eventos</h3>
           <div className="space-y-4">
             {eventos.length === 0 ? (
@@ -975,7 +975,7 @@ const EtecDashboard = ({ onLogout }) => {
       </div>
 
       {/* Tabela de usuários */}
-      <div className="dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 overflow-hidden">
+      <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="dark:bg-[#0D1117] bg-gray-50">
@@ -1080,7 +1080,7 @@ const EtecDashboard = ({ onLogout }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {turmas.length === 0 ? (
-          <div className="col-span-full flex flex-col items-center justify-center p-12 dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200">
+          <div className="col-span-full flex flex-col items-center justify-center p-12 dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200">
             <BookOpen size={64} className="dark:text-gray-600 text-gray-400 mb-4" />
             <h3 className="text-xl font-semibold dark:text-gray-300 text-gray-700 mb-2">Nenhuma turma encontrada</h3>
             <p className="dark:text-gray-500 text-gray-500 text-center max-w-md">Ainda não há turmas cadastradas no sistema. Comece criando a primeira turma.</p>
@@ -1096,7 +1096,7 @@ const EtecDashboard = ({ onLogout }) => {
           <motion.div
             key={turma.id}
             whileHover={{ scale: 1.02 }}
-            className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+            className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
           >
             <div className="flex items-start justify-between mb-4">
               <div>
@@ -1150,7 +1150,7 @@ const EtecDashboard = ({ onLogout }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {eventos.length === 0 ? (
-          <div className="col-span-full flex flex-col items-center justify-center p-12 dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200">
+          <div className="col-span-full flex flex-col items-center justify-center p-12 dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200">
             <Calendar size={64} className="dark:text-gray-600 text-gray-400 mb-4" />
             <h3 className="text-xl font-semibold dark:text-gray-300 text-gray-700 mb-2">Nenhum evento encontrado</h3>
             <p className="dark:text-gray-500 text-gray-500 text-center max-w-md">Ainda não há eventos cadastrados no sistema. Comece criando o primeiro evento.</p>
@@ -1166,7 +1166,7 @@ const EtecDashboard = ({ onLogout }) => {
           <motion.div
             key={evento.id}
             whileHover={{ scale: 1.02 }}
-            className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+            className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
           >
             <div className="mb-4">
               <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-2">{evento.titulo}</h3>
@@ -1232,7 +1232,7 @@ const EtecDashboard = ({ onLogout }) => {
 
       <div className="space-y-4">
         {notifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-12 dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200">
+          <div className="flex flex-col items-center justify-center p-12 dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200">
             <Bell size={64} className="dark:text-gray-600 text-gray-400 mb-4" />
             <h3 className="text-xl font-semibold dark:text-gray-300 text-gray-700 mb-2">Nenhuma notificação</h3>
             <p className="dark:text-gray-500 text-gray-500 text-center max-w-md">Ainda não há notificações no sistema. Envie a primeira notificação para os usuários.</p>
@@ -1249,7 +1249,7 @@ const EtecDashboard = ({ onLogout }) => {
             key={notification.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+            className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
           >
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
@@ -1301,7 +1301,7 @@ const EtecDashboard = ({ onLogout }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+        <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 bg-blue-500/10 rounded-xl">
               <Users size={24} className="text-blue-500" />
@@ -1317,7 +1317,7 @@ const EtecDashboard = ({ onLogout }) => {
           </button>
         </div>
 
-        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+        <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 bg-green-500/10 rounded-xl">
               <Calendar size={24} className="text-green-500" />
@@ -1333,7 +1333,7 @@ const EtecDashboard = ({ onLogout }) => {
           </button>
         </div>
 
-        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+        <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 bg-purple-500/10 rounded-xl">
               <BarChart3 size={24} className="text-purple-500" />
@@ -1356,7 +1356,7 @@ const EtecDashboard = ({ onLogout }) => {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold dark:text-white text-gray-900">Configurações</h2>
       
-      <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+      <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
         <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Informações da Escola</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -1409,7 +1409,7 @@ const EtecDashboard = ({ onLogout }) => {
         </div>
       </div>
 
-      <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+      <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
         <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Configurações do Sistema</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -1439,7 +1439,7 @@ const EtecDashboard = ({ onLogout }) => {
       </div>
 
       {onLogout && (
-        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+        <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
           <h3 className="text-lg font-semibold text-red-500 mb-4">Zona de Perigo</h3>
           <button
             onClick={onLogout}
@@ -1580,10 +1580,10 @@ const EtecDashboard = ({ onLogout }) => {
     );
   }, [modalState.createUser, userForm, handleCreateUser, handleUserFormChange]);  // Renderização principal
   return (
-    <div className="min-h-screen dark:bg-[#0A0A0A] bg-gray-50">
+    <div className="min-h-screen bg-[#f5ecff ] dark:bg-[#121212]">
       <div className="flex">
         {/* Sidebar */}
-        <div className="w-64 dark:bg-[#161B22] bg-white border-r dark:border-[#30363D] border-gray-200 min-h-screen">
+        <div className="w-64 dark:bg-[#1E1E1E] bg-white border-r dark:border-[#30363D] border-gray-200 min-h-screen">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-8">
               <div className="p-2 bg-[#8C43FF] rounded-xl">
@@ -1626,7 +1626,7 @@ const EtecDashboard = ({ onLogout }) => {
         <div className="flex-1 p-8">
           {loading && (
             <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 flex items-center justify-center">
-              <div className="dark:bg-[#161B22] bg-white p-6 rounded-2xl shadow-xl">
+              <div className="dark:bg-[#1E1E1E] bg-white p-6 rounded-2xl shadow-xl">
                 <div className="flex items-center gap-3">
                   <RefreshCw className="animate-spin text-[#8C43FF]" size={24} />
                   <span className="dark:text-white text-gray-900 font-medium">Carregando...</span>

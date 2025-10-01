@@ -148,14 +148,14 @@ const UserDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen dark:bg-[#0A0A0A] bg-gray-50">
+    <div className="min-h-screen bg-[#f5ecff ] dark:bg-[#121212]">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 p-8 mb-6"
+          className="dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 p-8 mb-6"
         >
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Profile Image */}
@@ -290,7 +290,7 @@ const UserDashboard = () => {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="grid grid-cols-2 md:grid-cols-4 gap-4"
             >
-              <div className="dark:bg-[#161B22] bg-white rounded-xl p-4 shadow-sm border dark:border-[#30363D] border-gray-200">
+              <div className="dark:bg-[#1E1E1E] bg-white rounded-xl p-4 shadow-sm border dark:border-[#30363D] border-gray-200">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-blue-500/10 rounded-lg">
                     <FileText size={20} className="text-blue-500" />
@@ -302,7 +302,7 @@ const UserDashboard = () => {
                 </div>
               </div>
 
-              <div className="dark:bg-[#161B22] bg-white rounded-xl p-4 shadow-sm border dark:border-[#30363D] border-gray-200">
+              <div className="dark:bg-[#1E1E1E] bg-white rounded-xl p-4 shadow-sm border dark:border-[#30363D] border-gray-200">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-green-500/10 rounded-lg">
                     <CheckSquare size={20} className="text-green-500" />
@@ -314,7 +314,7 @@ const UserDashboard = () => {
                 </div>
               </div>
 
-              <div className="dark:bg-[#161B22] bg-white rounded-xl p-4 shadow-sm border dark:border-[#30363D] border-gray-200">
+              <div className="dark:bg-[#1E1E1E] bg-white rounded-xl p-4 shadow-sm border dark:border-[#30363D] border-gray-200">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-orange-500/10 rounded-lg">
                     <TrendingUp size={20} className="text-orange-500" />
@@ -326,7 +326,7 @@ const UserDashboard = () => {
                 </div>
               </div>
 
-              <div className="dark:bg-[#161B22] bg-white rounded-xl p-4 shadow-sm border dark:border-[#30363D] border-gray-200">
+              <div className="dark:bg-[#1E1E1E] bg-white rounded-xl p-4 shadow-sm border dark:border-[#30363D] border-gray-200">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-purple-500/10 rounded-lg">
                     <Clock size={20} className="text-purple-500" />
@@ -344,7 +344,7 @@ const UserDashboard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 p-6"
+              className="dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 p-6"
             >
               <div className="flex items-center gap-2 mb-6">
                 <Activity size={20} className="text-[#8C43FF]" />
@@ -372,7 +372,7 @@ const UserDashboard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 p-6"
+              className="dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 p-6"
             >
               <div className="flex items-center gap-2 mb-6">
                 <Award size={20} className="text-[#8C43FF]" />
@@ -424,7 +424,7 @@ const UserDashboard = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 p-6"
+              className="dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 p-6"
             >
               <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Configurações</h3>
 
@@ -514,7 +514,7 @@ const UserDashboard = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 p-6"
+              className="dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 p-6"
             >
               <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Informações de Contato</h3>
               <div className="space-y-3">

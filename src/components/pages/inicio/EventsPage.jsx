@@ -113,7 +113,7 @@ const EventsPage = () => {
         {events.map((event) => (
           <div
             key={event.id}
-            className="bg-gradient-to-br from-[#8C43FF]/80 to-[#CCA9DD]/80 dark:from-[#2D2D2D] dark:to-[#8C43FF]/40 rounded-3xl shadow-xl p-6 flex flex-col md:flex-row items-center hover:scale-[1.02] transition-transform duration-300"
+            className="bg-gradient-to-br bg-[#5b38ba] dark:bg-[#5b38ba] rounded-3xl shadow-xl p-6 flex flex-col md:flex-row items-center hover:scale-[1.02] transition-transform duration-300"
           >
             <img
               src={event.image || "/placeholder.svg"}
@@ -153,7 +153,7 @@ const EventsPage = () => {
       {/* Modal de Detalhes */}
       {selectedEvent && (
         <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-[#8C43FF]/90 to-[#CCA9DD]/90 dark:from-[#232E33] dark:to-[#8C43FF]/60 rounded-3xl p-8 max-w-2xl w-full shadow-2xl border-2 border-[#8C43FF]/40 relative">
+          <div className="bg-[#5b38ba] dark:bg-[#5b38ba] rounded-3xl p-8 max-w-2xl w-full shadow-2xl border-2 border-[#8C43FF]/40 relative">
             <button
               onClick={() => setSelectedEvent(null)}
               className="absolute top-4 right-4 px-3 py-1 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg shadow transition-colors"

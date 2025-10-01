@@ -498,10 +498,10 @@ const ChatPage = () => {
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="w-full max-w-md bg-white/95 dark:bg-gray-900/95 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/50 overflow-hidden"
+            className="w-full max-w-md dark:bg-[#1E1E1E] backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/50 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative p-8 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-cyan-500/10">
+            <div className="relative p-8 dark:bg-[#121212]">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-cyan-500/5" />
               <div className="relative">
                 <div className="flex items-center gap-3 mb-2">
@@ -518,7 +518,7 @@ const ChatPage = () => {
               </div>
             </div>
 
-            <div className="p-6 max-h-96 overflow-y-auto">
+            <div className="p-6 max-h-96 overflow-y-auto dark:bg-[1E1E1E]">
               <div className="space-y-3">
                 {availableTeachers.map((teacher, index) => (
                   <motion.button
@@ -527,7 +527,7 @@ const ChatPage = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
                     onClick={() => handleStartNewChat(teacher)}
-                    className="w-full group flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-gray-50/50 to-white/50 dark:from-gray-800/50 dark:to-gray-700/50 hover:from-purple-50 hover:to-blue-50 dark:hover:from-purple-900/20 dark:hover:to-blue-900/20 border border-gray-200/50 dark:border-gray-700/50 hover:border-purple-200 dark:hover:border-purple-700/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 hover:scale-[1.02]"
+                    className="w-full group flex items-center gap-4 p-4 rounded-2xl dark:bg-[#121212]"
                   >
                     <div className="relative">
                       <div className="w-14 h-14 rounded-2xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 shadow-lg">
@@ -554,20 +554,19 @@ const ChatPage = () => {
                     </div>
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                       <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-                        <MessageCircle size={16} className="text-white" />
+                        <Plus size={16} className="text-white" />
                       </div>
                     </div>
                   </motion.button>
                 ))}
               </div>
             </div>
-
-            <div className="p-6 bg-gradient-to-r from-gray-50/50 to-white/50 dark:from-gray-800/50 dark:to-gray-700/50 border-t border-gray-200/50 dark:border-gray-700/50">
+            <div className="p-6 ">
               <button
                 onClick={() => setShowTicketModal(true)}
-                className="w-full group flex items-center justify-center gap-3 p-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-2xl transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-[1.02]"
+                className="w-full group flex items-center justify-center gap-3 p-4 dark:bg-[#121212]"
               >
-                <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
+                <div className="w-6 h-6 rounded-lg flex items-center justify-center">
                   <Building size={16} />
                 </div>
                 <span className="font-semibold">Contatar Secretaria</span>
@@ -797,17 +796,14 @@ const ChatPage = () => {
   )
 
   return (
-    <div className="flex h-full bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="flex h-full bg-[##f5ecff ] dark:bg-[#121212]">
       {/* Sidebar de conversas */}
       <div className="w-80 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200/50 dark:border-gray-700/50 flex flex-col shadow-xl">
         {/* Header da sidebar */}
-        <div className="p-6 bg-gradient-to-br from-purple-500/5 via-blue-500/5 to-cyan-500/5 border-b border-gray-200/50 dark:border-gray-700/50">
+        <div className="p-6 bg-[##f5ecff ] dark:bg-[#121212]">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/25">
-                <MessageCircle size={20} className="text-white" />
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
                 Chat
               </h1>
             </div>
@@ -839,7 +835,7 @@ const ChatPage = () => {
         </div>
 
         {/* Lista de conversas */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto bg-[##f5ecff ] dark:bg-[#121212]">
           <div className="p-4">
             <div className="mb-4">
               <h2 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3 py-2 flex items-center gap-2">
@@ -937,19 +933,8 @@ const ChatPage = () => {
         </div>
 
         {/* Footer da sidebar */}
-        <div className="p-4 bg-gradient-to-br from-purple-500/5 via-blue-500/5 to-cyan-500/5 border-t border-gray-200/50 dark:border-gray-700/50">
-          <button
-            onClick={() => setShowNewChatModal(true)}
-            className="w-full group flex items-center justify-center gap-3 p-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-2xl transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-[1.02]"
-          >
-            <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-              <MessageCircle size={16} />
-            </div>
-            <span className="font-semibold">Nova Conversa</span>
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-              <Plus size={16} />
-            </div>
-          </button>
+        <div className="p-4 bg-[##f5ecff ] dark:bg-[#121212]">
+          
         </div>
       </div>
 
@@ -1036,7 +1021,7 @@ const ChatPage = () => {
                 {activeTab === "chat" && (
                   <>
                     {/* Mensagens */}
-                    <div className="flex-1 overflow-y-auto p-8 space-y-6 bg-gradient-to-br from-gray-50/50 via-white/50 to-gray-100/50 dark:from-gray-900/50 dark:via-gray-800/50 dark:to-gray-900/50">
+                    <div className="flex-1 overflow-y-auto p-8 space-y-6 bg-[##f5ecff ] dark:bg-[#121212]">
                       {activeConversation.messages?.length > 0 ? (
                         activeConversation.messages.map((msg, index) => (
                           <motion.div
@@ -1209,7 +1194,7 @@ const ChatPage = () => {
 
                 {/* Aba de Arquivos */}
                 {activeTab === "files" && (
-                  <div className="flex-1 p-8 bg-gradient-to-br from-gray-50/50 via-white/50 to-gray-100/50 dark:from-gray-900/50 dark:via-gray-800/50 dark:to-gray-900/50">
+                  <div className="flex-1 p-8 bg-[##f5ecff ] dark:bg-[#121212]">
                     <div className="text-center py-16">
                       <div className="w-32 h-32 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                         <FileText size={48} className="text-blue-500" />
@@ -1226,7 +1211,7 @@ const ChatPage = () => {
 
                 {/* Aba de Mídia */}
                 {activeTab === "media" && (
-                  <div className="flex-1 p-8 bg-gradient-to-br from-gray-50/50 via-white/50 to-gray-100/50 dark:from-gray-900/50 dark:via-gray-800/50 dark:to-gray-900/50">
+                  <div className="flex-1 p-8 bg-[##f5ecff ] dark:bg-[#121212]">
                     <div className="text-center py-16">
                       <div className="w-32 h-32 bg-gradient-to-br from-pink-500/10 to-purple-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                         <ImageIcon size={48} className="text-pink-500" />
@@ -1319,7 +1304,7 @@ const ChatPage = () => {
           </>
         ) : (
           /* Estado vazio - nenhuma conversa selecionada */
-          <div className="flex-1 flex flex-col items-center justify-center p-8 bg-gradient-to-br from-gray-50/50 via-white/50 to-gray-100/50 dark:from-gray-900/50 dark:via-gray-800/50 dark:to-gray-900/50">
+          <div className="flex-1 flex flex-col items-center justify-center p-8 bg-[##f5ecff ] dark:bg-[#121212]">
             <div className="w-40 h-40 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-3xl flex items-center justify-center mb-8 shadow-xl">
               <MessageCircle size={64} className="text-purple-500" />
             </div>
@@ -1333,7 +1318,7 @@ const ChatPage = () => {
               onClick={() => setShowNewChatModal(true)}
               className="group flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-2xl transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-[1.05] font-semibold text-lg"
             >
-              <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
+              <div className="w-6 h-6  rounded-lg flex items-center justify-center">
                 <Plus size={18} />
               </div>
               Iniciar Nova Conversa

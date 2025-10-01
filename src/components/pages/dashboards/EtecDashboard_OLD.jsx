@@ -620,7 +620,7 @@ const EtecDashboard = ({ onLogout }) => {
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
-            className={`w-full ${sizeClasses[size]} dark:bg-[#161B22] bg-white rounded-2xl shadow-xl border dark:border-[#30363D] border-gray-200 max-h-[90vh] overflow-y-auto`}
+            className={`w-full ${sizeClasses[size]} dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-xl border dark:border-[#30363D] border-gray-200 max-h-[90vh] overflow-y-auto`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between p-6 border-b dark:border-[#30363D] border-gray-200">
@@ -1528,7 +1528,7 @@ const EtecDashboard = ({ onLogout }) => {
   const StatCard = ({ icon: Icon, title, value, subtitle, color, trend }) => (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+      className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
     >
       <div className="flex items-center justify-between mb-4">
         <div className={`p-3 rounded-xl ${color}`}>
@@ -1593,7 +1593,7 @@ const EtecDashboard = ({ onLogout }) => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+          className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
         >
           <div className="flex items-center gap-2 mb-6">
             <BarChart3 size={20} className="text-[#8C43FF]" />
@@ -1624,7 +1624,7 @@ const EtecDashboard = ({ onLogout }) => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+          className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
         >
           <div className="flex items-center gap-2 mb-6">
             <Activity size={20} className="text-[#8C43FF]" />
@@ -1685,7 +1685,7 @@ const EtecDashboard = ({ onLogout }) => {
           <motion.div
             key={classItem.id}
             whileHover={{ scale: 1.02 }}
-            className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
+            className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
           >
             <div className="flex items-start justify-between mb-4">
               <div>
@@ -1763,7 +1763,7 @@ const EtecDashboard = ({ onLogout }) => {
         </button>
       </div>
 
-      <div className="dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 overflow-hidden">
+      <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="dark:bg-[#0D1117] bg-gray-50">
@@ -1874,7 +1874,7 @@ const EtecDashboard = ({ onLogout }) => {
         </div>
       </div>
 
-      <div className="dark:bg-[#161B22] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 overflow-hidden">
+      <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="dark:bg-[#0D1117] bg-gray-50">
@@ -1971,7 +1971,7 @@ const EtecDashboard = ({ onLogout }) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Calendar */}
-        <div className="lg:col-span-2 dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+        <div className="lg:col-span-2 dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold dark:text-white text-gray-900">Janeiro 2025</h3>
             <div className="flex gap-2">
@@ -2018,7 +2018,7 @@ const EtecDashboard = ({ onLogout }) => {
         </div>
 
         {/* Upcoming Events */}
-        <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+        <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
           <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-6">Próximos Eventos</h3>
           <div className="space-y-4">
             {upcomingEvents.map((event) => (
@@ -2059,7 +2059,7 @@ const EtecDashboard = ({ onLogout }) => {
       </div>
 
       {/* News Management */}
-      <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+      <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <Newspaper size={20} className="text-[#8C43FF]" />
@@ -2116,7 +2116,7 @@ const EtecDashboard = ({ onLogout }) => {
       </div>
 
       {/* Events Management */}
-      <div className="dark:bg-[#161B22] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+      <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <Calendar size={20} className="text-[#8C43FF]" />
@@ -2185,9 +2185,9 @@ const EtecDashboard = ({ onLogout }) => {
   ]
 
   return (
-    <div className="min-h-screen dark:bg-[#0A0A0A] bg-gray-50">
+    <div className="min-h-screen dark:bg-[#121212] bg-gray-50">
       {/* Header with ETEC Info */}
-      <div className="dark:bg-[#161B22] bg-white border-b dark:border-[#30363D] border-gray-200 px-6 py-4">
+      <div className="dark:bg-[#1E1E1E] bg-white border-b dark:border-[#30363D] border-gray-200 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="p-3 bg-[#8C43FF] rounded-xl">
@@ -2229,7 +2229,7 @@ const EtecDashboard = ({ onLogout }) => {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Navigation Tabs */}
-        <div className="flex flex-wrap gap-2 mb-8 p-1 dark:bg-[#161B22] bg-white rounded-2xl border dark:border-[#30363D] border-gray-200">
+        <div className="flex flex-wrap gap-2 mb-8 p-1 dark:bg-[#1E1E1E] bg-white rounded-2xl border dark:border-[#30363D] border-gray-200">
           {sections.map((section) => (
             <button
               key={section.id}
@@ -2263,7 +2263,7 @@ const EtecDashboard = ({ onLogout }) => {
       </div>
 
       {/* Footer */}
-      <footer className="dark:bg-[#161B22] bg-white border-t dark:border-[#30363D] border-gray-200 px-6 py-4 mt-12">
+      <footer className="dark:bg-[#1E1E1E] bg-white border-t dark:border-[#30363D] border-gray-200 px-6 py-4 mt-12">
         <div className="max-w-7xl mx-auto text-center">
           <p className="dark:text-gray-400 text-gray-600">© 2025 EtecNotes - Sistema de Gestão Educacional</p>
         </div>

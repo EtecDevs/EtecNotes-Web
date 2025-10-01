@@ -10,10 +10,11 @@ import PatchNotesPage from "./pages/inicio/PatchNotesPage"
 import SchedulePage from "./pages/calendar/SchedulePage"
 import UserDashboard from "./pages/dashboards/UserDashboard"
 import ChatPage from "./pages/chat/ChatPage"
+import AboutPage from "./pages/about/AboutPage"
 import ThemeToggle from "./ThemeToggle"
 import { ThemeProvider } from "../context/ThemeContext"
 import { AuthProvider, useAuth } from "../hooks/useAuth"
-import LogoEtecNotes from "../assets/LogoEtecNotes.png"
+import LogoEtecNotes from "../assets/LuaEtecNotes.png"
 import CloudPage from "./pages/cloud/CloudPage"
 import LandingPage from "./pages/landing/LandingPage"
 import LoginPage from "./pages/login/LoginPage"
@@ -104,7 +105,7 @@ function AppContent() {
   // Mostrar loading enquanto verifica autenticação ou status do sistema
   if (loading || checkingSystem) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-[#121212]">
+      <div className="flex items-center justify-center min-h-screen bg-[#f5ecff ] dark:bg-[#121212]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400">Carregando sistema...</p>
@@ -153,6 +154,8 @@ function AppContent() {
 
       case "Eventos":
         return <HomePage activeTab="Eventos" onTabChange={handleContentTabChange} />
+      case "Sobre Nós":
+        return <AboutPage />
       case "Calendário":
         return <CalendarPage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
       case "Chat":
@@ -174,21 +177,26 @@ function AppContent() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen dark:bg-[#121212] bg-white transition-colors duration-300">
+    <div className="flex flex-col min-h-screen bg-[#f5ecff ] dark:bg-[#121212] transition-colors duration-300">
         {/* Header */}
-        <header className="h-[60px] dark:bg-[#1E1E1E] bg-white border-b dark:border-[#333333] border-gray-200 flex items-center justify-between px-6 transition-colors duration-300">
+        <header className="h-[60px] dark:bg-[#1E1E1E] bg-[#5b38ba] border-b dark:border-[#333333] border-gray-200 flex items-center justify-between px-6 transition-colors duration-300">
           {/* Logo */}
           <div
             className="flex items-center cursor-pointer"
-            onClick={() => handleMainTabChange("Landing")}
-            title="Ir para a landing page"
+            onClick={() => handleMainTabChange(isAuthenticated ? "Início" : "Landing")}
+            title={isAuthenticated ? "Ir para o início" : "Ir para a landing page"}
           >
             <img
               src={LogoEtecNotes}
               alt="Logo EtecNotes"
-              className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+              className="w-8 h-8 rounded-full object-contain flex-shrink-0"
+              style={{ 
+                imageRendering: '-webkit-optimize-contrast',
+                backfaceVisibility: 'hidden',
+                filter: 'contrast(1.1) saturate(1.1)'
+              }}
             />
-            <span className="ml-2 dark:text-white text-gray-800 font-bold text-lg transition-colors duration-300">
+            <span className="ml-2 text-white font-bold text-lg transition-colors duration-300">
               EtecNotes
             </span>
           </div>
@@ -211,8 +219,8 @@ function AppContent() {
               {/* Navigation Icons - Desktop */}
               <div className="hidden md:flex items-center space-x-6">
                 <button
-                  className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                    (activeTab === "Início" || activeTab === "Patch Notes") ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
+                  className={`p-1.5 rounded-full transition-all duration-300 hover:bg-white/20 dark:hover:bg-[#333333] ${
+                    (activeTab === "Início" || activeTab === "Patch Notes") ? "text-purple-500" : "text-white/80 hover:text-white cursor-pointer"
                   }`}
                   onClick={() => handleMainTabChange("Início")}
                   aria-label="Página Inicial"
@@ -220,8 +228,8 @@ function AppContent() {
                   <Home size={28} />
                 </button>
                 <button
-                  className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                    activeTab === "Calendário" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
+                  className={`p-1.5 rounded-full transition-all duration-300 hover:bg-white/20 dark:hover:bg-[#333333] ${
+                    activeTab === "Calendário" ? "text-purple-500" : "text-white/80 hover:text-white cursor-pointer"
                   }`}
                   onClick={() => handleMainTabChange("Calendário")}
                   aria-label="Calendário"
@@ -229,8 +237,8 @@ function AppContent() {
                   <Calendar size={28} />
                 </button>
                 <button
-                  className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                    activeTab === "Chat" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
+                  className={`p-1.5 rounded-full transition-all duration-300 hover:bg-white/20 dark:hover:bg-[#333333] ${
+                    activeTab === "Chat" ? "text-purple-500" : "text-white/80 hover:text-white cursor-pointer"
                   }`}
                   onClick={() => handleMainTabChange("Chat")}
                   aria-label="Chat"
@@ -238,12 +246,12 @@ function AppContent() {
                   <MessageCircle size={28} />
                 </button>
                 <button
-                  className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
+                  className={`p-1.5 rounded-full transition-all duration-300 hover:bg-white/20 dark:hover:bg-[#333333] ${
                     (user?.role === "professor" && activeTab === "Perfil") ||
                     (user?.role === "ADM" && activeTab === "AdminDashboard") ||
                     (user?.role === "aluno" && activeTab === "Perfil")
-                      ? "text-[#8C43FF]"
-                      : "dark:text-gray-400 text-gray-500 cursor-pointer"
+                      ? "text-purple-500"
+                      : "text-white/80 hover:text-white cursor-pointer"
                   }`}
                   onClick={() => {
                     if (user?.role === "professor") {
@@ -259,8 +267,8 @@ function AppContent() {
                   <User size={28} />
                 </button>
                 <button
-                  className={`p-1.5 rounded-md transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333] ${
-                    activeTab === "Cloud" ? "text-[#8C43FF]" : "dark:text-gray-400 text-gray-500 cursor-pointer"
+                  className={`p-1.5 rounded-full transition-all duration-300 hover:bg-white/20 dark:hover:bg-[#333333] ${
+                    activeTab === "Cloud" ? "text-purple-500" : "text-white/80 hover:text-white cursor-pointer"
                   }`}
                   onClick={() => handleMainTabChange("Cloud")}
                   aria-label="Cloud"
@@ -274,11 +282,11 @@ function AppContent() {
                 <ThemeToggle />
 
                 <button
-                  className="p-1.5 rounded-full border dark:border-gray-600 border-gray-300 transition-all duration-300 hover:bg-gray-100 dark:hover:bg-[#333333]"
+                  className="p-1.5 rounded-full border border-white/30 dark:border-gray-600 transition-all duration-300 hover:bg-white/20 dark:hover:bg-[#333333]"
                   aria-label="Ajuda"
                   title="Ajuda"
                 >
-                  <HelpCircle size={20} className="dark:text-gray-400 text-gray-500" />
+                  <HelpCircle size={20} className="text-white/80 hover:text-white dark:text-gray-400" />
                 </button>
                 <button
                   onClick={handleLogout}
@@ -293,7 +301,7 @@ function AppContent() {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto dark:bg-[#121212] bg-white transition-colors duration-300">
+        <main className="flex-1 overflow-auto bg-[#f5ecff ] dark:bg-[#121212] transition-colors duration-300">
           {renderActivePage()}
         </main>
 
