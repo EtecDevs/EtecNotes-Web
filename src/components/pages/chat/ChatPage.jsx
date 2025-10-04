@@ -38,6 +38,7 @@ const ChatPage = () => {
   const [showContactInfo, setShowContactInfo] = useState(false)
   const [activeTab, setActiveTab] = useState("chat") // chat, files, media
   const [isTyping, setIsTyping] = useState(false)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
 
   // Estados do formulário de ticket
   const [ticketForm, setTicketForm] = useState({
@@ -51,7 +52,20 @@ const ChatPage = () => {
   })
 
   const messagesEndRef = useRef(null)
+  const messagesContainerRef = useRef(null)
   const fileInputRef = useRef(null)
+  const emojiPickerRef = useRef(null)
+
+  // Emojis organizados por categoria
+  const emojiCategories = {
+    recentes: ['😀', '😂', '❤️', '👍', '👋', '🔥', '💯', '✨'],
+    rostos: ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕'],
+    gestos: ['👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '👊', '✊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏'],
+    objetos: ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '🆔', '⚛️', '🉑', '☢️', '☣️', '📴', '📳', '🈶', '🈚', '🈸', '🈺', '🈷️', '✴️', '🆚', '💮', '🉐', '㊙️', '㊗️', '🈴', '🈵', '🈹', '🈲', '🅰️', '🅱️', '🆎', '🆑', '🅾️', '🆘', '❌', '⭕', '🛑', '⛔', '📛', '🚫', '💯', '💢', '♨️', '🚷', '🚯', '🚳', '🚱', '🔞', '📵', '🚭'],
+    natureza: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋', '🐌', '🐞', '🐜', '🦟', '🦗', '🕷️', '🕸️', '🦂', '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘', '🦛', '🦏', '🐪', '🐫', '🦒', '🦘', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🦙', '🐐', '🦌', '🐕', '🐩', '🦮', '🐕‍🦺', '🐈', '🐓', '🦃', '🦚', '🦜', '🦢', '🦩', '🕊️', '🐇', '🦝', '🦨', '🦡', '🦦', '🦥', '🐁', '🐀', '🐿️'],
+    comida: ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥦', '🥬', '🥒', '🌶️', '🫑', '🌽', '🥕', '🫒', '🧄', '🧅', '🥔', '🍠', '🥐', '🥖', '🍞', '🥨', '🥯', '🧀', '🥚', '🍳', '🧈', '🥞', '🧇', '🥓', '🥩', '🍗', '🍖', '🦴', '🌭', '🍔', '🍟', '🍕', '🫓', '🥪', '🥙', '🧆', '🌮', '🌯', '🫔', '🥗', '🥘', '🫕', '🥫', '🍝', '🍜', '🍲', '🍛', '🍣', '🍱', '🥟', '🦪', '🍤', '🍙', '🍚', '🍘', '🍥', '🥠', '🥮', '🍢', '🍡', '🍧', '🍨', '🍦', '🥧', '🧁', '🍰', '🎂', '🍮', '🍭', '🍬', '🍫', '🍿', '🍩', '🍪', '🌰', '🥜', '🍯'],
+    atividades: ['⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🪀', '🏓', '🏸', '🏒', '🏑', '🥍', '🏏', '🪃', '🥅', '⛳', '🪁', '🏹', '🎣', '🤿', '🥊', '🥋', '🎽', '🛹', '🛷', '⛸️', '🥌', '🎿', '⛷️', '🏂', '🪂', '🏋️‍♀️', '🏋️', '🏋️‍♂️', '🤼‍♀️', '🤼', '🤼‍♂️', '🤸‍♀️', '🤸', '🤸‍♂️', '⛹️‍♀️', '⛹️', '⛹️‍♂️', '🤺', '🤾‍♀️', '🤾', '🤾‍♂️', '🏌️‍♀️', '🏌️', '🏌️‍♂️', '🧘‍♀️', '🧘', '🧘‍♂️', '🏄‍♀️', '🏄', '🏄‍♂️', '🏊‍♀️', '🏊', '🏊‍♂️', '🤽‍♀️', '🤽', '🤽‍♂️', '🚣‍♀️', '🚣', '🚣‍♂️', '🧗‍♀️', '🧗', '🧗‍♂️', '🚵‍♀️', '🚵', '🚵‍♂️', '🚴‍♀️', '🚴', '🚴‍♂️', '🏆', '🥇', '🥈', '🥉', '🏅', '🎖️', '🏵️', '🎗️']
+  }
 
   // Mock data baseado no sistema especificado
   const currentUser = {
@@ -310,6 +324,26 @@ const ChatPage = () => {
     }
   }
 
+  // Handler para inserir emoji
+  const handleEmojiSelect = (emoji) => {
+    setMessage(prev => prev + emoji)
+    setShowEmojiPicker(false)
+  }
+
+  // Fechar picker de emoji ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+        setShowEmojiPicker(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   // Handlers
   const handleSendMessage = () => {
     if (!message.trim() || !activeConversation) return
@@ -322,23 +356,28 @@ const ChatPage = () => {
       status: "sent",
     }
 
+    // Atualizar conversations e activeConversation
+    const updatedConversation = {
+      ...activeConversation,
+      messages: [...activeConversation.messages, newMessage],
+      lastMessage: {
+        content: message.trim(),
+        timestamp: new Date(),
+        sender: currentUser.id,
+      },
+    }
+
     setConversations((prev) =>
       prev.map((conv) => {
         if (conv.id === activeConversation.id) {
-          return {
-            ...conv,
-            messages: [...conv.messages, newMessage],
-            lastMessage: {
-              content: message.trim(),
-              timestamp: new Date(),
-              sender: currentUser.id,
-            },
-          }
+          return updatedConversation
         }
         return conv
       }),
     )
 
+    // Atualizar activeConversation imediatamente
+    setActiveConversation(updatedConversation)
     setMessage("")
 
     // Simular resposta automática em alguns casos
@@ -352,10 +391,10 @@ const ChatPage = () => {
           status: "sent",
         }
 
-        setConversations((prev) =>
-          prev.map((conv) => {
+        setConversations((prev) => {
+          const updatedConversations = prev.map((conv) => {
             if (conv.id === activeConversation.id) {
-              return {
+              const updatedConv = {
                 ...conv,
                 messages: [...conv.messages, response],
                 lastMessage: {
@@ -364,10 +403,14 @@ const ChatPage = () => {
                   sender: response.senderId,
                 },
               }
+              // Atualizar activeConversation se esta é a conversa ativa
+              setActiveConversation(updatedConv)
+              return updatedConv
             }
             return conv
-          }),
-        )
+          })
+          return updatedConversations
+        })
       }, 2000)
     }
   }
@@ -459,10 +502,10 @@ const ChatPage = () => {
         status: "sent",
       }
 
-      setConversations((prev) =>
-        prev.map((conv) => {
+      setConversations((prev) => {
+        const updatedConversations = prev.map((conv) => {
           if (conv.id === newTicket.id) {
-            return {
+            const updatedConv = {
               ...conv,
               messages: [...conv.messages, autoResponse],
               lastMessage: {
@@ -471,16 +514,42 @@ const ChatPage = () => {
                 sender: "secretaria",
               },
             }
+            // Atualizar activeConversation se esta é a conversa ativa
+            if (activeConversation && activeConversation.id === newTicket.id) {
+              setActiveConversation(updatedConv)
+            }
+            return updatedConv
           }
           return conv
-        }),
-      )
+        })
+        return updatedConversations
+      })
     }, 1500)
   }
 
-  // Scroll automático para última mensagem
+  // Sincronizar activeConversation com mudanças em conversations
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    if (activeConversation) {
+      const updatedConversation = conversations.find(conv => conv.id === activeConversation.id)
+      if (updatedConversation && updatedConversation !== activeConversation) {
+        setActiveConversation(updatedConversation)
+      }
+    }
+  }, [conversations, activeConversation])
+
+  // Scroll automático para última mensagem (sempre vai para o final)
+  useEffect(() => {
+    if (messagesContainerRef.current && activeConversation?.messages?.length > 0) {
+      const container = messagesContainerRef.current
+      
+      // Use timeout para garantir que o DOM foi atualizado
+      setTimeout(() => {
+        container.scrollTo({
+          top: container.scrollHeight,
+          behavior: 'smooth'
+        })
+      }, 100)
+    }
   }, [activeConversation?.messages])
 
   // Modal para nova conversa
@@ -581,6 +650,56 @@ const ChatPage = () => {
     </AnimatePresence>
   )
 
+  // Componente Emoji Picker
+  const EmojiPicker = () => (
+    <AnimatePresence>
+      {showEmojiPicker && (
+        <motion.div
+          ref={emojiPickerRef}
+          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10, scale: 0.95 }}
+          className="absolute bottom-full right-0 mb-2 w-80 h-96 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden z-50"
+        >
+          <div className="p-4 border-b border-gray-200/50 dark:border-gray-700/50">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Selecionar Emoji</h3>
+            <div className="flex gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-[#5b38ba] scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
+              {Object.keys(emojiCategories).map((category) => (
+                <button
+                  key={category}
+                  className="px-3 py-1 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 bg-gray-100/50 dark:bg-gray-800/50 hover:bg-purple-100/50 dark:hover:bg-purple-900/20 rounded-xl transition-all duration-200 whitespace-nowrap"
+                >
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          <div className="p-4 overflow-y-auto max-h-80 scrollbar-thin scrollbar-thumb-[#5b38ba] scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
+            {Object.entries(emojiCategories).map(([category, emojis]) => (
+              <div key={category} className="mb-6">
+                <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 capitalize">
+                  {category}
+                </h4>
+                <div className="grid grid-cols-8 gap-2">
+                  {emojis.map((emoji, index) => (
+                    <button
+                      key={`${category}-${index}`}
+                      onClick={() => handleEmojiSelect(emoji)}
+                      className="w-8 h-8 flex items-center justify-center text-xl hover:bg-purple-100/50 dark:hover:bg-purple-900/20 rounded-lg transition-all duration-200 hover:scale-110"
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+
   // Modal para criação de ticket
   const TicketModal = () => (
     <AnimatePresence>
@@ -615,7 +734,7 @@ const ChatPage = () => {
                 </div>
                 <button
                   onClick={() => setShowTicketModal(false)}
-                  className="p-3 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 rounded-2xl transition-all duration-300 hover:scale-110"
+                  className="p-3 hover:bg-gray-100/50 dark:hover:bg-[#1E1E1E] rounded-2xl transition-all duration-300 hover:scale-110"
                 >
                   <X size={24} className="text-gray-600 dark:text-gray-400" />
                 </button>
@@ -772,7 +891,7 @@ const ChatPage = () => {
               </div>
             </div>
 
-            <div className="p-8 bg-gradient-to-r from-gray-50/50 to-white/50 dark:from-gray-800/50 dark:to-gray-700/50 border-t border-gray-200/50 dark:border-gray-700/50">
+            <div className="p-8 bg-gradient-to-r from-gray-50/50 to-white/50 dark:from-[#1E1E1E] dark:to-gray-700/50 border-t border-gray-200/50 dark:border-gray-700/50">
               <div className="flex gap-4">
                 <button
                   onClick={() => setShowTicketModal(false)}
@@ -796,11 +915,11 @@ const ChatPage = () => {
   )
 
   return (
-    <div className="flex h-full bg-[##f5ecff ] dark:bg-[#121212]">
+    <div className="flex h-full bg-[#f3e8ff] dark:bg-[#121212]">
       {/* Sidebar de conversas */}
       <div className="w-80 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200/50 dark:border-gray-700/50 flex flex-col shadow-xl">
         {/* Header da sidebar */}
-        <div className="p-6 bg-[##f5ecff ] dark:bg-[#121212]">
+        <div className="p-6 bg-[#f3e8ff] dark:bg-[#121212]">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
@@ -818,7 +937,7 @@ const ChatPage = () => {
           {/* Barra de pesquisa */}
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-2xl blur-xl" />
-            <div className="relative bg-white/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg">
+            <div className="relative bg-white/50 dark:bg-[#1E1E1E] backdrop-blur-xl rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg">
               <Search
                 size={18}
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
@@ -835,7 +954,7 @@ const ChatPage = () => {
         </div>
 
         {/* Lista de conversas */}
-        <div className="flex-1 overflow-y-auto bg-[##f5ecff ] dark:bg-[#121212]">
+        <div className="flex-1 overflow-y-auto bg-[#f3e8ff] dark:bg-[#121212] max-h-[calc(100vh-200px)] scrollbar-thin scrollbar-thumb-[#5b38ba] scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
           <div className="p-4">
             <div className="mb-4">
               <h2 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3 py-2 flex items-center gap-2">
@@ -862,7 +981,7 @@ const ChatPage = () => {
                     className={`w-full group flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 text-left hover:scale-[1.02] ${
                       activeConversation?.id === conversation.id
                         ? "bg-gradient-to-r from-purple-500/20 to-blue-500/20 border-l-4 border-purple-500 shadow-lg shadow-purple-500/10"
-                        : "bg-white/50 dark:bg-gray-800/50 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 dark:hover:from-purple-900/20 dark:hover:to-blue-900/20 border border-gray-200/50 dark:border-gray-700/50 hover:border-purple-200 dark:hover:border-purple-700/50 hover:shadow-lg hover:shadow-purple-500/5"
+                        : "bg-white/50 dark:bg-[#1E1E1E] hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 dark:hover:from-purple-900/20 dark:hover:to-blue-900/20 border border-gray-200/50 dark:border-gray-700/50 hover:border-purple-200 dark:hover:border-purple-700/50 hover:shadow-lg hover:shadow-purple-500/5"
                     }`}
                   >
                     <div className="relative">
@@ -933,7 +1052,7 @@ const ChatPage = () => {
         </div>
 
         {/* Footer da sidebar */}
-        <div className="p-4 bg-[##f5ecff ] dark:bg-[#121212]">
+        <div className="p-4 bg-[#f3e8ff] dark:bg-[#121212]">
           
         </div>
       </div>
@@ -943,7 +1062,7 @@ const ChatPage = () => {
         {activeConversation ? (
           <>
             {/* Header da conversa */}
-            <div className="h-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 px-8 flex items-center justify-between shadow-lg">
+            <div className="h-20 bg-white/80 dark:bg-[#1E1E1E] px-8 flex items-center justify-between shadow-lg">
               <div className="flex items-center gap-4">
                 <div className="relative">
                   <div className="w-12 h-12 rounded-2xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 shadow-lg">
@@ -974,7 +1093,7 @@ const ChatPage = () => {
                         className={`text-xs px-2 py-1 rounded-lg font-medium ${getTicketStatusColor(activeConversation.ticketInfo.status)}`}
                       >
                         #{activeConversation.ticketInfo.protocol} -{" "}
-                        {activeConversation.ticketInfo.status.replace("_", " ")}
+                        {activeConversation.ticketInfo.status.replace(" ", " ")}
                       </span>
                     </div>
                   )}
@@ -982,7 +1101,7 @@ const ChatPage = () => {
               </div>
 
               {/* Abas */}
-              <div className="flex items-center gap-2 bg-gray-100/50 dark:bg-gray-800/50 backdrop-blur-xl rounded-2xl p-1 border border-gray-200/50 dark:border-gray-700/50">
+              <div className="flex items-center gap-2 bg-gray-100/50 dark:bg-[#1E1E1E] backdrop-blur-xl rounded-2xl p-1 border border-gray-200/50 dark:border-gray-700/50">
                 {["chat", "files", "media"].map((tab) => (
                   <button
                     key={tab}
@@ -999,17 +1118,8 @@ const ChatPage = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setShowContactInfo(!showContactInfo)}
-                  className={`p-3 rounded-2xl transition-all duration-300 hover:scale-110 shadow-lg ${
-                    showContactInfo
-                      ? "bg-purple-500/20 text-purple-600 shadow-purple-500/10"
-                      : "bg-gray-100/50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-400 hover:bg-purple-500/10 hover:text-purple-600 shadow-gray-500/10"
-                  }`}
-                >
-                  <Info size={20} />
-                </button>
-                <button className="p-3 bg-gray-100/50 dark:bg-gray-800/50 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-400 rounded-2xl transition-all duration-300 hover:scale-110 shadow-lg shadow-gray-500/10">
+                
+                <button className="p-3 bg-gray-100/50 dark:bg-[#1E1E1E] hover:bg-gray-200/50 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-400 rounded-2xl transition-all duration-300 hover:scale-110 shadow-lg shadow-gray-500/10">
                   <MoreHorizontal size={20} />
                 </button>
               </div>
@@ -1021,7 +1131,7 @@ const ChatPage = () => {
                 {activeTab === "chat" && (
                   <>
                     {/* Mensagens */}
-                    <div className="flex-1 overflow-y-auto p-8 space-y-6 bg-[##f5ecff ] dark:bg-[#121212]">
+                    <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-8 space-y-6 bg-[#f3e8ff] dark:bg-[#121212] max-h-[calc(100vh-280px)] scrollbar-thin scrollbar-thumb-[#5b38ba] scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
                       {activeConversation.messages?.length > 0 ? (
                         activeConversation.messages.map((msg, index) => (
                           <motion.div
@@ -1125,8 +1235,8 @@ const ChatPage = () => {
                     </div>
 
                     {/* Input de mensagem */}
-                    <div className="p-8 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-t border-gray-200/50 dark:border-gray-700/50">
-                      <div className="flex items-end gap-4">
+                    <div className="p-8 bg-white/80 dark:bg-[#1E1E1E]">
+                      <div className="flex items-end gap-4 relative">
                         <button className="p-4 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 hover:from-purple-100 hover:to-blue-100 dark:hover:from-purple-900/20 dark:hover:to-blue-900/20 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 rounded-2xl transition-all duration-300 hover:scale-110 shadow-lg">
                           <Paperclip size={20} />
                         </button>
@@ -1157,9 +1267,19 @@ const ChatPage = () => {
                           </div>
                         </div>
 
-                        <button className="p-4 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 hover:from-yellow-100 hover:to-orange-100 dark:hover:from-yellow-900/20 dark:hover:to-orange-900/20 text-gray-600 dark:text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 rounded-2xl transition-all duration-300 hover:scale-110 shadow-lg">
-                          <Smile size={20} />
-                        </button>
+                        <div className="relative">
+                          <button 
+                            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                            className={`p-4 bg-gradient-to-br transition-all duration-300 hover:scale-110 shadow-lg rounded-2xl ${
+                              showEmojiPicker 
+                                ? 'from-purple-100 to-blue-100 dark:from-purple-900/30 dark:to-blue-900/30 text-purple-600 dark:text-purple-400'
+                                : 'from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 hover:from-yellow-100 hover:to-orange-100 dark:hover:from-yellow-900/20 dark:hover:to-orange-900/20 text-gray-600 dark:text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400'
+                            }`}
+                          >
+                            <Smile size={20} />
+                          </button>
+                          <EmojiPicker />
+                        </div>
 
                         <button
                           onClick={handleSendMessage}
@@ -1194,7 +1314,7 @@ const ChatPage = () => {
 
                 {/* Aba de Arquivos */}
                 {activeTab === "files" && (
-                  <div className="flex-1 p-8 bg-[##f5ecff ] dark:bg-[#121212]">
+                  <div className="flex-1 p-8 bg-[#f3e8ff] dark:bg-[#121212] max-h-[calc(100vh-280px)] overflow-y-auto scrollbar-thin scrollbar-thumb-[#5b38ba] scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
                     <div className="text-center py-16">
                       <div className="w-32 h-32 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                         <FileText size={48} className="text-blue-500" />
@@ -1211,7 +1331,7 @@ const ChatPage = () => {
 
                 {/* Aba de Mídia */}
                 {activeTab === "media" && (
-                  <div className="flex-1 p-8 bg-[##f5ecff ] dark:bg-[#121212]">
+                  <div className="flex-1 p-8 bg-[#f3e8ff] dark:bg-[#121212] max-h-[calc(100vh-280px)] overflow-y-auto scrollbar-thin scrollbar-thumb-[#5b38ba] scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
                     <div className="text-center py-16">
                       <div className="w-32 h-32 bg-gradient-to-br from-pink-500/10 to-purple-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                         <ImageIcon size={48} className="text-pink-500" />
@@ -1233,7 +1353,7 @@ const ChatPage = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
-                  className="w-80 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-l border-gray-200/50 dark:border-gray-700/50 p-8 overflow-y-auto shadow-xl"
+                  className="w-80 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-l border-gray-200/50 dark:border-gray-700/50 p-8 overflow-y-auto shadow-xl max-h-[calc(100vh-80px)] scrollbar-thin scrollbar-thumb-[#5b38ba] scrollbar-track-gray-200 dark:scrollbar-track-gray-800"
                 >
                   <div className="space-y-8">
                     {/* Perfil do contato */}
@@ -1304,7 +1424,7 @@ const ChatPage = () => {
           </>
         ) : (
           /* Estado vazio - nenhuma conversa selecionada */
-          <div className="flex-1 flex flex-col items-center justify-center p-8 bg-[##f5ecff ] dark:bg-[#121212]">
+          <div className="flex-1 flex flex-col items-center justify-center p-8 bg-[#f3e8ff] dark:bg-[#121212]">
             <div className="w-40 h-40 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-3xl flex items-center justify-center mb-8 shadow-xl">
               <MessageCircle size={64} className="text-purple-500" />
             </div>
