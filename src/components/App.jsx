@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import BootstrapPage from "./BootstrapPage"
 import { useSystemStatus } from "../hooks/useSystemStatus"
-import { Home, Calendar, MessageCircle, User, Cloud, HelpCircle, Menu } from "lucide-react"
+import { Home, Calendar, MessageCircle, User, Cloud, HelpCircle, Menu, Monitor } from "lucide-react"
 import CalendarPage from "./pages/calendar/CalendarPage"
 import HomePage from "./pages/inicio/HomePage"
 import PatchNotesPage from "./pages/inicio/PatchNotesPage"
@@ -13,6 +13,7 @@ import ChatPage from "./pages/chat/ChatPage"
 import AboutPage from "./pages/about/AboutPage"
 import ThemeToggle from "./ThemeToggle"
 import { ThemeProvider } from "../context/ThemeContext"
+import LabsControlPage from "./pages/labs/LabsControl"
 import { AuthProvider, useAuth } from "../hooks/useAuth"
 import LogoEtecNotes from "../assets/LuaEtecNotes.png"
 import CloudPage from "./pages/cloud/CloudPage"
@@ -30,6 +31,9 @@ function AppContent() {
   const [activeContentTab, setActiveContentTab] = useState("Jornal Etec")
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  // Determinar o userType baseado no role do usuário
+  const userType = user?.role === "ADM" ? "etec" : user?.role === "professor" ? "teacher" : "student"
 
   // Redirecionar automaticamente após login bem-sucedido
   useEffect(() => {
@@ -156,6 +160,8 @@ function AppContent() {
         return <HomePage activeTab="Eventos" onTabChange={handleContentTabChange} />
       case "Sobre Nós":
         return <AboutPage />
+      case "Laboratórios":
+        return <LabsControlPage userType={userType} userData={user} />
       case "Calendário":
         return <CalendarPage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
       case "Chat":
@@ -236,6 +242,17 @@ function AppContent() {
                 >
                   <Calendar size={28} />
                 </button>
+                {(userType === "teacher" || userType === "etec") && (
+                  <button
+                    className={`p-1.5 rounded-full transition-all duration-300 hover:bg-white/20 dark:hover:bg-[#333333] ${
+                      activeTab === "Laboratórios" ? "text-purple-500" : "text-white/80 hover:text-white cursor-pointer"
+                    }`}
+                    onClick={() => handleMainTabChange("Laboratórios")}
+                    aria-label="Laboratórios"
+                  >
+                    <Monitor size={28} />
+                  </button>
+                )}
                 <button
                   className={`p-1.5 rounded-full transition-all duration-300 hover:bg-white/20 dark:hover:bg-[#333333] ${
                     activeTab === "Chat" ? "text-purple-500" : "text-white/80 hover:text-white cursor-pointer"
