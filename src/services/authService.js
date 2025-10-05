@@ -23,15 +23,76 @@ class AuthService {
         body: JSON.stringify(body)
       });
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      // Parse da resposta sempre, independente do status
+      let responseData;
+      try {
+        responseData = await response.json();
+      } catch (parseError) {
+        console.error('❌ Erro ao fazer parse da resposta:', parseError);
+        const error = new Error(`Erro de comunicação com o servidor (${response.status})`);
+        error.suggestion = 'Verifique sua conexão com a internet e tente novamente.';
+        throw error;
       }
       
-      const result = await response.json();
-      if (!result.success) {
-        throw new Error(result.error || 'Login failed');
+      if (!response.ok || !responseData.success) {
+        console.error('❌ Erro do backend:', {
+          status: response.status,
+          statusText: response.statusText,
+          data: responseData
+        });
+        
+        // Criar objeto de erro detalhado
+        const error = new Error();
+        error.message = responseData.error || responseData.message || 'Erro desconhecido';
+        error.suggestion = responseData.suggestion || '';
+        error.code = responseData.code || '';
+        error.userRole = responseData.userRole;
+        error.attemptedRole = responseData.attemptedRole;
+        
+        console.log('🔍 AUTHSERVICE - Erro sendo criado:', {
+          originalResponse: responseData,
+          createdError: {
+            message: error.message,
+            suggestion: error.suggestion,
+            code: error.code,
+            userRole: error.userRole,
+            attemptedRole: error.attemptedRole
+          }
+        });
+        
+        // Fallback para mensagens padrão se não houver mensagem do backend
+        if (!error.message) {
+          switch (response.status) {
+            case 400:
+              error.message = 'Dados inválidos. Verifique suas credenciais.';
+              error.suggestion = 'Certifique-se de preencher todos os campos corretamente.';
+              break;
+            case 401:
+              error.message = 'Credenciais inválidas ou usuário não autorizado para este tipo de acesso.';
+              error.suggestion = 'Verifique se você está usando a área de login correta para seu tipo de usuário.';
+              break;
+            case 403:
+              error.message = 'Acesso negado. Você não tem permissão para acessar como este tipo de usuário.';
+              error.suggestion = 'Verifique se está tentando acessar a área correta para seu perfil.';
+              break;
+            case 404:
+              error.message = 'Usuário não encontrado no sistema.';
+              error.suggestion = 'Verifique se o email está correto ou entre em contato com a administração.';
+              break;
+            case 500:
+              error.message = 'Erro interno do servidor. Tente novamente em alguns momentos.';
+              error.suggestion = 'Se o problema persistir, entre em contato com o suporte técnico.';
+              break;
+            default:
+              error.message = `Erro no servidor (${response.status}). Tente novamente.`;
+              error.suggestion = 'Verifique sua conexão e tente novamente em alguns minutos.';
+          }
+        }
+        
+        throw error;
       }
+      
+      const result = responseData;
       
       // Debug: verificar se o token existe na resposta
       console.log('✅ Login response:', { success: result.success, hasToken: !!result.token, user: result.user });
@@ -51,7 +112,12 @@ class AuthService {
       
       return result.user;
     } catch (error) {
-      console.error('❌ Erro no login:', error.message);
+      console.error('❌ Erro no login:', {
+        message: error.message,
+        email: email,
+        role: role,
+        fullError: error
+      });
       
       // Fallback para usuários de teste locais
       const testUsers = {

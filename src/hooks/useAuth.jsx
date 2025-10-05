@@ -28,7 +28,21 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(!!updatedUser);
       return { success: true, user: updatedUser };
     } catch (error) {
-      return { success: false, error: error.message };
+      console.error('❌ Erro de login capturado:', {
+        message: error.message,
+        suggestion: error.suggestion,
+        code: error.code,
+        userRole: error.userRole,
+        attemptedRole: error.attemptedRole
+      });
+      return { 
+        success: false, 
+        error: error.message,
+        suggestion: error.suggestion,
+        code: error.code,
+        userRole: error.userRole,
+        attemptedRole: error.attemptedRole
+      };
     } finally {
       setLoading(false);
     }

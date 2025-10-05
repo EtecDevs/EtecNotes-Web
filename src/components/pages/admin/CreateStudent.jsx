@@ -19,7 +19,9 @@ const CreateStudent = ({ onBack, onSuccess }) => {
     nome: '',
     senha: '',
     turma: '',
-    curso: ''
+    curso: '',
+    ano: '',
+    cursoTurma: ''
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -111,7 +113,9 @@ const CreateStudent = ({ onBack, onSuccess }) => {
           nome: '',
           senha: '',
           turma: '',
-          curso: ''
+          curso: '',
+          ano: '',
+          cursoTurma: ''
         });
         
         // Chamar callback de sucesso se fornecido
@@ -288,8 +292,9 @@ const CreateStudent = ({ onBack, onSuccess }) => {
               </label>
               <div className="flex gap-2">
                 <select
-                  value={formData.ano || ""}
-                  onChange={e => setFormData(prev => ({ ...prev, ano: e.target.value }))}
+                  name="ano"
+                  value={formData.ano}
+                  onChange={handleChange}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   required
                 >
@@ -299,8 +304,9 @@ const CreateStudent = ({ onBack, onSuccess }) => {
                   ))}
                 </select>
                 <select
-                  value={formData.cursoTurma || ""}
-                  onChange={e => setFormData(prev => ({ ...prev, cursoTurma: e.target.value }))}
+                  name="cursoTurma"
+                  value={formData.cursoTurma}
+                  onChange={handleChange}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   required
                 >
