@@ -218,7 +218,7 @@ const EtecDashboard = ({ onLogout }) => {
             body: JSON.stringify({
               email: 'admin@etec.sp.gov.br',
               password: 'admin123',
-              role: 'ADM'
+              role: 'SECRETARIA'
             })
           });
           
@@ -583,7 +583,7 @@ const EtecDashboard = ({ onLogout }) => {
               body: JSON.stringify({
                 email: 'admin@etec.sp.gov.br',
                 password: 'admin123',
-                role: 'ADM'
+                role: 'SECRETARIA'
               })
             });
             
@@ -953,7 +953,7 @@ const EtecDashboard = ({ onLogout }) => {
             <option value="todos">Todos</option>
             <option value="aluno">Alunos</option>
             <option value="professor">Professores</option>
-            <option value="ADM">Administradores</option>
+            <option value="SECRETARIA">Administradores</option>
           </select>
 
           <button
@@ -1482,7 +1482,7 @@ const EtecDashboard = ({ onLogout }) => {
           >
             <option value="aluno">Aluno</option>
             <option value="professor">Professor</option>
-            <option value="ADM">Administrador</option>
+            <option value="SECRETARIA">Administrador</option>
           </select>
         </div>
 
@@ -1590,7 +1590,7 @@ const EtecDashboard = ({ onLogout }) => {
                 <Building2 size={24} className="text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-bold dark:text-white text-gray-900">Painel ADM</h1>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] bg-clip-text text-transparent mb-2">Painel SECRETARIA</h1>
                 <p className="text-sm dark:text-gray-400 text-gray-600">Secretaria</p>
               </div>
             </div>

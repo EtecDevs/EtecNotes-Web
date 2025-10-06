@@ -22,7 +22,8 @@ import LoginPage from "./pages/login/LoginPage"
 import Footer from "./Footer"
 import EtecDashboard from "./pages/dashboards/EtecDashboard"
 import TeacherDashboard from "./pages/dashboards/TeacherDashboard"
-import AdminDashboard from "./pages/admin/AdminDashboard"
+import AdminDashboard from "./pages/dashboards/AdminDashboard"
+
 function AppContent() {
   const { user, isAuthenticated, logout, loading } = useAuth()
   const { checkingSystem, systemNeedsBootstrap, checkSystemStatus } = useSystemStatus()
@@ -33,12 +34,19 @@ function AppContent() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Determinar o userType baseado no role do usuário
-  const userType = user?.role === "ADM" ? "etec" : user?.role === "professor" ? "teacher" : "student"
+  // ADMINISTRADOR = controle total com CRUD
+  // SECRETARIA/ETEC = secretária (visualização e gestão operacional, sem CRUD de usuários)
+  const userType = user?.role === "ADMINISTRADOR" ? "admin" : user?.role === "SECRETARIA" ? "etec" : user?.role === "professor" ? "teacher" : "student"
 
   // Redirecionar automaticamente após login bem-sucedido
   useEffect(() => {
     if (user && user.role && activeTab === "Login") {
-      setActiveTab("Início");
+      // ADMINISTRADOR vai direto para AdminDashboard, outros vão para Início
+      if (user.role === "ADMINISTRADOR") {
+        setActiveTab("AdminDashboard");
+      } else {
+        setActiveTab("Início");
+      }
     }
   }, [user, activeTab]);
 
@@ -128,7 +136,7 @@ function AppContent() {
   }
 
   // Roteamento normal por role
-  // Para ADM, navegação padrão entre páginas, mas Perfil abre EtecDashboard
+  // Para SECRETARIA, navegação padrão entre páginas, mas Perfil abre EtecDashboard
   // Para professor, navegação padrão entre páginas, mas Perfil abre TeacherDashboard
   // Para alunos, segue navegação normal pelas páginas já existentes
   // (Home, Calendário, Chat, Perfil, Cloud/Relaxar)
@@ -166,12 +174,17 @@ function AppContent() {
         return <CalendarPage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
       case "Chat":
         return <ChatPage activeTab={activeContentTab} onTabChange={handleContentTabChange} />
+      case "AdminDashboard":
+        return <AdminDashboard onLogout={handleLogout} />
       case "Perfil":
         if (user?.role === "professor") {
           return <TeacherDashboard onLogout={handleLogout} />
         }
-        if (user?.role === "ADM") {
+        if (user?.role === "SECRETARIA") {
           return <EtecDashboard onLogout={handleLogout} />
+        }
+        if (user?.role === "ADMINISTRADOR") {
+          return <AdminDashboard onLogout={handleLogout} />
         }
         return <UserDashboard activeTab="Perfil" onTabChange={handleContentTabChange} />
       case "Cloud":
@@ -265,15 +278,18 @@ function AppContent() {
                 <button
                   className={`p-1.5 rounded-full transition-all duration-300 hover:bg-white/20 dark:hover:bg-[#333333] ${
                     (user?.role === "professor" && activeTab === "Perfil") ||
-                    (user?.role === "ADM" && activeTab === "AdminDashboard") ||
+                    (user?.role === "SECRETARIA" && activeTab === "Perfil") ||
+                    (user?.role === "ADMINISTRADOR" && activeTab === "AdminDashboard") ||
                     (user?.role === "aluno" && activeTab === "Perfil")
                       ? "text-purple-500"
                       : "text-white/80 hover:text-white cursor-pointer"
                   }`}
                   onClick={() => {
-                    if (user?.role === "professor") {
+                    if (user?.role === "ADMINISTRADOR") {
+                      setActiveTab("AdminDashboard")
+                    } else if (user?.role === "professor") {
                       setActiveTab("Perfil")
-                    } else if (user?.role === "ADM") {
+                    } else if (user?.role === "SECRETARIA") {
                       setActiveTab("Perfil")
                     } else {
                       setActiveTab("Perfil")

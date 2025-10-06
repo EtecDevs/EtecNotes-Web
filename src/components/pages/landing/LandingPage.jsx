@@ -67,7 +67,7 @@ const LandingPage = ({ onGetStarted }) => {
       image: "/src/assets/EtecNotesTeam/Daniel.jpeg",
       description:
         "Programador full stack com paixão por design, focado em criar soluções web eficientes e visualmente atraentes.",
-      skills: ["React", "Firebase", "Figma", "JavaScript"],
+      skills: ["React", "Firebase", "Figma", "Node.js", "JavaScript", "Trello"],
       social: {
         github: "https://github.com/zKingDragon",
         linkedin: "https://linkedin.com/in/ana",
@@ -91,7 +91,7 @@ const LandingPage = ({ onGetStarted }) => {
       role: "Documentation Lead",
       image: "/src/assets/EtecNotesTeam/GustavoPaes.jpeg",
       description: "Principal documentador do projeto, garantindo clareza e acessibilidade nas informações técnicas.",
-      skills: ["Word"],
+      skills: ["Word, Trello"],
       social: {
         github: "https://github.com/GustavooRPaes",
         linkedin: "https://linkedin.com/in/maria",

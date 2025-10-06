@@ -6,7 +6,7 @@ import { auth } from '../../config/firebase';
 const SetUserRole = () => {
   const { user, isAuthenticated } = useAuth();
   const [uid, setUid] = useState('');
-  const [role, setRole] = useState('ADM');
+  const [role, setRole] = useState('SECRETARIA');
   const [rm, setRm] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -107,7 +107,7 @@ const SetUserRole = () => {
               onChange={(e) => setRole(e.target.value)}
               className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             >
-              <option value="ADM">👑 Administrador</option>
+              <option value="SECRETARIA">👑 Administrador</option>
               <option value="professor">👨‍🏫 Professor</option>
               <option value="aluno">🎓 Aluno</option>
             </select>
@@ -155,7 +155,7 @@ const SetUserRole = () => {
         {/* Instruções */}
         <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
           <p className="text-gray-600 dark:text-gray-400 text-xs mb-2">
-            ⚠️ <strong>Erro 403: Precisa ser ADM para definir roles</strong>
+            ⚠️ <strong>Erro 403: Precisa ser SECRETARIA para definir roles</strong>
           </p>
           
           <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded text-xs">
@@ -174,7 +174,7 @@ const SetUserRole = () => {
               <strong>🔧 Firestore direto:</strong>
             </p>
             <p className="text-blue-700 dark:text-blue-300 text-xs">
-              Vá no Firebase Console → Firestore → users → [UID] → role: "ADM"
+              Vá no Firebase Console → Firestore → users → [UID] → role: "SECRETARIA"
             </p>
           </div>
 
@@ -183,7 +183,7 @@ const SetUserRole = () => {
               <strong>PowerShell (se backend permitir):</strong>
             </p>
             <code className="text-gray-800 dark:text-gray-200 break-all block">
-              $body = @&#123;uid="SEU_UID"; role="ADM"&#125; | ConvertTo-Json
+              $body = @&#123;uid="SEU_UID"; role="SECRETARIA"&#125; | ConvertTo-Json
               <br />
               Invoke-RestMethod -Uri "http://localhost:5001/api/admin/set-role" -Method POST -Body $body -ContentType "application/json"
             </code>

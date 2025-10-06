@@ -61,7 +61,7 @@ export const formatUserRole = (role) => {
   const roles = {
     'aluno': 'Aluno',
     'professor': 'Professor',
-    'ADM': 'Administrador'
+    'SECRETARIA': 'Administrador'
   }
   return roles[role] || role
 }

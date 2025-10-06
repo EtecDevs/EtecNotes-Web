@@ -581,7 +581,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] bg-clip-text text-transparent mb-2">
-                Controle de Laboratórios
+               LabNotes
               </h1>
               <p className="dark:text-gray-400 text-gray-600">
                 {userType === "teacher"

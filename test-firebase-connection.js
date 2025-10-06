@@ -66,7 +66,7 @@ console.log(`
 1. Certifique-se de que o backend está rodando na porta 5001
 2. Verifique se existe um usuário no Firebase Authentication
 3. Teste o login com credenciais válidas
-4. Se der erro 403, o usuário precisa de role de ADM no banco
+4. Se der erro 403, o usuário precisa de role de SECRETARIA no banco
 
 🆘 SE AINDA DER ERRO:
 - Verifique o console do navegador para detalhes do erro

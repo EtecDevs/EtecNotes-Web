@@ -164,7 +164,7 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
   return (
     <div className="flex flex-col h-full bg-[#f5ecff ] dark:bg-[#121212] text-gray-800 dark:text-white">
       <div className="w-full max-w-7xl mx-auto px-6 py-10">
-        <h1 className="text-4xl font-bold mb-8 dark:text-white text-gray-800">Calendário</h1>
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] bg-clip-text text-transparent mb-8">Calendário</h1>
 
         {/* Tab Navigation */}
         <div className="flex border-b border-[#E6DFFF] mb-8 overflow-x-auto">

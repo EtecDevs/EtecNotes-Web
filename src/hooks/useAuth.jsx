@@ -84,7 +84,8 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     // Funções utilitárias
-    isAdmin: user?.role === 'ADM',
+    isAdmin: user?.role === 'ADMINISTRADOR',
+    isSecretaria: user?.role === 'SECRETARIA',
     isProfessor: user?.role === 'professor',
     isAluno: user?.role === 'aluno',
   };

@@ -13,7 +13,7 @@ const QuickUserSetup = () => {
     setError('');
 
     const users = [
-      { email: 'admin@etec.com', password: '123456', role: 'ADM' },
+      { email: 'admin@etec.com', password: '123456', role: 'SECRETARIA' },
       { email: 'professor@etec.com', password: '123456', role: 'Professor' },
       { email: 'aluno@etec.com', password: '123456', role: 'Aluno' }
     ];
@@ -105,7 +105,7 @@ const QuickUserSetup = () => {
           disabled={loading}
           className="w-full bg-white/20 hover:bg-white/30 backdrop-blur text-white font-medium py-2 px-4 rounded mb-3 transition-all disabled:opacity-50"
         >
-          {loading ? 'Criando...' : '🎯 Criar ADM + Prof + Aluno'}
+          {loading ? 'Criando...' : '🎯 Criar SECRETARIA + Prof + Aluno'}
         </button>
 
         {error && (

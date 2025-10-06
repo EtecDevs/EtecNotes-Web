@@ -203,7 +203,7 @@ const CloudPage = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-8 flex-shrink-0">
           <div>
-            <h1 className="text-4xl font-bold dark:text-white text-gray-800 mb-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] bg-clip-text text-transparent mb-2">
               {activeTab === "iatec" ? "IATEC AI" : "Meditação & Bem-estar"}
             </h1>
             <p className="dark:text-gray-400 text-gray-600">
