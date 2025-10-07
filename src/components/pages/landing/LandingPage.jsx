@@ -245,7 +245,7 @@ const LandingPage = ({ onGetStarted }) => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5ecff ] dark:bg-[#121212] overflow-x-hidden">
+    <div className="min-h-screen bg-[#f3e8ff] dark:bg-[#121212] overflow-x-hidden">
       {/* Hero Section */}
       <section id="início" className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Effects */}
@@ -462,7 +462,7 @@ const LandingPage = ({ onGetStarted }) => {
             >
               <div className="relative">
                 <img
-                  src="/placeholder.svg?height=500&width=600&text=Project+Vision"
+                  src="src/assets/etecNotesTeam/fotoTerceiraPrevia.jpg"
                   alt="Visão do Projeto"
                   className="w-full h-96 object-cover rounded-3xl shadow-2xl"
                 />

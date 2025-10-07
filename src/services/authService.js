@@ -23,6 +23,12 @@ class AuthService {
         return await this.loginSecretariaWithPassword(email, password, role);
       }
 
+      // Para usuários de teste (aluno e professor)
+      if (role === 'aluno' || role === 'professor') {
+        console.log(`Login de ${role} detectado`);
+        return await this.loginTestUser(email, password, role, rm);
+      }
+
       // Login normal com Firebase Auth (para outros usuários)
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCredential.user;
@@ -199,6 +205,89 @@ class AuthService {
     }
   }
 
+  // Login para usuários de teste (aluno e professor)
+  async loginTestUser(email, password, role, rm = null) {
+    try {
+      console.log(`Processando login de ${role} de teste`);
+
+      // Usuários de teste predefinidos
+      const testUsers = {
+        // Professores de teste
+        'prof@teste.com': {
+          id: 'test_prof_1',
+          nome: 'Professor Teste',
+          email: 'prof@teste.com',
+          role: 'professor',
+          active: true,
+          isBootstrap: false,
+          senha: '123456'
+        },
+        // Alunos de teste
+        'user@teste.com': {
+          id: 'test_aluno_1',
+          nome: 'João Santos',
+          email: 'aluno@teste.com',
+          role: 'aluno',
+          active: true,
+          isBootstrap: false,
+          rm: '00000',
+          senha: '123456'
+        },
+      };
+
+      // Verificar se o usuário existe
+      const testUser = testUsers[email];
+      if (!testUser) {
+        const error = new Error('Usuário de teste não encontrado');
+        error.suggestion = `Tente: prof@teste.com, professor@etec.com, aluno@teste.com ou estudante@etec.com`;
+        throw error;
+      }
+
+      // Verificar se o role bate
+      if (testUser.role !== role) {
+        const error = new Error(`Este email é para ${testUser.role}, não ${role}`);
+        error.suggestion = `Use a área de login correta para ${testUser.role}.`;
+        error.code = 'ROLE_MISMATCH';
+        error.userRole = testUser.role;
+        error.attemptedRole = role;
+        throw error;
+      }
+
+      // Verificar senha
+      if (testUser.senha !== password) {
+        const error = new Error('Senha incorreta');
+        error.suggestion = 'Tente: 123456, professor123 ou aluno123';
+        throw error;
+      }
+
+      // Para alunos, verificar RM se fornecido
+      if (role === 'aluno' && rm && testUser.rm !== rm) {
+        const error = new Error('RM incorreto');
+        error.suggestion = `RM correto para ${testUser.nome}: ${testUser.rm}`;
+        throw error;
+      }
+
+      // Remover senha do objeto retornado
+      const { senha, ...userWithoutPassword } = testUser;
+
+      console.log(`✅ ${role} de teste autenticado:`, userWithoutPassword);
+
+      // Gerar um token simulado
+      const token = `${role}-token-${Date.now()}`;
+
+      // Salvar no localStorage
+      localStorage.setItem('user', JSON.stringify(userWithoutPassword));
+      localStorage.setItem('userRole', userWithoutPassword.role);
+      localStorage.setItem('token', token);
+
+      return userWithoutPassword;
+
+    } catch (error) {
+      console.error(`❌ Erro no login de ${role}:`, error);
+      throw error;
+    }
+  }
+
   getCurrentUser() {
     const userData = localStorage.getItem('user');
     return userData ? JSON.parse(userData) : null;
@@ -212,8 +301,8 @@ class AuthService {
     const token = this.getToken();
     const user = this.getCurrentUser();
     
-    // Para tokens simulados (admin e secretaria), verificar se ainda são válidos
-    if (token && user && (token.startsWith('admin-token-') || token.startsWith('secretaria-token-'))) {
+    // Para tokens simulados (admin, secretaria, professor, aluno), verificar se ainda são válidos
+    if (token && user && (token.startsWith('admin-token-') || token.startsWith('secretaria-token-') || token.startsWith('professor-token-') || token.startsWith('aluno-token-'))) {
       // Token simulado é válido se foi criado nas últimas 24 horas
       const timestamp = parseInt(token.split('-').pop());
       const now = Date.now();

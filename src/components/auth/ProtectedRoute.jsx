@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children, requiredRole = null, allowedRoles = [] }) =>
   // Mostrar loading enquanto verifica autenticação
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#f5ecff ] dark:bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-[#f3e8ff] dark:bg-gray-900">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400">Verificando permissões...</p>
@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children, requiredRole = null, allowedRoles = [] }) =>
   // Se não estiver autenticado, mostrar mensagem
   if (!isAuthenticated || !user) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#f5ecff ] dark:bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-[#f3e8ff] dark:bg-gray-900">
         <div className="text-center max-w-md mx-auto p-6">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
             <div className="w-16 h-16 mx-auto mb-4 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
@@ -48,7 +48,7 @@ const ProtectedRoute = ({ children, requiredRole = null, allowedRoles = [] }) =>
   // Verificar role específica se fornecida
   if (requiredRole && user.role !== requiredRole) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#f5ecff ] dark:bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-[#f3e8ff] dark:bg-gray-900">
         <div className="text-center max-w-md mx-auto p-6">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
             <div className="w-16 h-16 mx-auto mb-4 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center">
@@ -81,7 +81,7 @@ const ProtectedRoute = ({ children, requiredRole = null, allowedRoles = [] }) =>
   // Verificar roles permitidas se fornecidas
   if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#f5ecff ] dark:bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-[#f3e8ff] dark:bg-gray-900">
         <div className="text-center max-w-md mx-auto p-6">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
             <div className="w-16 h-16 mx-auto mb-4 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center">

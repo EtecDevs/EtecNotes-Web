@@ -712,7 +712,7 @@ const TeacherDashboard = ({ teacherData }) => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5ecff ] dark:bg-[#121212]">
+    <div className="min-h-screen bg-[#f3e8ff] dark:bg-[#121212]">
       <div className="flex">
         {/* Sidebar */}
         <div className="w-64 dark:bg-[#1E1E1E] bg-white border-r dark:border-[#30363D] border-gray-200 min-h-screen">

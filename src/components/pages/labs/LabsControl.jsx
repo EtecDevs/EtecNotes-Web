@@ -275,7 +275,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
             onClick={() => setSelectedLab(lab.id)}
             className={`px-4 py-3 rounded-xl font-medium transition-all ${
               selectedLab === lab.id
-                ? "bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] text-white shadow-lg shadow-purple-500/30"
+                ? "bg-[#58417d] text-white shadow-lg shadow-purple-500/30"
                 : "dark:bg-[#161B22] bg-white border dark:border-[#30363D] border-gray-200 dark:text-gray-300 text-gray-700 hover:border-[#8C43FF]"
             }`}
           >
@@ -475,7 +475,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] rounded-lg">
+                    <div className="p-2 bg-[#58417d] rounded-lg">
                       <Monitor size={20} className="text-white" />
                     </div>
                     <div>
@@ -580,8 +580,8 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] bg-clip-text text-transparent mb-2">
-               LabNotes
+              <h1 className="text-4xl font-bold text-[var(--primary)] mb-2">
+                LabNotes
               </h1>
               <p className="dark:text-gray-400 text-gray-600">
                 {userType === "teacher"
@@ -591,27 +591,25 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
             </div>
 
             <div className="flex items-center gap-3">
-              
-
               {userType === "etec" && (
-                <div className="flex gap-2 p-1 dark:bg-[#161B22] bg-white rounded-xl border dark:border-[#30363D] border-gray-200">
+                <div className="flex gap-0 bg-[var(--card)] dark:bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden transition-colors duration-300">
                   <button
                     onClick={() => setSelectedView("grid")}
-                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                      selectedView === "grid"
-                        ? "bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] text-white"
-                        : "dark:text-gray-400 text-gray-600"
-                    }`}
+                    className={`px-6 py-2.5 font-semibold transition-all duration-300 focus:outline-none
+                      ${selectedView === "grid"
+                        ? "bg-[var(--primary)] text-white shadow-lg"
+                        : "bg-transparent text-gray-500 dark:text-gray-400 hover:bg-[var(--muted)]"}
+                    `}
                   >
                     Grade
                   </button>
                   <button
                     onClick={() => setSelectedView("list")}
-                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                      selectedView === "list"
-                        ? "bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] text-white"
-                        : "dark:text-gray-400 text-gray-600"
-                    }`}
+                    className={`px-6 py-2.5 font-semibold transition-all duration-300 focus:outline-none
+                      ${selectedView === "list"
+                        ? "bg-[var(--primary)] text-white shadow-lg"
+                        : "bg-transparent text-gray-500 dark:text-gray-400 hover:bg-[var(--muted)]"}
+                    `}
                   >
                     Lista
                   </button>
@@ -808,7 +806,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
               </button>
               <button
                 onClick={handleSubmitRequest}
-                className="flex-1 px-4 py-3 bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] text-white rounded-xl hover:shadow-lg hover:shadow-purple-500/30 transition-all font-medium"
+                className="flex-1 px-4 py-3 bg-[#58417d] text-white rounded-xl hover:shadow-lg hover:shadow-purple-500/30 transition-all font-medium"
               >
                 Enviar Solicitação
               </button>

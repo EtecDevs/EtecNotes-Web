@@ -6,9 +6,9 @@ import EventsPage from "./EventsPage"
 
 const HomePage = ({ activeTab, onTabChange }) => {
   return (
-    <div className="flex flex-col h-full bg-[#f5ecff ] dark:bg-[#121212]">
+    <div className="flex flex-col h-full bg-[#f3e8ff] dark:bg-[#121212]">
       <div className="w-full max-w-7xl mx-auto px-6 py-10">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] bg-clip-text text-transparent mb-8">Início</h1>
+        <h1 className="text-4xl font-bold bg-[#58417d] bg-clip-text text-transparent mb-8">Início</h1>
 
         {/* Tabs */}
         <TabNavigation activeTab={activeTab} onTabChange={onTabChange} />
@@ -19,7 +19,7 @@ const HomePage = ({ activeTab, onTabChange }) => {
           <div className="flex flex-col md:flex-row gap-8 mb-10">
             {/* Left Card */}
             <motion.div
-              className="w-full md:w-[45%] h-[320px] bg-[#8C43FF] rounded-3xl p-6 transition-all duration-300 hover:shadow-[0_0_30px_rgba(140,67,255,0.6)] hover:bg-[#9955FF] cursor-pointer"
+              className="w-full md:w-[45%] h-[320px] bg-[#58417d] rounded-3xl p-6 transition-all duration-300 hover:shadow-[0_0_30px_rgba(140,67,255,0.6)] hover:bg-[#9955FF] cursor-pointer"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}

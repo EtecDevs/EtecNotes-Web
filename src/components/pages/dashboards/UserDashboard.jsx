@@ -148,7 +148,7 @@ const UserDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5ecff ] dark:bg-[#121212]">
+    <div className="min-h-screen bg-[#f3e8ff] dark:bg-[#121212]">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header Section */}
         <motion.div

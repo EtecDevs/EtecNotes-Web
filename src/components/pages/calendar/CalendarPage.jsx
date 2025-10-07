@@ -162,9 +162,9 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
   }
 
   return (
-    <div className="flex flex-col h-full bg-[#f5ecff ] dark:bg-[#121212] text-gray-800 dark:text-white">
+    <div className="flex flex-col h-full bg-[#f3e8ff] dark:bg-[#121212] text-gray-800 dark:text-white">
       <div className="w-full max-w-7xl mx-auto px-6 py-10">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] bg-clip-text text-transparent mb-8">Calendário</h1>
+        <h1 className="text-4xl font-bold bg-[#58417d] bg-clip-text text-transparent mb-8">Calendário</h1>
 
         {/* Tab Navigation */}
         <div className="flex border-b border-[#E6DFFF] mb-8 overflow-x-auto">
@@ -206,7 +206,7 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
                   <span>Evento</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 rounded-full bg-[#8C43FF]"></div>
+                  <div className="w-3 h-3 rounded-full bg-[#58417d]"></div>
                   <span>Lembrete</span>
                 </div>
                 <div className="flex items-center gap-1">
@@ -271,7 +271,7 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
                   {/* Indicadores de eventos */}
                   <div className="absolute bottom-2 right-2 flex gap-1">
                     {day.hasEvent && <div className="w-2 h-2 rounded-full bg-[#00B2FF]"></div>}
-                    {day.hasReminder && <div className="w-2 h-2 rounded-full bg-[#8C43FF]"></div>}
+                    {day.hasReminder && <div className="w-2 h-2 rounded-full bg-[#58417d]"></div>}
                     {day.hasExam && <div className="w-2 h-2 rounded-full bg-[#FF4D4D]"></div>}
                     {day.hasNote && <div className="w-2 h-2 rounded-full bg-[#4CAF50]"></div>}
                   </div>
@@ -362,7 +362,7 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
             <div className="space-y-3">
               <button
                 onClick={openAddNoteModal}
-                className="w-full py-3 px-4 bg-[#8C43FF] hover:bg-[#9955FF] rounded-xl font-medium flex items-center justify-center gap-2 transition-colors text-white cursor-pointer"
+                className="w-full py-3 px-4 bg-[#58417d] hover:bg-[#9955FF] rounded-xl font-medium flex items-center justify-center gap-2 transition-colors text-white cursor-pointer"
               >
                 <Edit size={18} />
                 <span>Adicionar nova nota</span>

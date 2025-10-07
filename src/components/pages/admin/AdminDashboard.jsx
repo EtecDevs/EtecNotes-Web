@@ -221,7 +221,7 @@ const AdminDashboard = ({ onLogout }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5ecff ] dark:bg-gray-900">
+    <div className="min-h-screen bg-[#f3e8ff] dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {renderActiveTab()}
       </div>

@@ -48,7 +48,8 @@ import {
   List,
   Grid,
   Archive,
-  RefreshCw
+  RefreshCw,
+  FileCheck
 } from "lucide-react"
 import authService from "../../../services/authService"
 import socketService from "../../../services/socketService"
@@ -1580,7 +1581,7 @@ const EtecDashboard = ({ onLogout }) => {
     );
   }, [modalState.createUser, userForm, handleCreateUser, handleUserFormChange]);  // Renderização principal
   return (
-    <div className="min-h-screen bg-[#f5ecff ] dark:bg-[#121212]">
+    <div className="min-h-screen bg-[#f3e8ff] dark:bg-[#121212]">
       <div className="flex">
         {/* Sidebar */}
         <div className="w-64 dark:bg-[#1E1E1E] bg-white border-r dark:border-[#30363D] border-gray-200 min-h-screen">
@@ -1590,7 +1591,7 @@ const EtecDashboard = ({ onLogout }) => {
                 <Building2 size={24} className="text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] bg-clip-text text-transparent mb-2">Painel SECRETARIA</h1>
+                <h1 className="text-2xl font-bold bg-[#58417d] bg-clip-text text-transparent mb-2">Painel SECRETARIA</h1>
                 <p className="text-sm dark:text-gray-400 text-gray-600">Secretaria</p>
               </div>
             </div>

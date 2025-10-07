@@ -117,7 +117,7 @@ function AppContent() {
   // Mostrar loading enquanto verifica autenticação ou status do sistema
   if (loading || checkingSystem) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#f5ecff ] dark:bg-[#121212]">
+      <div className="flex items-center justify-center min-h-screen bg-[#f3e8ff] dark:bg-[#121212]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400">Carregando sistema...</p>
@@ -196,9 +196,9 @@ function AppContent() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f5ecff ] dark:bg-[#121212] transition-colors duration-300">
+    <div className="flex flex-col min-h-screen bg-[#f3e8ff] dark:bg-[#121212] transition-colors duration-300">
         {/* Header */}
-        <header className="h-[60px] dark:bg-[#1E1E1E] bg-[#5b38ba] border-b dark:border-[#333333] border-gray-200 flex items-center justify-between px-6 transition-colors duration-300">
+        <header className="h-[60px] dark:bg-[#1E1E1E] bg-[#58417d] border-b dark:border-[#333333] border-gray-200 flex items-center justify-between px-6 transition-colors duration-300">
           {/* Logo */}
           <div
             className="flex items-center cursor-pointer"
@@ -334,7 +334,7 @@ function AppContent() {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto bg-[#f5ecff ] dark:bg-[#121212] transition-colors duration-300">
+        <main className="flex-1 overflow-auto bg-[#f3e8ff] dark:bg-[#121212] transition-colors duration-300">
           {renderActivePage()}
         </main>
 

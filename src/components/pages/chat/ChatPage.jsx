@@ -922,7 +922,7 @@ const ChatPage = () => {
         <div className="p-6 bg-[#f3e8ff] dark:bg-[#121212]">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] bg-clip-text text-transparent mb-4">
+              <h1 className="text-4xl font-bold bg-[#58417d] bg-clip-text text-transparent mb-4">
                 Chat
               </h1>
             </div>

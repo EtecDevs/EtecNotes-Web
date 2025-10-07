@@ -148,7 +148,7 @@ const CloudPage = () => {
   }
 
   return (
-    <div className="flex flex-col h-full bg-[#f5ecff ] dark:bg-[#121212]">
+    <div className="flex flex-col h-full bg-[#f3e8ff] dark:bg-[#121212]">
   <style>{`
         .custom-scrollbar {
           --sb-size: 8px;
@@ -203,7 +203,7 @@ const CloudPage = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-8 flex-shrink-0">
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] bg-clip-text text-transparent mb-2">
+            <h1 className="text-4xl font-bold bg-[#58417d] bg-clip-text text-transparent mb-2">
               {activeTab === "iatec" ? "IATEC AI" : "Meditação & Bem-estar"}
             </h1>
             <p className="dark:text-gray-400 text-gray-600">
@@ -251,7 +251,7 @@ const CloudPage = () => {
 
         {/* Content Area */}
         <motion.div
-          className="flex-1 min-h-0 dark:bg-[#1E1E1E]/80 bg-purple-100 backdrop-blur-md rounded-3xl shadow-lg border dark:border-[#333333] border-gray-300 flex flex-col overflow-hidden"
+          className="flex-1 min-h-0 dark:bg-[#1E1E1E]/80 bg-white backdrop-blur-md rounded-3xl shadow-lg border dark:border-[#333333] border-gray-300 flex flex-col overflow-hidden"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}

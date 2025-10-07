@@ -43,163 +43,163 @@ const AboutPage = () => {
 
   // Dados dos integrantes da equipe
   const teamMembers = [
-    {
-      name: "Gustavo Silva",
-      role: "Full Stack Developer & Project Lead",
-      image: "/placeholder.svg?height=300&width=300&text=GS",
-      description:
-        "Especialista em React e Node.js, responsável pela arquitetura do sistema e liderança técnica do projeto.",
-      skills: ["React", "Node.js", "TypeScript", "MongoDB"],
-      social: {
-        github: "https://github.com/gustavo",
-        linkedin: "https://linkedin.com/in/gustavo",
-        email: "gustavo@etecnotes.com",
+      {
+        name: "Gustavo Silva",
+        role: "Full Stack Developer & Project Lead",
+        image: "/src/assets/EtecNotesTeam/GustavoSilva.jpeg",
+        description:
+          "Especialista em React e Node.js, responsável pela arquitetura do sistema e liderança técnica do projeto.",
+        skills: ["React", "Node.js", "TypeScript", "Firebase"],
+        social: {
+          github: "https://github.com/DevGusta5",
+          linkedin: "https://linkedin.com/in/danie",
+          email: "gusta.gu.112007.55@gmail.com",
+        },
       },
-    },
-    {
-      name: "Daniel Pereira",
-      role: "UI/UX Designer & Frontend",
-      image: "/placeholder.svg?height=300&width=300&text=DP",
-      description:
-        "Designer focado em experiência do usuário e interfaces modernas, criando designs acessíveis e intuitivos.",
-      skills: ["Figma", "Adobe XD", "CSS", "Design Systems"],
-      social: {
-        github: "https://github.com/daniel",
-        linkedin: "https://linkedin.com/in/daniel",
-        email: "daniel@etecnotes.com",
+      {
+        name: "Daniel Pereira",
+        role: "Full Stack Developer & Designer",
+        image: "/src/assets/EtecNotesTeam/Daniel.jpeg",
+        description:
+          "Programador full stack com paixão por design, focado em criar soluções web eficientes e visualmente atraentes.",
+        skills: ["React", "Firebase", "Figma", "Node.js", "JavaScript", "Trello"],
+        social: {
+          github: "https://github.com/zKingDragon",
+          linkedin: "https://linkedin.com/in/ana",
+          email: "daniel10.fine@gmail.com",
+        },
       },
-    },
-    {
-      name: "Pedro Cruz",
-      role: "Backend Developer & DevOps",
-      image: "/placeholder.svg?height=300&width=300&text=PC",
-      description: "Desenvolvedor backend especializado em APIs robustas, banco de dados e infraestrutura em nuvem.",
-      skills: ["Python", "PostgreSQL", "Docker", "AWS"],
-      social: {
-        github: "https://github.com/pedro",
-        linkedin: "https://linkedin.com/in/pedro",
-        email: "pedro@etecnotes.com",
+      {
+        name: "Pedro Cruz",
+        role: "Documentation & DevOps",
+        image: "/src/assets/EtecNotesTeam/PedroCruz.jpeg",
+        description: "Documentador do projeto, focado em garantir que todas as funcionalidades sejam bem documentadas e compreendidas.",
+        skills: ["Word", "Dia"],
+        social: {
+          github: "https://github.com/Pedro-Crouss",
+          linkedin: "https://linkedin.com/in/carlos",
+          email: "pedro.a17009@gmail.com",
+        },
       },
-    },
-    {
-      name: "Maykon Sullyvan",
-      role: "AI Developer & Data Science",
-      image: "/placeholder.svg?height=300&width=300&text=MS",
-      description: "Responsável pelo desenvolvimento da IATEC AI, machine learning e análise de dados educacionais.",
-      skills: ["Python", "TensorFlow", "NLP", "Data Analysis"],
-      social: {
-        github: "https://github.com/maykon",
-        linkedin: "https://linkedin.com/in/maykon",
-        email: "maykon@etecnotes.com",
+      {
+        name: "Gustavo Paes",
+        role: "Documentation Lead",
+        image: "/src/assets/EtecNotesTeam/GustavoPaes.jpeg",
+        description: "Principal documentador do projeto, garantindo clareza e acessibilidade nas informações técnicas.",
+        skills: ["Word, Trello"],
+        social: {
+          github: "https://github.com/GustavooRPaes",
+          linkedin: "https://linkedin.com/in/maria",
+          email: "Gustavo.rodrigues.paes12@gmail.com",
+        },
       },
-    },
-    {
-      name: "Gustavo Paes",
-      role: "Frontend Developer & UI/UX",
-      image: "/placeholder.svg?height=300&width=300&text=GP",
-      description: "Especialista em interfaces responsivas e experiência do usuário em aplicações web modernas.",
-      skills: ["React", "CSS", "JavaScript", "Figma"],
-      social: {
-        github: "https://github.com/gustavopaes",
-        linkedin: "https://linkedin.com/in/gustavopaes",
-        email: "gustavopaes@etecnotes.com",
+      {
+        name: "Maykon Sullyvan",
+        role: "Design & Content Creator",
+        image: "/src/assets/EtecNotesTeam/Maykon.jpeg",
+        description: "Designer gráfico e criador de conteúdo, responsável pela identidade visual do EtecNotes e de nossas redes sociais.",
+        skills: ["Figma", "Design Systems"],
+        social: {
+          github: "https://github.com/SucoDeCaju1239",
+          linkedin: "https://linkedin.com/in/maria",
+          email: "maykonsullyvan12@gmail.com",
+        },
       },
-    },
-    {
-      name: "Pedro Victor",
-      role: "Mobile Developer & QA",
-      image: "/placeholder.svg?height=300&width=300&text=PV",
-      description: "Desenvolvedor mobile e responsável pelos testes de qualidade e validação do sistema.",
-      skills: ["React Native", "Flutter", "Testing", "Mobile UX"],
-      social: {
-        github: "https://github.com/pedrovictor",
-        linkedin: "https://linkedin.com/in/pedrovictor",
-        email: "pedrovictor@etecnotes.com",
+      {
+        name: "Leandro Silva",
+        role: "AI Developer & Documentation",
+        image: "/src/assets/EtecNotesTeam/Leandro.jpeg",
+        description: "Responsável pelo desenvolvimento da IATEC AI, machine learning e análise de dados educacionais.",
+        skills: ["Dia", "Word", "AI"],
+        social: {
+          github: "https://github.com/maria",
+          linkedin: "https://linkedin.com/in/maria",
+          email: "maria@etecnotes.com",
+        },
       },
-    },
-    {
-      name: "Leandro Silva",
-      role: "DevOps & Infrastructure",
-      image: "/placeholder.svg?height=300&width=300&text=LS",
-      description: "Especialista em infraestrutura, deploy contínuo e monitoramento de sistemas em produção.",
-      skills: ["AWS", "Docker", "Kubernetes", "CI/CD"],
-      social: {
-        github: "https://github.com/leandro",
-        linkedin: "https://linkedin.com/in/leandro",
-        email: "leandro@etecnotes.com",
+      {
+        name: "Pedro Victor",
+        role: "Support",
+        image: "/src/assets/EtecNotesTeam/PedroVictor.jpg",
+        description: "Suporte e documentação, auxiliando na criação de tutoriais para os usuários.",
+        skills: ["Word"],
+        social: {
+          github: "https://github.com/maria",
+          linkedin: "https://linkedin.com/in/maria",
+          email: "maria@etecnotes.com",
+        },
       },
-    },
-  ]
-
-  // Funcionalidades principais
-  const features = [
-    {
-      icon: Calendar,
-      title: "Calendário Inteligente",
-      description:
-        "Organize suas aulas, provas e eventos acadêmicos com lembretes automáticos e sincronização em tempo real.",
-      color: "bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD]",
-      image: "/placeholder.svg?height=400&width=600&text=Calendar+Interface",
-    },
-    {
-      icon: Brain,
-      title: "IATEC AI Assistant",
-      description:
-        "Assistente virtual inteligente que responde dúvidas acadêmicas, ajuda com estudos e oferece suporte 24/7.",
-      color: "bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD]",
-      image: "/placeholder.svg?height=400&width=600&text=AI+Chat+Interface",
-    },
-    {
-      icon: FileText,
-      title: "Jornal Etec Digital",
-      description: "Fique por dentro das últimas notícias, eventos e oportunidades da sua escola em tempo real.",
-      color: "bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD]",
-      image: "/placeholder.svg?height=400&width=600&text=News+Feed",
-    },
-    {
-      icon: Users,
-      title: "Comunidade Estudantil",
-      description: "Conecte-se com colegas, compartilhe conhecimento e participe de grupos de estudo colaborativos.",
-      color: "bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD]",
-      image: "/placeholder.svg?height=400&width=600&text=Community+Hub",
-    },
-  ]
-
-  // Processo de criação
-  const creationProcess = [
-    {
-      step: "01",
-      title: "Pesquisa & Descoberta",
-      description:
-        "Realizamos entrevistas com mais de 200 estudantes da Etec para identificar suas principais dificuldades e necessidades no ambiente acadêmico.",
-      icon: Target,
-      details: ["Entrevistas com estudantes", "Análise de concorrentes", "Mapeamento de jornada do usuário"],
-    },
-    {
-      step: "02",
-      title: "Design & Prototipação",
-      description:
-        "Criamos wireframes, protótipos interativos e testamos diferentes abordagens de interface focando na experiência do usuário.",
-      icon: Lightbulb,
-      details: ["Wireframes e mockups", "Prototipagem interativa", "Testes de usabilidade"],
-    },
-    {
-      step: "03",
-      title: "Desenvolvimento Ágil",
-      description:
-        "Implementamos a solução usando metodologias ágeis, tecnologias modernas e práticas de desenvolvimento colaborativo.",
-      icon: Code,
-      details: ["Desenvolvimento em sprints", "Code review contínuo", "Testes automatizados"],
-    },
-    {
-      step: "04",
-      title: "Testes & Otimização",
-      description:
-        "Realizamos testes extensivos, coletamos feedback dos usuários e implementamos melhorias baseadas em dados reais.",
-      icon: Zap,
-      details: ["Testes beta com usuários", "Análise de métricas", "Otimização contínua"],
-    },
-  ]
+    ]
+  
+    // Funcionalidades principais
+    const features = [
+      {
+        icon: Calendar,
+        title: "Calendário Inteligente",
+        description:
+          "Organize seu calendário acadêmico com provas, tarefas e apresentações registradas diretamente pelos professores.",
+        color: "bg-gradient-to-r from-[#CCA9DD] to-[#CCA9DD]",
+        image: "/src/assets/features/calendario.png",
+      },
+      {
+        icon: Brain,
+        title: "IATEC AI",
+        description:
+          "Assistente virtual inteligente que responde dúvidas acadêmicas, ajuda com estudos e oferece suporte 24/7.",
+        color: "bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD]",
+        image: "/src/assets/features/iatec.png",
+      },
+      {
+        icon: FileText,
+        title: "Jornal Etec Digital",
+        description: "Fique por dentro das últimas notícias, eventos e oportunidades da sua escola em tempo real.",
+        color: "bg-gradient-to-r from-[#CCA9DD] to-[#CCA9DD]",
+        image: "/src/assets/features/jornal.png",
+      },
+      {
+        icon: Users,
+        title: "Chat",
+        description: "Conecte-se com professores, tire dúvidas, e contate a secretaria.",
+        color: "bg-gradient-to-r from-[#CCA9DD] to-[#CCA9DD]",
+        image: "/src/assets/features/calendario.png",
+      },
+    ]
+  
+    // Processo de criação
+    const creationProcess = [
+      {
+        step: "01",
+        title: "Pesquisa & Descoberta",
+        description:
+          "Realizamos entrevistas com mais de 200 estudantes da Etec para identificar suas principais dificuldades e necessidades no ambiente acadêmico.",
+        icon: Target,
+        details: ["Entrevistas com estudantes", "Análise de concorrentes", "Mapeamento de jornada do usuário"],
+      },
+      {
+        step: "02",
+        title: "Design & Prototipação",
+        description:
+          "Criamos wireframes, protótipos interativos e testamos diferentes abordagens de interface focando na experiência do usuário.",
+        icon: Lightbulb,
+        details: ["Wireframes e mockups", "Prototipagem interativa", "Testes de usabilidade"],
+      },
+      {
+        step: "03",
+        title: "Desenvolvimento Ágil",
+        description:
+          "Implementamos a solução usando metodologias ágeis, tecnologias modernas e práticas de desenvolvimento colaborativo.",
+        icon: Code,
+        details: ["Desenvolvimento em sprints", "Code review contínuo", "Testes automatizados"],
+      },
+      {
+        step: "04",
+        title: "Testes & Otimização",
+        description:
+          "Realizamos testes extensivos, coletamos feedback dos usuários e implementamos melhorias baseadas em dados reais.",
+        icon: Zap,
+        details: ["Testes beta com usuários", "Análise de métricas", "Otimização contínua"],
+      },
+    ]
 
   const stats = [
     { number: "1,200+", label: "Estudantes Ativos", icon: Users },
@@ -233,12 +233,12 @@ const AboutPage = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-[#f5ecff ] dark:bg-[#121212] overflow-x-hidden">
+    <div className="min-h-screen bg-[#f3e8ff] dark:bg-[#121212] overflow-x-hidden">
       {/* Hero Section */}
       <section id="início" className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-[#8C43FF]/20 rounded-full blur-3xl"></div>
+          <div className="absolute top-20 left-10 w-72 h-72 bg-[#58417d]/20 rounded-full blur-3xl"></div>
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#CCA9DD]/20 rounded-full blur-3xl"></div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-[#CCA9DD]/10 to-[#CCA9DD]/10 rounded-full blur-3xl"></div>
         </div>
@@ -339,7 +339,7 @@ const AboutPage = () => {
                     { icon: Globe, title: "Acessibilidade", desc: "Disponível para todos, em qualquer dispositivo" },
                   ].map((item, index) => (
                     <div key={index} className="flex items-start gap-3">
-                      <div className="p-2 bg-[#8C43FF]/20 rounded-lg">
+                      <div className="p-2 bg-[#58417d]/20 rounded-lg">
                         <item.icon size={20} className="text-[#8C43FF]" />
                       </div>
                       <div>
@@ -361,7 +361,7 @@ const AboutPage = () => {
             >
               <div className="relative">
                 <img
-                  src="/placeholder.svg?height=500&width=600&text=Project+Vision"
+                  src="src/assets/etecNotesTeam/fotoTerceiraPrevia.jpg"
                   alt="Visão do Projeto"
                   className="w-full h-96 object-cover rounded-3xl shadow-2xl"
                 />
@@ -564,7 +564,7 @@ const AboutPage = () => {
                   <div className="flex justify-center space-x-3">
                     <a
                       href={member.social.github}
-                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#8C43FF] hover:text-white transition-colors"
+                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#58417d] hover:text-white transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -572,7 +572,7 @@ const AboutPage = () => {
                     </a>
                     <a
                       href={member.social.linkedin}
-                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#8C43FF] hover:text-white transition-colors"
+                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#58417d] hover:text-white transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -580,7 +580,7 @@ const AboutPage = () => {
                     </a>
                     <a
                       href={`mailto:${member.social.email}`}
-                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#8C43FF] hover:text-white transition-colors"
+                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#58417d] hover:text-white transition-colors"
                     >
                       <Mail size={16} />
                     </a>
