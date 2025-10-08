@@ -53,7 +53,7 @@ const ConfirmDialog = ({
           <div className="flex justify-end space-x-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-[#333333] rounded-lg hover:bg-gray-50 dark:hover:bg-[#2D2D2D] transition-colors"
+              className="px-4 py-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-[#333333] rounded-lg hover:bg-gray-100 dark:hover:bg-[#2D2D2D] transition-colors"
             >
               {cancelText}
             </button>

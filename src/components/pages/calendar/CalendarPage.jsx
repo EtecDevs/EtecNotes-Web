@@ -252,15 +252,15 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
             onClick={() => setSelectedDay(day.date)}
             className={`
               relative h-20 p-2 rounded-xl cursor-pointer transition-all
-              ${day.isCurrentMonth ? "dark:bg-[#2D2D2D] bg-gray-50" : "dark:bg-[#252525] bg-gray-100 opacity-40"}
-              ${isToday(day.date) ? "border border-[#00B2FF]" : ""}
+              ${day.isCurrentMonth ? "dark:bg-[#2D2D2D] bg-[#E1E1E1]" : "dark:bg-[#252525] bg-[#f3e8ff] opacity-40"}
+              ${isToday(day.date) ? "border border-[#046087] dark:border-[#00B2FF]" : ""}
               ${isSelected(day.date) ? "border-2 border-[#8C43FF] dark:border-[#8C43FF] shadow-[0_0_15px_rgba(140,67,255,0.3)]" : ""}
             `}
                 >
                   <span
                     className={`
                     text-sm font-medium
-                    ${isToday(day.date) ? "text-[#00B2FF]" : ""}
+                    ${isToday(day.date) ? "text-[#00B2FF]": ""}
                     ${isSelected(day.date) ? "dark:text-white text-[#8C43FF]" : "dark:text-gray-300 text-gray-700"}
                     ${!day.isCurrentMonth ? "dark:text-gray-600 text-gray-400" : ""}
                   `}
@@ -302,7 +302,7 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="p-3 dark:bg-[#2D2D2D] bg-gray-50 rounded-xl dark:hover:bg-[#333333] hover:bg-gray-100 transition-colors"
+                    className="p-3 dark:bg-[#2D2D2D] bg-gray-100 rounded-xl dark:hover:bg-[#333333] hover:bg-gray-100 transition-colors"
                   >
                     <div className="flex justify-between items-start">
                       <div>

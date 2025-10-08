@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Check, X, Download } from "lucide-react"
+import { Check, X, Download, FileText } from "lucide-react"
 
 export default function ComprovantesSecretaria() {
   const [comprovantes, setComprovantes] = useState([
@@ -13,7 +13,7 @@ export default function ComprovantesSecretaria() {
       valor: "R$ 15,00",
       data: "20/08/2025",
       status: "pendente",
-      comprovante: "/comprovante-pix.jpg",
+      comprovante: "src/assets/imagesGeneral/ComprovanteTest.pdf",
     },
     {
       id: 2,
@@ -23,7 +23,7 @@ export default function ComprovantesSecretaria() {
       valor: "R$ 10,00",
       data: "21/08/2025",
       status: "pendente",
-      comprovante: "/comprovante-pix.jpg",
+      comprovante: "src/assets/imagesGeneral/ComprovanteTest.pdf",
     },
   ])
 
@@ -35,8 +35,23 @@ export default function ComprovantesSecretaria() {
     setComprovantes(comprovantes.map((c) => (c.id === id ? { ...c, status: "rejeitado" } : c)))
   }
 
+  // Função para verificar se é PDF
+  const isPDF = (url) => {
+    return url?.toLowerCase().endsWith('.pdf')
+  }
+
+  // Função para baixar o arquivo
+  const downloadFile = (url, filename) => {
+    const link = document.createElement('a')
+    link.href = url
+    link.download = filename || 'comprovante.pdf'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen bg-gray-100 py-12 px-4">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Comprovantes de Pagamento</h1>
 
@@ -46,15 +61,45 @@ export default function ComprovantesSecretaria() {
               <div className="flex gap-6">
                 {/* Comprovante */}
                 <div className="w-64 flex-shrink-0">
-                  <img
-                    src={comprovante.comprovante || "/placeholder.svg"}
-                    alt="Comprovante"
-                    className="w-full h-40 object-cover rounded-lg border border-gray-200"
-                  />
-                  <button className="mt-2 w-full px-4 py-2 text-sm text-purple-600 hover:text-purple-700 flex items-center justify-center gap-2">
-                    <Download className="w-4 h-4" />
-                    Baixar comprovante
-                  </button>
+                  {isPDF(comprovante.comprovante) ? (
+                    // Se for PDF, mostra um preview do PDF
+                    <div className="w-full h-40 bg-gray-100 rounded-lg border border-gray-200 overflow-hidden">
+                      <embed
+                        src={comprovante.comprovante}
+                        type="application/pdf"
+                        className="w-full h-full"
+                        title="Preview do Comprovante PDF"
+                      />
+                    </div>
+                  ) : (
+                    // Se for imagem, mostra normalmente
+                    <img
+                      src={comprovante.comprovante || "/placeholder.svg"}
+                      alt="Comprovante"
+                      className="w-full h-40 object-cover rounded-lg border border-gray-200"
+                    />
+                  )}
+                  
+                  {/* Botões de ação */}
+                  <div className="mt-2 space-y-2">
+                    <button 
+                      onClick={() => window.open(comprovante.comprovante, '_blank')}
+                      className="w-full px-4 py-2 text-sm text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                    >
+                      <FileText className="w-4 h-4" />
+                      {isPDF(comprovante.comprovante) ? 'Visualizar Comprovante' : 'Abrir PDF em Nova Aba'}
+                    </button>
+                    
+                    {isPDF(comprovante.comprovante) && (
+                      <button 
+                        onClick={() => downloadFile(comprovante.comprovante, `comprovante-${comprovante.rm}.pdf`)}
+                        className="w-full px-4 py-2 text-sm bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center justify-center gap-2 transition-colors"
+                      >
+                        <Download className="w-4 h-4" />
+                        Baixar PDF
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 {/* Informações */}

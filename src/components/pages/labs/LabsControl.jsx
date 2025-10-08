@@ -305,9 +305,9 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
 
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="dark:bg-[#0D1117] bg-gray-50">
+              <thead className="dark:bg-[#0D1117] bg-gray-100">
                 <tr>
-                  <th className="p-4 text-left font-semibold dark:text-white text-gray-900 sticky left-0 dark:bg-[#0D1117] bg-gray-50 z-10">
+                  <th className="p-4 text-left font-semibold dark:text-white text-gray-900 sticky left-0 dark:bg-[#0D1117] bg-gray-100 z-10">
                     Aula
                   </th>
                   {diasSemana.map((dia) => (
@@ -405,7 +405,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
             </table>
           </div>
 
-          <div className="p-4 border-t dark:border-[#30363D] border-gray-200 bg-gray-50 dark:bg-[#0D1117]">
+          <div className="p-4 border-t dark:border-[#30363D] border-gray-200 bg-gray-100 dark:bg-[#0D1117]">
             <div className="flex flex-wrap gap-6 text-sm">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded bg-green-500/20 border-2 border-green-500/40" />
@@ -574,13 +574,13 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
   )
 
   return (
-    <div className="min-h-screen dark:bg-[#0A0A0A] bg-gray-50 p-6">
+    <div className="min-h-screen dark:bg-[#0A0A0A] bg-[#f3e8ff] p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-[var(--primary)] mb-2">
+              <h1 className="text-4xl font-bold dark:bg-[#58417d] bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] bg-clip-text text-transparent mb-2">
                 LabNotes
               </h1>
               <p className="dark:text-gray-400 text-gray-600">
@@ -597,7 +597,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
                     onClick={() => setSelectedView("grid")}
                     className={`px-6 py-2.5 font-semibold transition-all duration-300 focus:outline-none
                       ${selectedView === "grid"
-                        ? "bg-[var(--primary)] text-white shadow-lg"
+                        ? "bg-[#58417d] text-white shadow-lg"
                         : "bg-transparent text-gray-500 dark:text-gray-400 hover:bg-[var(--muted)]"}
                     `}
                   >
@@ -607,7 +607,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
                     onClick={() => setSelectedView("list")}
                     className={`px-6 py-2.5 font-semibold transition-all duration-300 focus:outline-none
                       ${selectedView === "list"
-                        ? "bg-[var(--primary)] text-white shadow-lg"
+                        ? "bg-[#58417d] text-white shadow-lg"
                         : "bg-transparent text-gray-500 dark:text-gray-400 hover:bg-[var(--muted)]"}
                     `}
                   >
@@ -826,7 +826,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
             size="lg"
           >
             <div className="space-y-6">
-              <div className="p-6 dark:bg-[#0D1117] bg-gray-50 rounded-xl">
+              <div className="p-6 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
                 <div className="grid grid-cols-2 gap-6">
                   <div>
                     <p className="text-sm dark:text-gray-400 text-gray-600 mb-1">Professor</p>

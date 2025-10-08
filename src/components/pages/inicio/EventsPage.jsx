@@ -217,35 +217,35 @@ const EventsPage = () => {
         ))}
       </div>
 
-      {/* Modal de Detalhes */}
-      {selectedEvent && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-[#58417d] dark:bg-[#58417d] rounded-3xl p-8 max-w-2xl w-full shadow-2xl border-2 border-[#8C43FF]/40 relative">
-            <button
-              onClick={() => setSelectedEvent(null)}
-              className="absolute top-4 right-4 px-3 py-1 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg shadow transition-colors"
-            >
-              Fechar
-            </button>
-            <h2 className="text-3xl font-bold text-white mb-4 drop-shadow">{selectedEvent.title}</h2>
-            <img
-              src={selectedEvent.image || "/placeholder.svg"}
-              alt={selectedEvent.title}
-              className="w-full h-64 object-cover rounded-2xl mb-6 shadow-lg border-4 border-white dark:border-[#232E33]"
-            />
-            <p className="text-white/90 dark:text-gray-300 mb-4 text-lg">{selectedEvent.fullDescription}</p>
-            <div className="text-md text-white/80 dark:text-gray-400 mb-4">
-              <p>Data: {new Date(selectedEvent.date).toLocaleDateString()}</p>
-              <p>Horário: {selectedEvent.time}</p>
-              <p>Local: {selectedEvent.location}</p>
-              {selectedEvent.isPaid && (
-                <p className="mt-2 text-yellow-300 font-bold text-lg">
-                  💰 Valor: R$ {selectedEvent.price.toFixed(2)}
-                </p>
-              )}
-            </div>
-            
-            {/* Botão de participação no modal */}
+      /* Modal de Detalhes */
+        {selectedEvent && (
+          <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-[#58417d] dark:bg-[#58417d] rounded-3xl p-8 max-w-2xl w-full shadow-2xl border-2 border-[#8C43FF]/40 relative">
+          <button
+            onClick={() => setSelectedEvent(null)}
+            className="absolute top-4 right-4 px-3 py-1 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg shadow transition-colors z-50"
+          >
+            Fechar
+          </button>
+          <h2 className="text-3xl font-bold text-white mb-4 drop-shadow">{selectedEvent.title}</h2>
+          <img
+            src={selectedEvent.image || "/placeholder.svg"}
+            alt={selectedEvent.title}
+            className="w-full h-64 object-cover rounded-2xl mb-6 shadow-lg border-4 border-white dark:border-[#232E33]"
+          />
+          <p className="text-white/90 dark:text-gray-300 mb-4 text-lg">{selectedEvent.fullDescription}</p>
+          <div className="text-md text-white/80 dark:text-gray-400 mb-4">
+            <p>Data: {new Date(selectedEvent.date).toLocaleDateString()}</p>
+            <p>Horário: {selectedEvent.time}</p>
+            <p>Local: {selectedEvent.location}</p>
+            {selectedEvent.isPaid && (
+              <p className="mt-2 text-yellow-300 font-bold text-lg">
+            💰 Valor: R$ {selectedEvent.price.toFixed(2)}
+              </p>
+            )}
+          </div>
+          
+          {/* Botão de participação no modal */}
             {user?.role === 'aluno' && (
               <button
                 onClick={() => {

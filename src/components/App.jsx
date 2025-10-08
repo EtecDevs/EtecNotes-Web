@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import BootstrapPage from "./BootstrapPage"
 import { useSystemStatus } from "../hooks/useSystemStatus"
-import { Home, Calendar, MessageCircle, User, Cloud, HelpCircle, Menu, Monitor } from "lucide-react"
+import { Home, Calendar, MessageCircle, User, Cloud, HelpCircle, Menu, Monitor, Building2 } from "lucide-react"
 import CalendarPage from "./pages/calendar/CalendarPage"
 import HomePage from "./pages/inicio/HomePage"
 import PatchNotesPage from "./pages/inicio/PatchNotesPage"
@@ -255,7 +255,7 @@ function AppContent() {
                 >
                   <Calendar size={28} />
                 </button>
-                {(userType === "teacher" || userType === "etec") && (
+                {(userType === "teacher" || userType === "etec" || userType === "admin") && (
                   <button
                     className={`p-1.5 rounded-full transition-all duration-300 hover:bg-white/20 dark:hover:bg-[#333333] ${
                       activeTab === "Laboratórios" ? "text-purple-500" : "text-white/80 hover:text-white cursor-pointer"
@@ -295,9 +295,13 @@ function AppContent() {
                       setActiveTab("Perfil")
                     }
                   }}
-                  aria-label="Perfil"
+                  aria-label={user?.role === "SECRETARIA" || user?.role === "ADMINISTRADOR" ? "Painel Administrativo" : "Perfil"}
                 >
-                  <User size={28} />
+                  {user?.role === "SECRETARIA" || user?.role === "ADMINISTRADOR" ? (
+                    <Building2 size={28} />
+                  ) : (
+                    <User size={28} />
+                  )}
                 </button>
                 <button
                   className={`p-1.5 rounded-full transition-all duration-300 hover:bg-white/20 dark:hover:bg-[#333333] ${

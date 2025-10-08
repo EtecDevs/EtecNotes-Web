@@ -161,7 +161,7 @@ const AdminDashboard = ({ onLogout }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <button
                   onClick={() => setActiveTab('create-student')}
-                  className="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
                   <UserPlus className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-3" />
                   <span className="text-sm font-medium text-gray-900 dark:text-white">
@@ -171,7 +171,7 @@ const AdminDashboard = ({ onLogout }) => {
 
                 <button
                   onClick={() => setActiveTab('create-teacher')}
-                  className="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
                   <UserPlus className="w-5 h-5 text-green-600 dark:text-green-400 mr-3" />
                   <span className="text-sm font-medium text-gray-900 dark:text-white">
@@ -181,7 +181,7 @@ const AdminDashboard = ({ onLogout }) => {
 
                 <button
                   onClick={() => setActiveTab('import-users')}
-                  className="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
                   <Upload className="w-5 h-5 text-purple-600 dark:text-purple-400 mr-3" />
                   <span className="text-sm font-medium text-gray-900 dark:text-white">
@@ -191,7 +191,7 @@ const AdminDashboard = ({ onLogout }) => {
 
                 <button
                   onClick={() => setActiveTab('users-list')}
-                  className="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="flex items-center p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
                   <List className="w-5 h-5 text-orange-600 dark:text-orange-400 mr-3" />
                   <span className="text-sm font-medium text-gray-900 dark:text-white">

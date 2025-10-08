@@ -344,7 +344,7 @@ const TeacherDashboard = ({ teacherData }) => {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 dark:bg-[#0D1117] bg-gray-50 rounded-xl">
+          <div className="p-4 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-500/10 rounded-lg">
                 <BookOpen size={20} className="text-blue-500" />
@@ -356,7 +356,7 @@ const TeacherDashboard = ({ teacherData }) => {
             </div>
           </div>
 
-          <div className="p-4 dark:bg-[#0D1117] bg-gray-50 rounded-xl">
+          <div className="p-4 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-green-500/10 rounded-lg">
                 <Users size={20} className="text-green-500" />
@@ -370,7 +370,7 @@ const TeacherDashboard = ({ teacherData }) => {
             </div>
           </div>
 
-          <div className="p-4 dark:bg-[#0D1117] bg-gray-50 rounded-xl">
+          <div className="p-4 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-purple-500/10 rounded-lg">
                 <Calendar size={20} className="text-purple-500" />
@@ -402,7 +402,7 @@ const TeacherDashboard = ({ teacherData }) => {
             .map((event) => {
               const eventClass = teacherClasses.find((cls) => cls.id === event.classId)
               return (
-                <div key={event.id} className="flex items-center gap-4 p-3 dark:bg-[#0D1117] bg-gray-50 rounded-xl">
+                <div key={event.id} className="flex items-center gap-4 p-3 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
                   <div className="p-2 bg-[#8C43FF]/10 rounded-lg">
                     <Calendar size={16} className="text-[#8C43FF]" />
                   </div>
@@ -470,7 +470,7 @@ const TeacherDashboard = ({ teacherData }) => {
           >
             {/* Header da Classe */}
             <div
-              className="p-6 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#0D1117] transition-colors"
+              className="p-6 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#0D1117] transition-colors"
               onClick={() => setExpandedClass(expandedClass === classItem.id ? null : classItem.id)}
             >
               <div className="flex items-center justify-between">
@@ -535,7 +535,7 @@ const TeacherDashboard = ({ teacherData }) => {
                       {classItem.students_list.map((student) => (
                         <div
                           key={student.id}
-                          className="flex items-center gap-3 p-3 dark:bg-[#0D1117] bg-gray-50 rounded-xl"
+                          className="flex items-center gap-3 p-3 dark:bg-[#0D1117] bg-gray-100 rounded-xl"
                         >
                           <img
                             src={student.avatar || "/placeholder.svg"}
@@ -659,7 +659,7 @@ const TeacherDashboard = ({ teacherData }) => {
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {classEvents.length > 0 ? (
                 classEvents.map((event) => (
-                  <div key={event.id} className="p-3 dark:bg-[#0D1117] bg-gray-50 rounded-xl">
+                  <div key={event.id} className="p-3 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">

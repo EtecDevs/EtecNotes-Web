@@ -160,7 +160,7 @@ const [comprovantes, setComprovantes] = useState([
     valor: "R$ 15,00", // String, não número
     data: "20/08/2025",
     status: "pendente",
-    comprovante: "/comprovante-pix.jpg", // URL fixa
+    comprovante: "src/assets/imagesGeneral/ComprovanteTest.pdf", // URL fixa
   }
 ])
 

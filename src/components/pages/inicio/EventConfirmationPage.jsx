@@ -14,7 +14,7 @@ const EventConfirmationPage = ({ event, onBack, onConfirm }) => {
   const [error, setError] = useState("")
 
   // Chave PIX da escola (pode ser configurável)
-  const pixKey = "etec.pagamentos@sp.gov.br"
+  const pixKey = "etec.pagamentos@etec.sp.gov.br"
 
   const handleCopyPix = () => {
     navigator.clipboard.writeText(pixKey)
@@ -133,7 +133,7 @@ const EventConfirmationPage = ({ event, onBack, onConfirm }) => {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#8C43FF] via-[#a76fff] to-[#553b7d] p-6 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#8C43FF] via-[#a76fff] to-[#553b7d] p-6 flex items-center justify-center ">
         <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 max-w-md w-full shadow-2xl text-center">
           <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
             <Check className="w-12 h-12 text-white" />
@@ -156,7 +156,7 @@ const EventConfirmationPage = ({ event, onBack, onConfirm }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#8C43FF] via-[#a76fff] to-[#553b7d] p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#8C43FF] via-[#a76fff] to-[#553b7d] p-6 rounded-3xl">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6">
@@ -223,7 +223,7 @@ const EventConfirmationPage = ({ event, onBack, onConfirm }) => {
               </div>
             </div>
 
-            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+            <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-700/50 rounded-xl">
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
                 {event.title}
               </h3>
@@ -250,7 +250,7 @@ const EventConfirmationPage = ({ event, onBack, onConfirm }) => {
                     type="text"
                     value={pixKey}
                     readOnly
-                    className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white font-mono text-sm"
+                    className="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white font-mono text-sm"
                   />
                   <button
                     type="button"
@@ -276,7 +276,7 @@ const EventConfirmationPage = ({ event, onBack, onConfirm }) => {
                 </label>
 
                 {!receipt ? (
-                  <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl cursor-pointer hover:border-purple-500 dark:hover:border-purple-400 transition-colors bg-gray-50 dark:bg-gray-700/50">
+                  <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl cursor-pointer hover:border-purple-500 dark:hover:border-purple-400 transition-colors bg-gray-100 dark:bg-gray-700/50">
                     <Upload className="w-10 h-10 text-gray-400 mb-2" />
                     <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">
                       Clique para anexar ou arraste o arquivo
@@ -309,7 +309,7 @@ const EventConfirmationPage = ({ event, onBack, onConfirm }) => {
                         </button>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600">
+                      <div className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
                             <Upload className="w-5 h-5 text-purple-600 dark:text-purple-400" />

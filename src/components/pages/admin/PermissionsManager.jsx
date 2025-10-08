@@ -246,7 +246,7 @@ const PermissionsManager = ({ onClose, onSave }) => {
                         key={key}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="dark:bg-[#0D1117] bg-gray-50 rounded-xl p-4 border-2 dark:border-[#30363D] border-gray-200 hover:border-purple-500 dark:hover:border-purple-500 transition-all"
+                        className="dark:bg-[#0D1117] bg-gray-100 rounded-xl p-4 border-2 dark:border-[#30363D] border-gray-200 hover:border-purple-500 dark:hover:border-purple-500 transition-all"
                       >
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3">
@@ -349,7 +349,7 @@ const PermissionsManager = ({ onClose, onSave }) => {
             /* Criação/Edição de Perfil Customizado */
             <div className="space-y-6">
               {/* Informações Básicas */}
-              <div className="dark:bg-[#0D1117] bg-gray-50 rounded-xl p-6 border dark:border-[#30363D] border-gray-200">
+              <div className="dark:bg-[#0D1117] bg-gray-100 rounded-xl p-6 border dark:border-[#30363D] border-gray-200">
                 <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">
                   Informações do Perfil
                 </h3>
@@ -428,7 +428,7 @@ const PermissionsManager = ({ onClose, onSave }) => {
               </div>
 
               {/* Seleção de Permissões */}
-              <div className="dark:bg-[#0D1117] bg-gray-50 rounded-xl p-6 border dark:border-[#30363D] border-gray-200">
+              <div className="dark:bg-[#0D1117] bg-gray-100 rounded-xl p-6 border dark:border-[#30363D] border-gray-200">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold dark:text-white text-gray-900">
                     Permissões ({newProfile.permissions.length} selecionadas)
@@ -458,7 +458,7 @@ const PermissionsManager = ({ onClose, onSave }) => {
                       <div key={category} className="border dark:border-[#30363D] border-gray-200 rounded-lg overflow-hidden">
                         <button
                           onClick={() => toggleCategory(category)}
-                          className="w-full flex items-center justify-between p-3 dark:bg-[#1E1E1E] bg-white hover:bg-gray-50 dark:hover:bg-[#21262D] transition-colors"
+                          className="w-full flex items-center justify-between p-3 dark:bg-[#1E1E1E] bg-white hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
                         >
                           <div className="flex items-center gap-3">
                             <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
@@ -505,7 +505,7 @@ const PermissionsManager = ({ onClose, onSave }) => {
                               exit={{ height: 0 }}
                               className="overflow-hidden"
                             >
-                              <div className="p-3 space-y-2 dark:bg-[#0D1117] bg-gray-50">
+                              <div className="p-3 space-y-2 dark:bg-[#0D1117] bg-gray-100">
                                 {permissions.map(permission => (
                                   <label
                                     key={permission.code}
@@ -568,7 +568,7 @@ const PermissionsManager = ({ onClose, onSave }) => {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-6 border-t dark:border-[#30363D] border-gray-200 dark:bg-[#0D1117] bg-gray-50">
+        <div className="flex items-center justify-between p-6 border-t dark:border-[#30363D] border-gray-200 dark:bg-[#0D1117] bg-gray-100">
           <div className="flex items-center gap-2 text-sm dark:text-gray-400 text-gray-600">
             <AlertCircle size={16} />
             <span>Perfis personalizados permitem controle granular de acesso</span>

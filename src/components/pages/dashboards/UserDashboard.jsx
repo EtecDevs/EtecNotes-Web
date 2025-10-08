@@ -192,13 +192,13 @@ const UserDashboard = () => {
                         type="text"
                         value={editedInfo.name}
                         onChange={(e) => setEditedInfo((prev) => ({ ...prev, name: e.target.value }))}
-                        className="text-3xl font-bold dark:bg-[#0D1117] bg-gray-50 dark:text-white text-gray-900 border dark:border-[#30363D] border-gray-300 rounded-lg px-3 py-2 w-full max-w-md"
+                        className="text-3xl font-bold dark:bg-[#0D1117] bg-gray-100 dark:text-white text-gray-900 border dark:border-[#30363D] border-gray-300 rounded-lg px-3 py-2 w-full max-w-md"
                       />
                       <input
                         type="text"
                         value={editedInfo.username}
                         onChange={(e) => setEditedInfo((prev) => ({ ...prev, username: e.target.value }))}
-                        className="text-xl dark:text-gray-400 text-gray-600 dark:bg-[#0D1117] bg-gray-50 border dark:border-[#30363D] border-gray-300 rounded-lg px-3 py-2 w-full max-w-md"
+                        className="text-xl dark:text-gray-400 text-gray-600 dark:bg-[#0D1117] bg-gray-100 border dark:border-[#30363D] border-gray-300 rounded-lg px-3 py-2 w-full max-w-md"
                         placeholder="@username"
                       />
                     </div>
@@ -213,7 +213,7 @@ const UserDashboard = () => {
                     <textarea
                       value={editedInfo.bio}
                       onChange={(e) => setEditedInfo((prev) => ({ ...prev, bio: e.target.value }))}
-                      className="w-full dark:bg-[#0D1117] bg-gray-50 dark:text-gray-300 text-gray-700 border dark:border-[#30363D] border-gray-300 rounded-lg px-3 py-2 h-24 resize-none"
+                      className="w-full dark:bg-[#0D1117] bg-gray-100 dark:text-gray-300 text-gray-700 border dark:border-[#30363D] border-gray-300 rounded-lg px-3 py-2 h-24 resize-none"
                       placeholder="Conte um pouco sobre você..."
                     />
                   ) : (
@@ -353,7 +353,7 @@ const UserDashboard = () => {
 
               <div className="space-y-4">
                 {recentActivity.map((activity, index) => (
-                  <div key={index} className="flex items-start gap-4 p-4 dark:bg-[#0D1117] bg-gray-50 rounded-xl">
+                  <div key={index} className="flex items-start gap-4 p-4 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
                     <div className={`p-2 rounded-lg bg-gray-100 dark:bg-[#21262D]`}>
                       <activity.icon size={16} className={activity.color} />
                     </div>
@@ -386,7 +386,7 @@ const UserDashboard = () => {
                     className={`p-4 rounded-xl border-2 transition-all ${
                       achievement.earned
                         ? "border-[#8C43FF] bg-[#8C43FF]/5"
-                        : "border-gray-200 dark:border-[#30363D] dark:bg-[#0D1117] bg-gray-50 opacity-60"
+                        : "border-gray-200 dark:border-[#30363D] dark:bg-[#0D1117] bg-gray-100 opacity-60"
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -430,7 +430,7 @@ const UserDashboard = () => {
 
               <div className="space-y-4">
                 {/* Theme Toggle */}
-                <div className="flex items-center justify-between p-3 dark:bg-[#0D1117] bg-gray-50 rounded-xl">
+                <div className="flex items-center justify-between p-3 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
                   <div className="flex items-center gap-3">
                     {theme === "light" ? (
                       <Sun size={18} className="text-[#8C43FF]" />
@@ -459,7 +459,7 @@ const UserDashboard = () => {
                 </div>
 
                 {/* Notifications Toggle */}
-                <div className="flex items-center justify-between p-3 dark:bg-[#0D1117] bg-gray-50 rounded-xl">
+                <div className="flex items-center justify-between p-3 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
                   <div className="flex items-center gap-3">
                     {notifications ? (
                       <Bell size={18} className="text-[#8C43FF]" />
@@ -488,7 +488,7 @@ const UserDashboard = () => {
                 </div>
 
                 {/* Language Selection */}
-                <div className="flex items-center justify-between p-3 dark:bg-[#0D1117] bg-gray-50 rounded-xl">
+                <div className="flex items-center justify-between p-3 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
                   <div className="flex items-center gap-3">
                     <Globe size={18} className="text-[#8C43FF]" />
                     <div>

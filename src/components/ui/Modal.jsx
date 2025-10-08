@@ -73,7 +73,7 @@ export const ModalContent = ({ children, className = '' }) => (
 
 // Componente para footer do modal
 export const ModalFooter = ({ children, className = '' }) => (
-  <div className={`flex justify-end space-x-4 p-6 border-t border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 ${className}`}>
+  <div className={`flex justify-end space-x-4 p-6 border-t border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700/50 ${className}`}>
     {children}
   </div>
 );

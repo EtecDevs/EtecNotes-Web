@@ -49,7 +49,7 @@ import {
   Grid,
   Archive,
   RefreshCw,
-  FileCheck
+  File
 } from "lucide-react"
 import authService from "../../../services/authService"
 import socketService from "../../../services/socketService"
@@ -118,6 +118,28 @@ const EtecDashboard = ({ onLogout }) => {
   const [eventos, setEventos] = useState([])
   const [notifications, setNotifications] = useState([])
   const [reports, setReports] = useState([])
+  const [comprovantes, setComprovantes] = useState([
+    {
+      id: 1,
+      aluno: "João Silva",
+      rm: "12345",
+      evento: "Show de Talentos",
+      valor: "R$ 15,00",
+      data: "20/08/2025",
+      status: "pendente",
+      comprovante: "src/assets/imagesGeneral/ComprovanteTest.pdf",
+    },
+    {
+      id: 2,
+      aluno: "Maria Santos",
+      rm: "67890",
+      evento: "Feira Tecnológica",
+      valor: "R$ 10,00",
+      data: "21/08/2025",
+      status: "pendente",
+      comprovante: "src/assets/imagesGeneral/ComprovanteTest.pdf",
+    },
+  ])
 
   // Estados dos modais
   const [modalState, setModalState] = useState({
@@ -820,7 +842,7 @@ const EtecDashboard = ({ onLogout }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <button
             onClick={() => openModal('createUser')}
-            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-gray-50 rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-[#E1E1E1] rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
           >
             <UserPlus className="text-[#8C43FF]" size={24} />
             <div className="text-left">
@@ -831,7 +853,7 @@ const EtecDashboard = ({ onLogout }) => {
 
           <button
             onClick={() => openModal('createTurma')}
-            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-gray-50 rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-[#E1E1E1] rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
           >
             <BookOpen className="text-[#8C43FF]" size={24} />
             <div className="text-left">
@@ -842,7 +864,7 @@ const EtecDashboard = ({ onLogout }) => {
 
           <button
             onClick={() => openModal('createEvent')}
-            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-gray-50 rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-[#E1E1E1] rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
           >
             <Calendar className="text-[#8C43FF]" size={24} />
             <div className="text-left">
@@ -853,7 +875,7 @@ const EtecDashboard = ({ onLogout }) => {
 
           <button
             onClick={() => openModal('sendNotification')}
-            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-gray-50 rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-[#E1E1E1] rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
           >
             <Bell className="text-[#8C43FF]" size={24} />
             <div className="text-left">
@@ -979,7 +1001,7 @@ const EtecDashboard = ({ onLogout }) => {
       <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="dark:bg-[#0D1117] bg-gray-50">
+            <thead className="dark:bg-[#0D1117] bg-gray-100">
               <tr>
                 <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Usuário</th>
                 <th className="text-left p-4 font-semibold dark:text-white text-gray-900">Tipo</th>
@@ -1287,6 +1309,147 @@ const EtecDashboard = ({ onLogout }) => {
       </div>
     </div>
   )
+
+  const renderComprovantes = () => {
+    const aprovarComprovante = (id) => {
+      setComprovantes(comprovantes.map((c) => (c.id === id ? { ...c, status: "aprovado" } : c)))
+    }
+
+    const rejeitarComprovante = (id) => {
+      setComprovantes(comprovantes.map((c) => (c.id === id ? { ...c, status: "rejeitado" } : c)))
+    }
+
+    const isPDF = (url) => {
+      return url && (url.toLowerCase().endsWith('.pdf') || url.toLowerCase().includes('.pdf'))
+    }
+
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold dark:text-white text-gray-900">Comprovantes de Pagamento</h2>
+        </div>
+
+        <div className="space-y-4">
+          {comprovantes.map((comprovante) => {
+            const isComprovantePDF = isPDF(comprovante.comprovante)
+            
+            return (
+              <div key={comprovante.id} className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
+                <div className="flex gap-6">
+                  {/* Comprovante */}
+                  <div className="w-64 flex-shrink-0">
+                    {isComprovantePDF ? (
+                      // Se for PDF, mostra um iframe ou ícone
+                      <div className="w-full h-40 rounded-lg border dark:border-[#30363D] border-gray-200 overflow-hidden bg-gray-100 dark:bg-[#0D1117]">
+                        <iframe
+                          src={comprovante.comprovante}
+                          className="w-full h-full"
+                          title="Comprovante PDF"
+                        />
+                      </div>
+                    ) : (
+                      // Se for imagem, mostra normalmente
+                      <img
+                        src={comprovante.comprovante || "/placeholder.svg"}
+                        alt="Comprovante"
+                        className="w-full h-40 object-cover rounded-lg border dark:border-[#30363D] border-gray-200"
+                      />
+                    )}
+                    <button 
+                      onClick={() => window.open(comprovante.comprovante, '_blank')}
+                      className="mt-2 w-full px-4 py-2 text-sm text-[#8C43FF] hover:text-[#9955FF] flex items-center justify-center gap-2 border dark:border-[#30363D] border-gray-300 rounded-lg transition-colors"
+                    >
+                      {isComprovantePDF ? (
+                        <>
+                          <Eye className="w-4 h-4" />
+                          Visualizar PDF
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="w-4 h-4" />
+                          Visualizar
+                        </>
+                      )}
+                    </button>
+                    {isComprovantePDF && (
+                      <a
+                        href={comprovante.comprovante}
+                        download={`Comprovante_${comprovante.aluno.replace(/\s+/g, '_')}_${comprovante.evento.replace(/\s+/g, '_')}.pdf`}
+                        className="mt-2 w-full px-4 py-2 text-sm text-white bg-[#8C43FF] hover:bg-[#9955FF] flex items-center justify-center gap-2 rounded-lg transition-colors"
+                      >
+                        <Download className="w-4 h-4" />
+                        Baixar PDF
+                      </a>
+                    )}
+                  </div>
+
+                {/* Informações */}
+                <div className="flex-1">
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="text-lg font-semibold dark:text-white text-gray-900">{comprovante.aluno}</h3>
+                      <p className="text-sm dark:text-gray-400 text-gray-600">RM: {comprovante.rm}</p>
+                    </div>
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        comprovante.status === "aprovado"
+                          ? "bg-green-500/10 text-green-500"
+                          : comprovante.status === "rejeitado"
+                            ? "bg-red-500/10 text-red-500"
+                            : "bg-yellow-500/10 text-yellow-500"
+                      }`}
+                    >
+                      {comprovante.status === "aprovado"
+                        ? "Aprovado"
+                        : comprovante.status === "rejeitado"
+                          ? "Rejeitado"
+                          : "Pendente"}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 mb-4">
+                    <div>
+                      <p className="text-xs dark:text-gray-500 text-gray-500">Evento</p>
+                      <p className="text-sm font-medium dark:text-white text-gray-900">{comprovante.evento}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs dark:text-gray-500 text-gray-500">Valor</p>
+                      <p className="text-sm font-medium dark:text-white text-gray-900">{comprovante.valor}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs dark:text-gray-500 text-gray-500">Data de envio</p>
+                      <p className="text-sm font-medium dark:text-white text-gray-900">{comprovante.data}</p>
+                    </div>
+                  </div>
+
+                  {/* Ações */}
+                  {comprovante.status === "pendente" && (
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => aprovarComprovante(comprovante.id)}
+                        className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center justify-center gap-2 transition-colors"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                        Aprovar
+                      </button>
+                      <button
+                        onClick={() => rejeitarComprovante(comprovante.id)}
+                        className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center justify-center gap-2 transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                        Rejeitar
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
 
   const renderReports = () => (
     <div className="space-y-6">
@@ -1603,6 +1766,7 @@ const EtecDashboard = ({ onLogout }) => {
                 { id: 'turmas', icon: BookOpen, label: 'Turmas' },
                 { id: 'eventos', icon: Calendar, label: 'Eventos' },
                 { id: 'notifications', icon: Bell, label: 'Notificações' },
+                { id: 'comprovantes', icon: Archive, label: 'Comprovantes' },
                 { id: 'reports', icon: BarChart3, label: 'Relatórios' },
                 { id: 'settings', icon: Settings, label: 'Configurações' }
               ].map(item => (
@@ -1647,6 +1811,7 @@ const EtecDashboard = ({ onLogout }) => {
             {activeSection === 'turmas' && renderTurmas()}
             {activeSection === 'eventos' && renderEventos()}
             {activeSection === 'notifications' && renderNotifications()}
+            {activeSection === 'comprovantes' && renderComprovantes()}
             {activeSection === 'reports' && renderReports()}
             {activeSection === 'settings' && renderSettings()}
           </motion.div>

@@ -86,7 +86,7 @@ const AboutPage = () => {
         role: "Documentation Lead",
         image: "/src/assets/EtecNotesTeam/GustavoPaes.jpeg",
         description: "Principal documentador do projeto, garantindo clareza e acessibilidade nas informações técnicas.",
-        skills: ["Word, Trello"],
+        skills: ["Word", "Trello"],
         social: {
           github: "https://github.com/GustavooRPaes",
           linkedin: "https://linkedin.com/in/maria",
@@ -152,7 +152,7 @@ const AboutPage = () => {
       {
         icon: FileText,
         title: "Jornal Etec Digital",
-        description: "Fique por dentro das últimas notícias, eventos e oportunidades da sua escola em tempo real.",
+        description: "Fique por dentro das últimas notícias, eventos e avisos de sua escola em tempo real.",
         color: "bg-gradient-to-r from-[#CCA9DD] to-[#CCA9DD]",
         image: "/src/assets/features/jornal.png",
       },
@@ -266,26 +266,6 @@ const AboutPage = () => {
             <p className="text-xl md:text-2xl dark:text-gray-300 text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
               Conheça a história, a equipe e a visão por trás da plataforma que está transformando a experiência educacional dos estudantes da Etec.
             </p>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
-          >
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <stat.icon size={24} className="text-[#8C43FF] mr-2" />
-                  <div className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#8C43FF] to-[#CCA9DD]">
-                    {stat.number}
-                  </div>
-                </div>
-                <div className="text-sm dark:text-gray-400 text-gray-600 font-medium">{stat.label}</div>
-              </div>
-            ))}
           </motion.div>
 
           {/* Scroll Indicator */}

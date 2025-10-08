@@ -279,7 +279,7 @@ const UsersList = ({ onBack }) => {
           <div className="flex justify-end space-x-4 mt-6">
             <button
               onClick={() => setEditingUser(null)}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               Cancelar
             </button>
@@ -313,7 +313,7 @@ const UsersList = ({ onBack }) => {
           <div className="flex justify-end space-x-4">
             <button
               onClick={() => setShowConfirmDeactivate(null)}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               Cancelar
             </button>
@@ -434,7 +434,7 @@ const UsersList = ({ onBack }) => {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700">
+            <thead className="bg-gray-100 dark:bg-gray-700">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">
                   Usuário

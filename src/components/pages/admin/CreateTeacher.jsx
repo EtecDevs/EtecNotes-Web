@@ -230,7 +230,7 @@ const CreateTeacher = ({ onBack, onSuccess }) => {
                 <button
                   type="button"
                   onClick={generateRandomPassword}
-                  className="px-3 py-2 bg-gray-100 dark:bg-gray-600 border border-l-0 border-gray-300 dark:border-gray-600 rounded-r-lg hover:bg-gray-200 dark:hover:bg-gray-500 text-sm"
+                  className="px-3 py-2 bg-gray-100 dark:bg-gray-600 border border-l-0 border-gray-300 dark:border-gray-600 rounded-r-lg hover:bg-gray-200 dark:hover:bg-gray-1000 text-sm"
                 >
                   Gerar
                 </button>
@@ -336,7 +336,7 @@ const CreateTeacher = ({ onBack, onSuccess }) => {
             <button
               type="button"
               onClick={onBack}
-              className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+              className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               Cancelar
             </button>

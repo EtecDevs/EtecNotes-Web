@@ -199,7 +199,7 @@ const EventPaymentsManager = () => {
                 placeholder="Buscar por nome, email, RM ou evento..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -313,7 +313,7 @@ const EventPaymentsManager = () => {
                   </div>
 
                   {receipt.notes && (
-                    <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
                       <p className="text-sm text-gray-700 dark:text-gray-300">
                         <strong>Observações:</strong> {receipt.notes}
                       </p>
@@ -327,7 +327,7 @@ const EventPaymentsManager = () => {
                     <a
                       href={receipt.receiptUrl}
                       download={receipt.receiptFile}
-                      className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
+                      className="px-4 py-2 bg-gray-1000 hover:bg-gray-600 text-white rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
                     >
                       <Download className="w-4 h-4" />
                       Baixar
@@ -427,7 +427,7 @@ const EventPaymentsManager = () => {
             </div>
 
             {/* Informações */}
-            <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+            <div className="mb-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-xl">
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
                 <strong>Aluno:</strong> {selectedReceipt.userName} (RM: {selectedReceipt.userRm})
               </p>
@@ -447,7 +447,7 @@ const EventPaymentsManager = () => {
               <textarea
                 value={reviewNotes}
                 onChange={(e) => setReviewNotes(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white resize-none"
+                className="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white resize-none"
                 rows="4"
                 placeholder="Adicione observações sobre a revisão..."
               />

@@ -127,7 +127,7 @@ export default function LoginPage({ onLogin, onCancel }) {
   const userTypes = [
     { id: "aluno", label: "Aluno", icon: GraduationCap },
     { id: "professor", label: "Professor", icon: Users },
-    { id: "etec", label: "Secretária", icon: Building2 },
+    { id: "etec", label: "Secretaria", icon: Building2 },
     { id: "administrador", icon: Shield },
   ]
 

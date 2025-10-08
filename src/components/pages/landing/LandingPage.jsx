@@ -25,11 +25,13 @@ import {
   Menu,
   X,
 } from "lucide-react"
+import ThemeToggle from "../../ThemeToggle"
 
 const LandingPage = ({ onGetStarted }) => {
   const [activeFeature, setActiveFeature] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
+  const [autoRotate, setAutoRotate] = useState(true)
 
   // Scroll effect
   useEffect(() => {
@@ -40,38 +42,49 @@ const LandingPage = ({ onGetStarted }) => {
 
   // Auto-rotate features
   useEffect(() => {
+    if (!autoRotate) return
+    
     const interval = setInterval(() => {
       setActiveFeature((prev) => (prev + 1) % features.length)
-    }, 4000)
+    }, 2000)
     return () => clearInterval(interval)
-  }, [])
+  }, [autoRotate])
 
   // Dados dos integrantes da equipe
   const teamMembers = [
     {
       name: "Gustavo Silva",
-      role: "Full Stack Developer & Project Lead",
+      role: "Full Stack Dev. & Project Lead",
       image: "/src/assets/EtecNotesTeam/GustavoSilva.jpeg",
       description:
-        "Especialista em React e Node.js, responsável pela arquitetura do sistema e liderança técnica do projeto.",
+        "Técnico em React e Node.js, responsável pela arquitetura do sistema e liderança técnica do projeto.",
       skills: ["React", "Node.js", "TypeScript", "Firebase"],
       social: {
         github: "https://github.com/DevGusta5",
-        linkedin: "https://linkedin.com/in/danie",
-        email: "gusta.gu.112007.55@gmail.com",
+        linkedin: "https://www.linkedin.com/in/gustavo-silva-998b85289/",
       },
     },
     {
       name: "Daniel Pereira",
-      role: "Full Stack Developer & Designer",
+      role: "Full Stack Dev. & Designer",
       image: "/src/assets/EtecNotesTeam/Daniel.jpeg",
       description:
         "Programador full stack com paixão por design, focado em criar soluções web eficientes e visualmente atraentes.",
       skills: ["React", "Firebase", "Figma", "Node.js", "JavaScript", "Trello"],
       social: {
         github: "https://github.com/zKingDragon",
-        linkedin: "https://linkedin.com/in/ana",
-        email: "daniel10.fine@gmail.com",
+        linkedin: "https://linkedin.com/in/daniel-santos-js",
+      },
+    },
+    {
+      name: "Gustavo Paes",
+      role: "Documentation Lead",
+      image: "/src/assets/EtecNotesTeam/GustavoPaes.jpeg",
+      description: "Principal documentador do projeto, garantindo clareza e acessibilidade nas informações técnicas.",
+      skills: ["Word", "Trello"],
+      social: {
+        github: "https://github.com/GustavooRPaes",
+        linkedin: "https://linkedin.com/in/maria",
       },
     },
     {
@@ -83,19 +96,6 @@ const LandingPage = ({ onGetStarted }) => {
       social: {
         github: "https://github.com/Pedro-Crouss",
         linkedin: "https://linkedin.com/in/carlos",
-        email: "pedro.a17009@gmail.com",
-      },
-    },
-    {
-      name: "Gustavo Paes",
-      role: "Documentation Lead",
-      image: "/src/assets/EtecNotesTeam/GustavoPaes.jpeg",
-      description: "Principal documentador do projeto, garantindo clareza e acessibilidade nas informações técnicas.",
-      skills: ["Word, Trello"],
-      social: {
-        github: "https://github.com/GustavooRPaes",
-        linkedin: "https://linkedin.com/in/maria",
-        email: "Gustavo.rodrigues.paes12@gmail.com",
       },
     },
     {
@@ -107,7 +107,6 @@ const LandingPage = ({ onGetStarted }) => {
       social: {
         github: "https://github.com/SucoDeCaju1239",
         linkedin: "https://linkedin.com/in/maria",
-        email: "maykonsullyvan12@gmail.com",
       },
     },
     {
@@ -119,7 +118,6 @@ const LandingPage = ({ onGetStarted }) => {
       social: {
         github: "https://github.com/maria",
         linkedin: "https://linkedin.com/in/maria",
-        email: "maria@etecnotes.com",
       },
     },
     {
@@ -131,7 +129,6 @@ const LandingPage = ({ onGetStarted }) => {
       social: {
         github: "https://github.com/maria",
         linkedin: "https://linkedin.com/in/maria",
-        email: "maria@etecnotes.com",
       },
     },
   ]
@@ -157,7 +154,7 @@ const LandingPage = ({ onGetStarted }) => {
     {
       icon: FileText,
       title: "Jornal Etec Digital",
-      description: "Fique por dentro das últimas notícias, eventos e oportunidades da sua escola em tempo real.",
+      description: "Fique por dentro das últimas notícias, eventos e avisos de sua escola em tempo real.",
       color: "bg-gradient-to-r from-[#CCA9DD] to-[#CCA9DD]",
       image: "/src/assets/features/jornal.png",
     },
@@ -246,6 +243,11 @@ const LandingPage = ({ onGetStarted }) => {
 
   return (
     <div className="min-h-screen bg-[#f3e8ff] dark:bg-[#121212] overflow-x-hidden">
+      {/* Theme Toggle - Fixed Position */}
+      <div className="fixed top-6 right-6 z-50">
+        <ThemeToggle lightModeColor="text-gray-600" />
+      </div>
+
       {/* Hero Section */}
       <section id="início" className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background Effects */}
@@ -270,7 +272,7 @@ const LandingPage = ({ onGetStarted }) => {
             <h1 className="text-5xl md:text-7xl font-bold dark:text-white text-gray-800 mb-6 leading-tight">
               Transforme sua
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#CCA9DD] via-[#CCA9DD] to-[#CCA9DD] animate-pulse">
+              <span className="text-transparent bg-clip-text bg-[#58417d] dark:bg-gradient-to-r from-[#CCA9DD] via-[#CCA9DD] to-[#CCA9DD] animate-pulse ">
                 jornada acadêmica
               </span>
             </h1>
@@ -296,32 +298,14 @@ const LandingPage = ({ onGetStarted }) => {
             </button>
           </motion.div>
 
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
-          >
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <stat.icon size={24} className="text-[#CCA9DD] mr-2" />
-                  <div className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#CCA9DD] to-[#CCA9DD]">
-                    {stat.number}
-                  </div>
-                </div>
-                <div className="text-sm dark:text-gray-400 text-gray-600 font-medium">{stat.label}</div>
-              </div>
-            ))}
-          </motion.div>
+          
 
           {/* Scroll Indicator */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1 }}
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+            className="items-center"
           >
             <div className="flex flex-col items-center">
               <span className="text-sm dark:text-gray-400 text-gray-600 mb-2">Descubra mais</span>
@@ -364,7 +348,13 @@ const LandingPage = ({ onGetStarted }) => {
                       ? "dark:bg-[#1A1A1A] bg-white shadow-xl scale-105"
                       : "dark:bg-[#151515] bg-gray-100 hover:shadow-lg"
                   }`}
-                  onClick={() => setActiveFeature(index)}
+                  onClick={() => {
+                    setActiveFeature(index)
+                    setAutoRotate(false)
+                    setTimeout(() => {
+                      setAutoRotate(true)
+                    }, 3000)
+                  }}
                 >
                   <div className="flex items-start gap-4">
                     <div className={`p-3 rounded-xl ${feature.color}`}>
@@ -558,7 +548,7 @@ const LandingPage = ({ onGetStarted }) => {
                 viewport={{ once: true }}
                 className="group"
               >
-                <div className="dark:bg-[#1A1A1A] bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all group-hover:scale-105">
+                <div className="dark:bg-[#1A1A1A] bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all group-hover:scale-105 min-h-[500px]">
                   <div className="relative mb-6">
                     <img
                       src={member.image || "/placeholder.svg"}

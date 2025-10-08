@@ -256,7 +256,7 @@ professor,prof1@exemplo.com,Carlos Oliveira,,,,Matemática;Física,Exatas,123456
           <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden">
             <div className="max-h-60 overflow-y-auto">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 dark:bg-gray-700">
+                <thead className="bg-gray-100 dark:bg-gray-700">
                   <tr>
                     <th className="px-4 py-2 text-left">Email</th>
                     <th className="px-4 py-2 text-left">Nome</th>
@@ -290,7 +290,7 @@ professor,prof1@exemplo.com,Carlos Oliveira,,,,Matemática;Física,Exatas,123456
           <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden">
             <div className="max-h-60 overflow-y-auto">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 dark:bg-gray-700">
+                <thead className="bg-gray-100 dark:bg-gray-700">
                   <tr>
                     <th className="px-4 py-2 text-left">Email</th>
                     <th className="px-4 py-2 text-left">Nome</th>
@@ -317,7 +317,7 @@ professor,prof1@exemplo.com,Carlos Oliveira,,,,Matemática;Física,Exatas,123456
       <div className="flex justify-end space-x-4">
         <button
           onClick={resetImport}
-          className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+          className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
         >
           Voltar
         </button>
@@ -439,7 +439,7 @@ professor,prof1@exemplo.com,Carlos Oliveira,,,,Matemática;Física,Exatas,123456
         </button>
         <button
           onClick={onBack}
-          className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+          className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
         >
           Voltar ao Dashboard
         </button>

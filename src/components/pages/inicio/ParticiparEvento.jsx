@@ -60,7 +60,7 @@ export default function ParticiparEvento() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen bg-gray-100 py-12 px-4">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-6">Confirmar Participação</h1>
@@ -80,7 +80,7 @@ export default function ParticiparEvento() {
                 type="text"
                 value={evento.chavePix}
                 readOnly
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100"
               />
               <button
                 onClick={copiarChavePix}
@@ -128,7 +128,7 @@ export default function ParticiparEvento() {
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 Cancelar
               </button>

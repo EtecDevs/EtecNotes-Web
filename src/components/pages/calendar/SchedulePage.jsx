@@ -200,7 +200,7 @@ export default function SchedulePage({ activeTab, onTabChange }) {
                         ? "bg-[#F3EFFF] dark:bg-[#2D2D2D] text-[#8C43FF] font-semibold text-center"
                         : period.isVacant
                           ? "bg-[#8C43FF] dark:bg-[#8C43FF] text-white font-semibold text-center"
-                          : "dark:bg-[#2D2D2D] bg-gray-50"
+                          : "dark:bg-[#2D2D2D] bg-gray-100"
                       }`}
                       >
                       <div className="flex justify-between items-center mb-0.5">
