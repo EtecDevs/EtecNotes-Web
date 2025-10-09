@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Accessibility Styles */
+@import './accessibility/accessibility.css';
+
 :root {
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;

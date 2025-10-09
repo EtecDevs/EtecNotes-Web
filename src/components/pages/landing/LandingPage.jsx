@@ -163,7 +163,7 @@ const LandingPage = ({ onGetStarted }) => {
       title: "Chat",
       description: "Conecte-se com professores, tire dúvidas, e contate a secretaria.",
       color: "bg-gradient-to-r from-[#CCA9DD] to-[#CCA9DD]",
-      image: "/src/assets/features/calendario.png",
+      image: "/src/assets/features/chat.png",
     },
   ]
 

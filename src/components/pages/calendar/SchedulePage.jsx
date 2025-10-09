@@ -7,8 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 export default function SchedulePage({ activeTab, onTabChange }) {
   const [currentIndex, setCurrentIndex] = useState(1) // Start with Tuesday (index 1)
   // Set default activeTab if not provided
-  const defaultActiveTab = activeTab || "Jornal Etec"
-
+  
   // Schedule data for the days of the week
   const scheduleData = [
     {
@@ -17,24 +16,24 @@ export default function SchedulePage({ activeTab, onTabChange }) {
         { time: "08:00 - 08:50", subject: "Aula Vaga", isVacant: true },
         { time: "08:50 - 09:40", subject: "Aula Vaga", isVacant: true },
         { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "Sistemas Embarcados", teacher: "Prof. Iury", lab: 2 },
-        { time: "10:50 - 11:40", subject: "Sistemas Embarcados", teacher: "Prof. Iury" },
-        { time: "11:40 - 12:30", subject: "Sociologia", teacher: "Prof. Elza" },
+        { time: "10:00 - 10:50", subject: "Sistemas Embarcados", teacher: "Prof. Iury", lab: 4 },
+        { time: "10:50 - 11:40", subject: "Sistemas Embarcados", teacher: "Prof. Iury", lab: 4 },
+        { time: "11:40 - 12:30", subject: "Sociologia", teacher: "Profa. Elza", lab: 4 },
         { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
-        { time: "13:30 - 14:20", subject: "EAMT", teacher: "Prof. Elza" },
-        { time: "14:20 - 15:10", subject: "EAMT", teacher: "Prof. Elza" },
-        { time: "15:10 - 16:00", subject: "EAMT", teacher: "Prof. Elza" },
+        { time: "13:30 - 14:20", subject: "EAMT", teacher: "Profa. Elza", lab: 2  },
+        { time: "14:20 - 15:10", subject: "EAMT", teacher: "Profa. Elza", lab: 2  },
+        { time: "15:10 - 16:00", subject: "EAMT", teacher: "Profa. Elza", lab: 2  },
       ],
     },
     {
       day: "Terça",
       periods: [
-        { time: "08:00 - 08:50", subject: "P.W. I, II, III", teacher: "Prof. Paulo e William G." },
-        { time: "08:50 - 09:40", subject: "Programação Web I, II e III", teacher: "Prof. Paulo e William G." },
+        { time: "08:00 - 08:50", subject: "P.W.", teacher: "Prof. Paulo", lab: 1 },
+        { time: "08:50 - 09:40", subject: "P.W.", teacher: "Prof. Paulo", lab: 1 },
         { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "E.A.C.N.T.", teacher: "Prof. Elza e Prof. Andreia", lab: 2 },
-        { time: "10:50 - 11:40", subject: "E.A.C.N.T.", teacher: "Prof. Elza e Prof. Andreia" },
-        { time: "11:40 - 12:30", subject: "Matematica", teacher: "Prof. Santos" },
+        { time: "10:00 - 10:50", subject: "E.A.C.N.T.", teacher: "Profa. Elza e Profa. Andreia", lab: 2 },
+        { time: "10:50 - 11:40", subject: "E.A.C.N.T.", teacher: "Profa. Elza e Profa. Andreia", lab: 2  },
+        { time: "11:40 - 12:30", subject: "Inglês", teacher: "Prof. Fidélis" },
         { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
         { time: "13:30 - 14:20", subject: "Inglês", teacher: "Prof. Fidélis" },
         { time: "14:20 - 15:10", subject: "Matematica", teacher: "Prof. William B." },
@@ -44,27 +43,27 @@ export default function SchedulePage({ activeTab, onTabChange }) {
     {
       day: "Quarta",
       periods: [
-        { time: "08:00 - 08:50", subject: "P.A.M. I, II", teacher: "Prof. Paulo" },
-        { time: "08:50 - 09:40", subject: "P.A.M. I, II", teacher: "Prof. Paulo" },
+        { time: "08:00 - 08:50", subject: "P.A.M. I, II", teacher: "Prof. Paulo", lab: 1 },
+        { time: "08:50 - 09:40", subject: "P.A.M. I, II", teacher: "Prof. Paulo", lab: 1 },
         { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "IPSSI", teacher: "Prof. Iury e Prof. Vanessa" },
-        { time: "10:50 - 11:40", subject: "IPSSI", teacher: "Prof. Iury e Prof. Vanessa" },
-        { time: "11:40 - 12:30", subject: "Filosofia", teacher: "Prof. Silva" },
+        { time: "10:00 - 10:50", subject: "IPSSI", teacher: "Prof. Iury e Profa. Vanessa", lab: 4},
+        { time: "10:50 - 11:40", subject: "IPSSI", teacher: "Prof. Iury e Profa. Vanessa", lab: 4},
+        { time: "11:40 - 12:30", subject: "Filosofia", teacher: "Profa. Elza", lab: 4 },
         { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
-        { time: "13:30 - 14:20", subject: "Biologia", teacher: "Prof. Andreia" },
-        { time: "14:20 - 15:10", subject: "Biologia", teacher: "Prof. Andreia" },
-        { time: "15:10 - 16:00", subject: "E.A.C.N.T.", teacher: "Prof. Andreia e Prof. Elza" },
+        { time: "13:30 - 14:20", subject: "Biologia", teacher: "Profa. Andreia" },
+        { time: "14:20 - 15:10", subject: "Biologia", teacher: "Profa. Andreia" },
+        { time: "15:10 - 16:00", subject: "E.A.C.N.T.", teacher: "Profa. Andreia e Profa. Elza" },
       ],
     },
     {
       day: "Quinta",
       periods: [
-        { time: "08:00 - 08:50", subject: "Português", teacher: "Prof. Fidélis" },
-        { time: "08:50 - 09:40", subject: "Português", teacher: "Prof. Fidélis" },
+        { time: "08:00 - 08:50", subject: "Português", teacher: "Prof. Fidélis", auditorium: true },
+        { time: "08:50 - 09:40", subject: "Português", teacher: "Prof. Fidélis", auditorium: true },
         { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
-        { time: "10:00 - 10:50", subject: "P.D.T.C.C.", teacher: "Prof. Veridiane e Prof. Elisângela", lab: 3 },
-        { time: "10:50 - 11:40", subject: "P.D.T.C.C.", teacher: "Prof. Veridiane e Prof. Elisângela" },
-        { time: "11:40 - 12:30", subject: "P.D.T.C.C.", teacher: "Prof. Veridiane e Prof. Elisângela" },
+        { time: "10:00 - 10:50", subject: "P.D.T.C.C.", teacher: "Profa. Veridiane e Profa. Elisângela", lab: 1 },
+        { time: "10:50 - 11:40", subject: "P.D.T.C.C.", teacher: "Profa. Veridiane e Profa. Elisângela", lab: 1 },
+        { time: "11:40 - 12:30", subject: "P.D.T.C.C.", teacher: "Profa. Veridiane e Profa. Elisângela", lab: 1  },
         { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
         { time: "13:30 - 14:20", subject: "Português", teacher: "Prof. Fidélis" },
         { time: "14:20 - 15:10", subject: "Matematica", teacher: "Prof. William B." },
@@ -75,15 +74,15 @@ export default function SchedulePage({ activeTab, onTabChange }) {
       day: "Sexta",
       periods: [
         { time: "08:00 - 08:50", subject: "Aula Vaga", isVacant: true },
-        { time: "08:50 - 09:40", subject: "Filosofia", teacher: "Prof. Elza" },
+        { time: "08:50 - 09:40", subject: "Filosofia", teacher: "Profa. Elza",  lab: 2},
         { time: "09:40 - 10:00", subject: "Intervalo", isBreak: true },
         { time: "10:00 - 10:50", subject: "Q.T.S.", teacher: "Prof. Iury e Prof. Gisbert", lab: 4 },
-        { time: "10:50 - 11:40", subject: "Q.T.S.", teacher: "Prof. Iury e Prof. Gisbert" },
+        { time: "10:50 - 11:40", subject: "Q.T.S.", teacher: "Prof. Iury e Prof. Gisbert", lab: 4 },
         { time: "11:40 - 12:30", subject: "Aula Vaga", isVacant: true },
         { time: "12:30 - 13:30", subject: "Almoço", isBreak: true },
         { time: "13:30 - 14:20", subject: "Geografia", teacher: "Prof. Valdeci" },
         { time: "14:20 - 15:10", subject: "Geografia", teacher: "Prof. Valdeci" },
-        { time: "15:10 - 16:00", subject: "Sociologia", teacher: "Prof. Elza" },
+        { time: "15:10 - 16:00", subject: "Sociologia", teacher: "Profa. Elza", lab: 4 },
       ],
     },
   ]
@@ -195,7 +194,7 @@ export default function SchedulePage({ activeTab, onTabChange }) {
                         duration: 0.3,
                         delay: isCenter ? periodIndex * 0.03 : 0,
                       }}
-                      className={`relative py-0.5 px-3 rounded-xl text-sm transition-all duration-300 ${
+                      className={`relative py-0.5 px-4 rounded-xl text-sm transition-all duration-300 ${
                         period.isBreak
                         ? "bg-[#F3EFFF] dark:bg-[#2D2D2D] text-[#8C43FF] font-semibold text-center"
                         : period.isVacant
@@ -226,20 +225,25 @@ export default function SchedulePage({ activeTab, onTabChange }) {
                         </div>
                       )}
 
-                      {/* Bottom-right compact Lab badge */}
-                      {typeof period.lab === 'number' && (
-                        <div className="absolute bottom-2 right-3 z-10 pointer-events-auto">
+                      {/* Badge de Lab ou Auditório */}
+                      {(typeof period.lab === 'number' || period.auditorium) && (
+                        <div className="absolute bottom-0 right-0 z-10 pointer-events-auto">
                           <div className="relative inline-block group">
                             <span
-                              className="inline-flex items-center bg-[#8C43FF] text-white px-2 py-0.5 rounded-full text-xs font-medium"
+                              className={`inline-flex items-center text-white px-2 py-0.5 rounded-full text-xs font-medium ${
+                                period.auditorium ? 'bg-[#db4040]' : 'bg-[#8C43FF]'
+                              }`}
                               aria-hidden="true"
                             >
-                              Lab {period.lab}
+                              {period.auditorium ? 'Auditório' : `Lab ${period.lab}`}
                             </span>
 
                             {/* Custom tooltip (subtle) */}
                             <div className="absolute right-0 -bottom-12 w-max max-w-xs bg-white text-gray-800 text-xs px-2 py-1 rounded-md shadow-md opacity-0 scale-95 transform origin-bottom-right transition-all duration-150 pointer-events-none group-hover:opacity-100 group-hover:scale-100 dark:bg-[#0f1724] dark:text-white">
-                              O(a) professor(a) escolheu o Lab {period.lab} para esta aula
+                              {period.auditorium 
+                                ? 'O(a) professor(a) escolheu o Auditório para esta aula'
+                                : `O(a) professor(a) escolheu o Lab ${period.lab} para esta aula`
+                              }
                             </div>
                           </div>
                         </div>

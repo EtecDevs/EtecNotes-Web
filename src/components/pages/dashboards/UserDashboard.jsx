@@ -357,16 +357,11 @@ const UserDashboard = () => {
                       <Calendar size={20} className="text-[#8C43FF]" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold dark:text-gray-300 text-gray-600">Carga horária estimada</p>
+                      <p className="text-sm font-semibold dark:text-gray-300 text-gray-600">Eventos neste mês</p>
                       <p className="text-3xl font-extrabold dark:text-white text-gray-900">{estimatedWeeklyLoad}h<span className="text-sm font-medium text-gray-500">/sem</span></p>
                     </div>
                   </div>
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">ESTIMADA</span>
-                </div>
-
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  <p>Baseada nas aulas semanais do aluno — valor aproximado.</p>
-                  <p className="mt-2">~ {estimatedMonthlyLoad}h / mês (estimado)</p>
                 </div>
               </div>
 
@@ -378,8 +373,7 @@ const UserDashboard = () => {
                       <Clock size={20} className="text-purple-500" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold dark:text-gray-300 text-gray-600">Horas estudadas</p>
-                      <p className="text-3xl font-extrabold dark:text-white text-gray-900">{userStats.totalStudyHours}h</p>
+                      <p className="text-sm font-semibold dark:text-gray-300 text-gray-600">Notas Totais</p>
                     </div>
                   </div>
                   <div className="text-xs text-gray-400">⏱️</div>

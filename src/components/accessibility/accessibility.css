@@ -1,0 +1,257 @@
+/* Estilos de Acessibilidade do EtecNotes */
+
+/* Modo de Alto Contraste */
+html.high-contrast {
+  /* Cores de alto contraste */
+  --hc-bg: #000000;
+  --hc-text: #FFFFFF;
+  --hc-primary: #FFFF00;
+  --hc-secondary: #00FFFF;
+  --hc-border: #FFFFFF;
+  --hc-link: #00FF00;
+  --hc-visited: #FF00FF;
+  --hc-focus: #FFFF00;
+}
+
+html.high-contrast body {
+  background-color: var(--hc-bg) !important;
+  color: var(--hc-text) !important;
+}
+
+html.high-contrast * {
+  border-color: var(--hc-border) !important;
+}
+
+html.high-contrast a {
+  color: var(--hc-link) !important;
+  text-decoration: underline !important;
+}
+
+html.high-contrast a:visited {
+  color: var(--hc-visited) !important;
+}
+
+html.high-contrast button,
+html.high-contrast input,
+html.high-contrast select,
+html.high-contrast textarea {
+  background-color: var(--hc-bg) !important;
+  color: var(--hc-text) !important;
+  border: 2px solid var(--hc-border) !important;
+}
+
+html.high-contrast button:hover,
+html.high-contrast button:focus {
+  background-color: var(--hc-primary) !important;
+  color: var(--hc-bg) !important;
+  outline: 3px solid var(--hc-focus) !important;
+  outline-offset: 2px;
+}
+
+html.high-contrast *:focus {
+  outline: 3px solid var(--hc-focus) !important;
+  outline-offset: 2px;
+}
+
+/* Garantir que imagens tenham borda visível */
+html.high-contrast img {
+  border: 2px solid var(--hc-border) !important;
+}
+
+/* Cards e containers */
+html.high-contrast [class*="bg-"],
+html.high-contrast [class*="dark:bg-"] {
+  background-color: var(--hc-bg) !important;
+  border: 2px solid var(--hc-border) !important;
+}
+
+/* Textos em gradiente para alto contraste */
+html.high-contrast [class*="bg-clip-text"] {
+  background: var(--hc-primary) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+/* Shadows removidas em alto contraste */
+html.high-contrast * {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+/* Focus visible sempre ativo */
+html *:focus-visible {
+  outline: 2px solid #8C43FF;
+  outline-offset: 2px;
+}
+
+/* Suporte para navegação por teclado */
+[tabindex]:focus,
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #8C43FF;
+  outline-offset: 2px;
+}
+
+/* Skip to main content link */
+.skip-to-main {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #8C43FF;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 9999;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-to-main:focus {
+  top: 0;
+}
+
+/* Indicadores de estado para leitores de tela */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Animações respeitam preferência de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Suporte para telas grandes com zoom */
+@media screen and (min-width: 1200px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* Ajustes para fontes maiores */
+html[style*="font-size: 125%"] body,
+html[style*="font-size: 150%"] body {
+  line-height: 1.6;
+  word-spacing: 0.16em;
+  letter-spacing: 0.12em;
+}
+
+/* Garantir que todos os links sejam identificáveis */
+a:not([class]) {
+  text-decoration: underline;
+  text-decoration-skip-ink: auto;
+}
+
+/* Melhorar legibilidade de código */
+code,
+pre {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  background: rgba(140, 67, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+html.high-contrast code,
+html.high-contrast pre {
+  background: var(--hc-bg) !important;
+  border: 1px solid var(--hc-border) !important;
+}
+
+/* Tooltips acessíveis */
+[role="tooltip"] {
+  background: #1E1E1E;
+  color: #FFFFFF;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  max-width: 300px;
+  z-index: 10000;
+}
+
+html.high-contrast [role="tooltip"] {
+  background: var(--hc-bg) !important;
+  color: var(--hc-text) !important;
+  border: 2px solid var(--hc-border) !important;
+}
+
+/* Indicadores de loading acessíveis */
+[role="status"],
+[aria-live] {
+  position: relative;
+}
+
+/* Garantir contraste em botões desabilitados */
+button:disabled,
+input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+html.high-contrast button:disabled,
+html.high-contrast input:disabled {
+  opacity: 0.8;
+  background-color: #333333 !important;
+  color: #888888 !important;
+}
+
+/* Melhorias para formulários */
+label {
+  cursor: pointer;
+  user-select: none;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+html.high-contrast input[type="checkbox"]:checked,
+html.high-contrast input[type="radio"]:checked {
+  background-color: var(--hc-primary) !important;
+}
+
+/* Tabelas acessíveis */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  text-align: left;
+  font-weight: 600;
+}
+
+html.high-contrast th {
+  background-color: #1a1a1a !important;
+  border: 2px solid var(--hc-border) !important;
+}
+
+/* Divisores visíveis */
+hr {
+  border: 0;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.2;
+}
+
+html.high-contrast hr {
+  opacity: 1;
+  background: var(--hc-border) !important;
+}

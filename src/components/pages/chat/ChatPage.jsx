@@ -22,6 +22,7 @@ import {
   FileText,
   ImageIcon,
   X,
+  User,
   Users,
   Settings,
   Zap,
@@ -73,7 +74,7 @@ const ChatPage = () => {
     name: "Ana Silva",
     email: "ana.silva@etec.sp.gov.br",
     role: userType,
-    avatar: "/placeholder.svg?height=40&width=40&text=AS",
+    avatar: "src/assets/imagesGeneral/iconeProfs.jpg",
     course: "Desenvolvimento de Sistemas",
     turma: "3º DS A",
     campus: "Etec Albert Einstein",
@@ -86,7 +87,7 @@ const ChatPage = () => {
       id: 2,
       name: "Prof. João Santos",
       email: "joao.santos@etec.sp.gov.br",
-      avatar: "/placeholder.svg?height=40&width=40&text=JS",
+      avatar: "src/assets/imagesGeneral/iconeProfs.jpg",
       subject: "Programação Web III",
       status: "online",
       lastSeen: null,
@@ -95,7 +96,7 @@ const ChatPage = () => {
       id: 3,
       name: "Prof. Maria Costa",
       email: "maria.costa@etec.sp.gov.br",
-      avatar: "/placeholder.svg?height=40&width=40&text=MC",
+      avatar: "src/assets/imagesGeneral/iconeProfs.jpg",
       subject: "Banco de Dados II",
       status: "away",
       lastSeen: "2 min atrás",
@@ -104,7 +105,7 @@ const ChatPage = () => {
       id: 4,
       name: "Prof. Carlos Lima",
       email: "carlos.lima@etec.sp.gov.br",
-      avatar: "/placeholder.svg?height=40&width=40&text=CL",
+      avatar: "src/assets/imagesGeneral/iconeProfs.jpg",
       subject: "Desenvolvimento Mobile",
       status: "offline",
       lastSeen: "1 hora atrás",
@@ -119,7 +120,7 @@ const ChatPage = () => {
       participant: {
         id: 2,
         name: "Prof. João Santos",
-        avatar: "/placeholder.svg?height=40&width=40&text=JS",
+        avatar: "src/assets/imagesGeneral/iconeProfs.jpg",
         status: "online",
       },
       lastMessage: {
@@ -159,7 +160,7 @@ const ChatPage = () => {
       participant: {
         id: "secretaria",
         name: "Secretaria Acadêmica",
-        avatar: "/placeholder.svg?height=40&width=40&text=SA",
+        avatar: "src/assets/imagesGeneral/iconeEscola.jpg",
         status: "online",
       },
       lastMessage: {
@@ -622,7 +623,7 @@ const ChatPage = () => {
                       )}
                     </div>
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                      <div className="w-8 h-8 bg-[#6b32c3] rounded-xl flex items-center justify-center shadow-lg">
                         <Plus size={16} className="text-white" />
                       </div>
                     </div>
@@ -915,7 +916,7 @@ const ChatPage = () => {
   )
 
   return (
-    <div className="flex h-full bg-[#f3e8ff] dark:bg-[#121212]">
+    <div className="flex h-screen bg-[#f3e8ff] dark:bg-[#121212]">
       {/* Sidebar de conversas */}
       <div className="w-80 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200/50 dark:border-gray-700/50 flex flex-col shadow-xl">
         {/* Header da sidebar */}
@@ -928,7 +929,7 @@ const ChatPage = () => {
             </div>
             <button
               onClick={() => setShowNewChatModal(true)}
-              className="p-3 bg-gradient-to-br from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-2xl transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-110"
+              className="p-3 bg-[#6b32c3] hover:from-purple-600 hover:to-blue-600 text-white rounded-2xl transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-110"
             >
               <Plus size={18} />
             </button>
@@ -954,7 +955,7 @@ const ChatPage = () => {
         </div>
 
         {/* Lista de conversas */}
-        <div className="flex-1 overflow-y-auto bg-[#f3e8ff] dark:bg-[#121212] max-h-[calc(100vh-200px)] scrollbar-thin scrollbar-thumb-[#5b38ba] scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
+        <div className="flex-1 overflow-y-auto bg-[#f3e8ff] dark:bg-[#121212] scrollbar-thin scrollbar-thumb-[#5b38ba] scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
           <div className="p-4">
             <div className="mb-4">
               <h2 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3 py-2 flex items-center gap-2">
@@ -1436,7 +1437,7 @@ const ChatPage = () => {
             </p>
             <button
               onClick={() => setShowNewChatModal(true)}
-              className="group flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-2xl transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-[1.05] font-semibold text-lg"
+              className="group flex items-center gap-3 px-8 py-4 bg-[#6b32c3] hover:from-purple-700 hover:to-blue-700 text-white rounded-2xl transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-[1.05] font-semibold text-lg"
             >
               <div className="w-6 h-6  rounded-lg flex items-center justify-center">
                 <Plus size={18} />

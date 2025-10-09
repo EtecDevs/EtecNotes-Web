@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import BootstrapPage from "./BootstrapPage"
 import { useSystemStatus } from "../hooks/useSystemStatus"
-import { Home, Calendar, MessageCircle, User, Cloud, HelpCircle, Menu, Monitor, Building2 } from "lucide-react"
+import { Home, Calendar, MessageCircle, User, Cloud, Menu, Monitor, Building2 } from "lucide-react"
 import CalendarPage from "./pages/calendar/CalendarPage"
 import HomePage from "./pages/inicio/HomePage"
 import PatchNotesPage from "./pages/inicio/PatchNotesPage"
@@ -12,6 +12,7 @@ import UserDashboard from "./pages/dashboards/UserDashboard"
 import ChatPage from "./pages/chat/ChatPage"
 import AboutPage from "./pages/about/AboutPage"
 import ThemeToggle from "./ThemeToggle"
+import AccessibilityMenu from "./accessibility/AccessibilityMenu"
 import { ThemeProvider } from "../context/ThemeContext"
 import LabsControlPage from "./pages/labs/LabNotes"
 import { AuthProvider, useAuth } from "../hooks/useAuth"
@@ -317,14 +318,7 @@ function AppContent() {
               {/* Right Icons */}
               <div className="flex items-center space-x-4">
                 <ThemeToggle />
-
-                <button
-                  className="p-1.5 rounded-full border border-white/30 dark:border-gray-600 transition-all duration-300 hover:bg-white/20 dark:hover:bg-[#333333]"
-                  aria-label="Ajuda"
-                  title="Ajuda"
-                >
-                  <HelpCircle size={20} className="text-white/80 hover:text-white dark:text-gray-400" />
-                </button>
+                <AccessibilityMenu />
                 <button
                   onClick={handleLogout}
                   className="px-3 py-1.5 rounded-full bg-red-500/90 hover:bg-red-600 text-white text-sm font-medium transition-colors"
