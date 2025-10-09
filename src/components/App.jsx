@@ -13,7 +13,7 @@ import ChatPage from "./pages/chat/ChatPage"
 import AboutPage from "./pages/about/AboutPage"
 import ThemeToggle from "./ThemeToggle"
 import { ThemeProvider } from "../context/ThemeContext"
-import LabsControlPage from "./pages/labs/LabsControl"
+import LabsControlPage from "./pages/labs/LabNotes"
 import { AuthProvider, useAuth } from "../hooks/useAuth"
 import LogoEtecNotes from "../assets/LuaEtecNotes.png"
 import CloudPage from "./pages/cloud/CloudPage"
@@ -239,7 +239,7 @@ function AppContent() {
               <div className="hidden md:flex items-center space-x-6">
                 <button
                   className={`p-1.5 rounded-full transition-all duration-300 hover:bg-white/20 dark:hover:bg-[#333333] ${
-                    (activeTab === "Início" || activeTab === "Patch Notes") ? "text-purple-500" : "text-white/80 hover:text-white cursor-pointer"
+                    (activeTab === "Início" || activeTab === "Patch Notes" || activeTab === "Eventos") ? "text-purple-500" : "text-white/80 hover:text-white cursor-pointer"
                   }`}
                   onClick={() => handleMainTabChange("Início")}
                   aria-label="Página Inicial"

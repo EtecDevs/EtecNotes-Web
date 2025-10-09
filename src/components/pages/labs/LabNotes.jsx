@@ -1,8 +1,52 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState, useCallback, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Clock, Plus, Check, X, Edit, Search, Monitor, Users, AlertCircle, CheckCircle, XCircle } from "lucide-react"
+
+// Constantes fora do componente para evitar re-criações
+const MODAL_SIZE_CLASSES = {
+  sm: "max-w-md",
+  md: "max-w-lg",
+  lg: "max-w-2xl",
+  xl: "max-w-4xl",
+}
+
+// Modal Component fora do componente principal
+const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
+  if (!isOpen) return null
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className={`w-full ${MODAL_SIZE_CLASSES[size]} bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h2>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            >
+              <X size={20} className="text-gray-500 dark:text-gray-400" />
+            </button>
+          </div>
+          <div className="p-6">{children}</div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  )
+}
 
 const LabsControlPage = ({ userType = "teacher", userData }) => {
   // Estados
@@ -121,8 +165,8 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
   // Aulas
   const aulas = Array.from({ length: 8 }, (_, i) => i + 1)
 
-  // Função para verificar se um horário está disponível
-  const isSlotAvailable = (labId, dia, aula) => {
+  // Funções memoizadas com useCallback
+  const isSlotAvailable = useCallback((labId, dia, aula) => {
     const agendamento = agendamentos.find(
       (ag) =>
         ag.lab_id === labId &&
@@ -132,10 +176,9 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
         ag.status === "aprovado",
     )
     return !agendamento
-  }
+  }, [agendamentos])
 
-  // Função para obter status de um slot
-  const getSlotStatus = (labId, dia, aula) => {
+  const getSlotStatus = useCallback((labId, dia, aula) => {
     const agendamento = agendamentos.find(
       (ag) => ag.lab_id === labId && ag.dia_semana === dia && aula >= ag.aula_inicio && aula <= ag.aula_fim,
     )
@@ -146,15 +189,13 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
     if (agendamento.status === "aprovado")
       return { status: "reservado", color: "bg-red-500/10 border-red-500/20", agendamento }
     return { status: "livre", color: "bg-green-500/10 border-green-500/20" }
-  }
+  }, [agendamentos])
 
-  // Função para verificar se o professor pode solicitar neste horário
-  const canTeacherRequest = (dia, aula) => {
+  const canTeacherRequest = useCallback((dia, aula) => {
     return teacherSchedule[dia]?.includes(String(aula))
-  }
+  }, [teacherSchedule])
 
-  // Função para enviar solicitação
-  const handleSubmitRequest = () => {
+  const handleSubmitRequest = useCallback(() => {
     if (!requestForm.lab_id || !requestForm.aula_inicio || !requestForm.aula_fim || !requestForm.descricao) {
       alert("Preencha todos os campos obrigatórios!")
       return
@@ -187,82 +228,60 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
       descricao: "",
       turma: "",
     })
-  }
+  }, [requestForm, agendamentos, labs, userData])
 
-  // Função para aprovar solicitação
-  const handleApprove = (id) => {
+  const handleApprove = useCallback((id) => {
     setAgendamentos(agendamentos.map((ag) => (ag.id === id ? { ...ag, status: "aprovado" } : ag)))
     setShowApprovalModal(false)
-  }
+  }, [agendamentos])
 
-  // Função para rejeitar solicitação
-  const handleReject = (id) => {
+  const handleReject = useCallback((id) => {
     if (window.confirm("Tem certeza que deseja rejeitar esta solicitação?")) {
       setAgendamentos(agendamentos.map((ag) => (ag.id === id ? { ...ag, status: "rejeitado" } : ag)))
       setShowApprovalModal(false)
     }
-  }
+  }, [agendamentos])
 
-  // Função para deletar agendamento
-  const handleDelete = (id) => {
+  const handleDelete = useCallback((id) => {
     if (window.confirm("Tem certeza que deseja excluir este agendamento?")) {
       setAgendamentos(agendamentos.filter((ag) => ag.id !== id))
       setShowApprovalModal(false)
     }
-  }
+  }, [agendamentos])
 
-  // Filtrar agendamentos
-  const filteredAgendamentos = agendamentos.filter((ag) => {
-    const matchStatus = filterStatus === "all" || ag.status === filterStatus
-    const matchSearch =
-      ag.professor_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ag.lab_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ag.descricao.toLowerCase().includes(searchTerm.toLowerCase())
-    return matchStatus && matchSearch
-  })
+  const handleRequestFormChange = useCallback((field, value) => {
+    setRequestForm(prev => ({ ...prev, [field]: value }))
+  }, [])
 
-  // Modal Component
-  const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
-    if (!isOpen) return null
-
-    const sizeClasses = {
-      sm: "max-w-md",
-      md: "max-w-2xl",
-      lg: "max-w-4xl",
-      xl: "max-w-6xl",
+  const handleSlotClick = useCallback((dia, aula, slotInfo, canRequest) => {
+    if (userType === "teacher" && canRequest && slotInfo.status === "livre") {
+      setRequestForm({
+        lab_id: selectedLab,
+        dia_semana: dia,
+        aula_inicio: String(aula),
+        aula_fim: String(aula),
+        recorrente: false,
+        descricao: "",
+        turma: "",
+      })
+      setShowRequestModal(true)
+    } else if (userType === "etec" && slotInfo.agendamento) {
+      setSelectedRequest(slotInfo.agendamento)
+      setShowApprovalModal(true)
     }
+  }, [userType, selectedLab])
 
-    return (
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-          onClick={onClose}
-        >
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            className={`w-full ${sizeClasses[size]} dark:bg-[#161B22] bg-white rounded-2xl shadow-2xl border dark:border-[#30363D] border-gray-200 max-h-[90vh] overflow-y-auto`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between p-6 border-b dark:border-[#30363D] border-gray-200">
-              <h2 className="text-2xl font-bold dark:text-white text-gray-900">{title}</h2>
-              <button
-                onClick={onClose}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-[#21262D] rounded-lg transition-colors"
-              >
-                <X size={20} className="dark:text-gray-400 text-gray-600" />
-              </button>
-            </div>
-            <div className="p-6">{children}</div>
-          </motion.div>
-        </motion.div>
-      </AnimatePresence>
-    )
-  }
+  // Filtrar agendamentos com useMemo
+  const filteredAgendamentos = useMemo(() => {
+    return agendamentos.filter((ag) => {
+      const matchStatus = filterStatus === "all" || ag.status === filterStatus
+      const matchSearch =
+        ag.professor_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ag.lab_nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        ag.descricao.toLowerCase().includes(searchTerm.toLowerCase())
+      return matchStatus && matchSearch
+    })
+  }, [agendamentos, filterStatus, searchTerm])
 
   // Renderizar view de grade semanal
   const renderWeeklyGrid = () => (
@@ -333,21 +352,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
                       return (
                         <td key={dia} className="p-2">
                           <button
-                            onClick={() => {
-                              if (userType === "teacher" && canRequest && slotInfo.status === "livre") {
-                                setRequestForm({
-                                  ...requestForm,
-                                  lab_id: selectedLab,
-                                  dia_semana: dia,
-                                  aula_inicio: String(aula),
-                                  aula_fim: String(aula),
-                                })
-                                setShowRequestModal(true)
-                              } else if (userType === "etec" && slotInfo.agendamento) {
-                                setSelectedRequest(slotInfo.agendamento)
-                                setShowApprovalModal(true)
-                              }
-                            }}
+                            onClick={() => handleSlotClick(dia, aula, slotInfo, canRequest)}
                             disabled={userType === "teacher" && !canRequest}
                             className={`w-full min-h-[80px] p-3 rounded-xl border-2 transition-all ${slotInfo.color} ${
                               userType === "teacher" && !canRequest
@@ -533,7 +538,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
                   </div>
                 </div>
 
-                {userType === "etec" && (
+                {(userType === "etec" || userType === "admin") && (
                   <div className="flex flex-col gap-2 ml-4">
                     {ag.status === "pendente" && (
                       <>
@@ -580,7 +585,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-bold dark:bg-[#58417d] bg-gradient-to-r from-[#8C43FF] to-[#00B2FF] bg-clip-text text-transparent mb-2">
+              <h1 className="text-4xl font-bold dark:bg-[#58417d] bg-[#58417d] bg-clip-text text-transparent mb-2">
                 LabNotes
               </h1>
               <p className="dark:text-gray-400 text-gray-600">
@@ -619,8 +624,8 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
           </div>
         </motion.div>
 
-        {/* Stats Cards (apenas para Etec) */}
-        {userType === "etec" && (
+        {/* Stats Cards (apenas para Etec e Administrador) */}
+        {(userType === "etec" || userType === "admin") && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -690,7 +695,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
                 <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Laboratório *</label>
                 <select
                   value={requestForm.lab_id}
-                  onChange={(e) => setRequestForm({ ...requestForm, lab_id: e.target.value })}
+                  onChange={(e) => handleRequestFormChange('lab_id', e.target.value)}
                   className="w-full px-3 py-3 border dark:border-[#30363D] border-gray-300 rounded-xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
                 >
                   <option value="">Selecione um laboratório</option>
@@ -708,7 +713,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
                 </label>
                 <select
                   value={requestForm.dia_semana}
-                  onChange={(e) => setRequestForm({ ...requestForm, dia_semana: e.target.value })}
+                  onChange={(e) => handleRequestFormChange('dia_semana', e.target.value)}
                   className="w-full px-3 py-3 border dark:border-[#30363D] border-gray-300 rounded-xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
                 >
                   {diasSemana.map((dia) => (
@@ -725,7 +730,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
                 <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Aula Início *</label>
                 <select
                   value={requestForm.aula_inicio}
-                  onChange={(e) => setRequestForm({ ...requestForm, aula_inicio: e.target.value })}
+                  onChange={(e) => handleRequestFormChange('aula_inicio', e.target.value)}
                   className="w-full px-3 py-3 border dark:border-[#30363D] border-gray-300 rounded-xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
                 >
                   <option value="">Selecione</option>
@@ -743,7 +748,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
                 <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Aula Fim *</label>
                 <select
                   value={requestForm.aula_fim}
-                  onChange={(e) => setRequestForm({ ...requestForm, aula_fim: e.target.value })}
+                  onChange={(e) => handleRequestFormChange('aula_fim', e.target.value)}
                   className="w-full px-3 py-3 border dark:border-[#30363D] border-gray-300 rounded-xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
                 >
                   <option value="">Selecione</option>
@@ -767,7 +772,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
               <input
                 type="text"
                 value={requestForm.turma}
-                onChange={(e) => setRequestForm({ ...requestForm, turma: e.target.value })}
+                onChange={(e) => handleRequestFormChange('turma', e.target.value)}
                 className="w-full px-3 py-3 border dark:border-[#30363D] border-gray-300 rounded-xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
                 placeholder="Ex: 3º DS A"
               />
@@ -777,7 +782,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
               <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">Descrição *</label>
               <textarea
                 value={requestForm.descricao}
-                onChange={(e) => setRequestForm({ ...requestForm, descricao: e.target.value })}
+                onChange={(e) => handleRequestFormChange('descricao', e.target.value)}
                 className="w-full px-3 py-3 border dark:border-[#30363D] border-gray-300 rounded-xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
                 rows="4"
                 placeholder="Descreva brevemente o motivo do agendamento..."
@@ -789,7 +794,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
                 type="checkbox"
                 id="recorrente"
                 checked={requestForm.recorrente}
-                onChange={(e) => setRequestForm({ ...requestForm, recorrente: e.target.checked })}
+                onChange={(e) => handleRequestFormChange('recorrente', e.target.checked)}
                 className="w-5 h-5 text-[#8C43FF] rounded focus:ring-2 focus:ring-[#8C43FF]"
               />
               <label htmlFor="recorrente" className="text-sm dark:text-gray-300 text-gray-700">

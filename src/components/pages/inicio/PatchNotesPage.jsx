@@ -23,7 +23,7 @@ const PatchNotesPage = ({ activeTab, onTabChange }) => {
             <h2 className="text-white text-xl font-semibold">Novas funcionalidades!</h2>
             <div className="mt-4 flex-grow flex items-center justify-center">
               <img
-                src="/placeholder.svg?height=200&width=300"
+                src="src\assets\imagesGeneral\PatchNotes.png"
                 alt="Nova funcionalidade"
                 className="max-w-full max-h-[200px] rounded-lg shadow-lg"
               />
@@ -47,15 +47,6 @@ const PatchNotesPage = ({ activeTab, onTabChange }) => {
               >
                 <span className="text-[#8C43FF] mr-2 text-xl">•</span>
                 <span>Novo estilo de personalização (Modo escuro)</span>
-              </motion.li>
-              <motion.li
-                className="flex items-start"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5, duration: 0.3 }}
-              >
-                <span className="text-[#8C43FF] mr-2 text-xl">•</span>
-                <span>Novas interfaces: Página de Cadastro e Login; Calculadora; Jornal Etec</span>
               </motion.li>
               <motion.li
                 className="flex items-start"

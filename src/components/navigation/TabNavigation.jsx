@@ -14,7 +14,7 @@ function TabNavigation({ activeTab, onTabChange }) {
   }, [activeTab, onTabChange])
 
   return (
-    <div className="flex border-b border-[#E6DFFF] mb-8 overflow-x-auto">
+    <div className="flex border-b border-[#E1E1E1] dark:border-[#E6DFFF] mb-8 overflow-x-auto">
       {tabs.map((tab) => (
         <button
           key={tab}

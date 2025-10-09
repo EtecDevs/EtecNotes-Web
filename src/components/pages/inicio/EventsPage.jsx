@@ -16,8 +16,8 @@ const EventsPage = () => {
   const events = [
     {
       id: 1,
-      title: "Feira Tecnológica",
-      image: "src/assets/events/feira-tecnologica.jpg",
+      title: "Semana Tecnológica",
+      image: "src/assets/events/semana-tecnologica.jpg",
       shortDescription: "Exposição de projetos tecnológicos desenvolvidos pelos alunos",
       date: "2025-09-15",
       time: "14:00",
@@ -28,35 +28,22 @@ const EventsPage = () => {
       price: 0,
     },
     {
-      id: 2,
-      title: "Workshop de Programação",
-      image: "src/assets/events/",
-      shortDescription: "Aprenda as bases da programação com professores especialistas",
-      date: "2025-09-22",
-      time: "09:00",
-      fullDescription:
-        "Workshop intensivo de programação para iniciantes. Abordaremos conceitos fundamentais de lógica de programação, estruturas de dados básicas e desenvolvimento de pequenos projetos práticos. Ideal para quem está começando na área de tecnologia.",
-      location: "Laboratório de Informática 1",
-      isPaid: true,
-      price: 25.00,
-    },
-    {
       id: 3,
-      title: "Palestra: Mercado de Trabalho em TI",
-      image: "src/assets/events/",
+      title: "Hopi-Hari",
+      image: "src/assets/events/hopihari.webp",
       shortDescription: "Profissionais da área compartilham experiências e dicas",
       date: "2025-09-28",
       time: "19:00",
       fullDescription:
         "Palestra com profissionais renomados do mercado de TI que compartilharão suas experiências, trajetórias de carreira e dicas valiosas para quem está ingressando na área. Haverá sessão de perguntas e respostas ao final.",
-      location: "Auditório Principal",
-      isPaid: false,
-      price: 0,
+      location: "Auditório",
+      isPaid: true,
+      price: 200,
     },
     {
       id: 4,
-      title: "Competição de Robótica",
-      image: "src/assets/events/competicao-robotica.jpg",
+      title: "Festa Junina",
+      image: "src/assets/events/festa-junina.jpg",
       shortDescription: "Equipes competem com seus robôs em desafios técnicos",
       date: "2025-10-05",
       time: "13:30",
@@ -64,57 +51,18 @@ const EventsPage = () => {
         "Competição entre equipes de estudantes com seus robôs desenvolvidos durante o semestre. Os desafios incluem navegação autônoma, manipulação de objetos e resolução de problemas complexos. Premiação para os três primeiros colocados.",
       location: "Quadra Poliesportiva",
       isPaid: true,
-      price: 15.00,
-    },
-    {
-      id: 5,
-      title: "Semana da Sustentabilidade",
-      image: "src/assets/events/",
-      shortDescription: "Projetos e iniciativas focados em sustentabilidade ambiental",
-      date: "2025-10-12",
-      time: "08:00",
-      fullDescription:
-        "Uma semana dedicada à conscientização ambiental com exposição de projetos sustentáveis, oficinas de reciclagem, palestras sobre energias renováveis e ações práticas para preservação do meio ambiente. Participação de ONGs e empresas do setor.",
-      location: "Pátio Central",
-      isPaid: false,
-      price: 0,
+      price: 10.00,
     },
     {
       id: 6,
       title: "Hackathon Etec 2025",
-      image: "src/assets/events/hackathon.jpg",
+      image: "src/assets/events/hackathon.png",
       shortDescription: "Maratona de programação de 24 horas para resolver desafios",
       date: "2025-10-19",
       time: "18:00",
       fullDescription:
         "Hackathon de 24 horas onde equipes de estudantes desenvolverão soluções inovadoras para problemas reais da comunidade. Mentoria de profissionais da área, premiação em dinheiro e oportunidades de estágio para os vencedores.",
       location: "Laboratórios de Informática",
-      isPaid: true,
-      price: 50.00,
-    },
-    {
-      id: 7,
-      title: "Mostra Cultural",
-      image: "src/assets/events/",
-      shortDescription: "Apresentações artísticas e culturais dos estudantes",
-      date: "2025-10-26",
-      time: "19:30",
-      fullDescription:
-        "Noite cultural com apresentações de teatro, música, dança e artes visuais produzidas pelos estudantes. Uma celebração da diversidade cultural e do talento artístico da nossa comunidade escolar.",
-      location: "Teatro da Escola",
-      isPaid: false,
-      price: 0,
-    },
-    {
-      id: 8,
-      title: "Feira de Profissões",
-      image: "src/assets/events/",
-      shortDescription: "Orientação vocacional e apresentação de diferentes carreiras",
-      date: "2025-11-02",
-      time: "14:00",
-      fullDescription:
-        "Evento de orientação vocacional com profissionais de diversas áreas apresentando suas carreiras, requisitos de formação e perspectivas do mercado de trabalho. Inclui testes vocacionais e sessões de orientação individual.",
-      location: "Ginásio",
       isPaid: false,
       price: 0,
     },
@@ -163,7 +111,12 @@ const EventsPage = () => {
   return (
     <div className="p-6">
       {/* Lista de Eventos */}
-      <div className="grid grid-cols-1 md:grid-cols-1    gap-8">
+      <motion.div className="grid grid-cols-1 md:grid-cols-1 gap-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+
         {events.map((event) => (
           <div
             key={event.id}
@@ -215,9 +168,9 @@ const EventsPage = () => {
             </div>
           </div>
         ))}
-      </div>
+      </motion.div>
 
-      /* Modal de Detalhes */
+      {/* Modal de Detalhes */}
         {selectedEvent && (
           <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
             <div className="bg-[#58417d] dark:bg-[#58417d] rounded-3xl p-8 max-w-2xl w-full shadow-2xl border-2 border-[#8C43FF]/40 relative">

@@ -598,7 +598,7 @@ const UserDashboard = () => {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          {userInfo.website}
+                          LinkedIn
                         </a>
                       </div>
                     )}

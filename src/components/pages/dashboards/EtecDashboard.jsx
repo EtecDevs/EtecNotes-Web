@@ -1594,7 +1594,6 @@ const EtecDashboard = ({ onLogout }) => {
           
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium dark:text-white text-gray-900">Modo de Desenvolvimento</p>
               <p className="text-sm dark:text-gray-400 text-gray-600">Habilitar logs detalhados</p>
             </div>
             <input type="checkbox" className="w-4 h-4 text-[#8C43FF] rounded" />
