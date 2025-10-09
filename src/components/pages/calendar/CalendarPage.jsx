@@ -185,6 +185,7 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
         
         {/* Renderizar conteúdo baseado na aba ativa */}
         {activeCalendarTab === "Calendário" ? (
+          <div className="transform scale-90 origin-top">
           <div className="flex flex-col lg:flex-row gap-6 h-full">
 
           {/* Calendário */}
@@ -250,8 +251,7 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
             key={index}
             whileHover={{ scale: 1.05 }}
             onClick={() => setSelectedDay(day.date)}
-            className={`
-              relative h-20 p-2 rounded-xl cursor-pointer transition-all
+            className={`relative h-20 p-2 rounded-xl cursor-pointer transition-all
               ${day.isCurrentMonth ? "dark:bg-[#2D2D2D] bg-[#E1E1E1]" : "dark:bg-[#252525] bg-[#f3e8ff] opacity-40"}
               ${isToday(day.date) ? "border border-[#046087] dark:border-[#00B2FF]" : ""}
               ${isSelected(day.date) ? "border-2 border-[#8C43FF] dark:border-[#8C43FF] shadow-[0_0_15px_rgba(140,67,255,0.3)]" : ""}
@@ -381,6 +381,7 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
             </div>
           </motion.div>
           </div>
+          </div>
         ) : (
           /* Renderizar SchedulePage quando a aba Horários estiver ativa */
           <div className="mt-6">
@@ -390,26 +391,26 @@ const CalendarPage = ({ activeTab, onTabChange }) => {
             />
           </div>
         )}
+
+        {/* Modais - apenas renderizar quando estiver na aba Calendário */}
+        {activeCalendarTab === "Calendário" && (
+          <>
+            <AddEventModal
+              isOpen={isAddEventModalOpen}
+              onClose={() => setIsAddEventModalOpen(false)}
+              onSave={handleAddEvent}
+              selectedDate={selectedDay}
+            />
+
+            <AddNoteModal
+              isOpen={isAddNoteModalOpen}
+              onClose={() => setIsAddNoteModalOpen(false)}
+              onSave={handleAddEvent}
+              selectedDate={selectedDay}
+            />
+          </>
+        )}
       </div>
-
-      {/* Modais - apenas renderizar quando estiver na aba Calendário */}
-      {activeCalendarTab === "Calendário" && (
-        <>
-          <AddEventModal
-            isOpen={isAddEventModalOpen}
-            onClose={() => setIsAddEventModalOpen(false)}
-            onSave={handleAddEvent}
-            selectedDate={selectedDay}
-          />
-
-          <AddNoteModal
-            isOpen={isAddNoteModalOpen}
-            onClose={() => setIsAddNoteModalOpen(false)}
-            onSave={handleAddEvent}
-            selectedDate={selectedDay}
-          />
-        </>
-      )}
     </div>
   )
 }

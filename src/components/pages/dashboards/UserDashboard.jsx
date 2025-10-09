@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { motion } from "framer-motion"
 import {
   Edit3,
@@ -9,6 +9,7 @@ import {
   CheckSquare,
   Clock,
   Mail,
+  Info,
   GraduationCap,
   BookOpen,
   Sun,
@@ -50,8 +51,14 @@ const UserDashboard = () => {
     lastLogin: "Hoje às 14:30",
     joinDate: "Setembro 2024",
     totalStudyHours: 230,
+    // Horas de aulas semanais do aluno (editar conforme necessário)
+    weeklyClassHours: 20,
     averageGrade: 8.7,
   })
+
+  // Estimativas baseadas nas aulas semanais
+  const estimatedWeeklyLoad = userStats.weeklyClassHours
+  const estimatedMonthlyLoad = Math.round(estimatedWeeklyLoad * 4)
 
   const [userInfo, setUserInfo] = useState({
     name: "Daniel Pereira",
@@ -68,6 +75,41 @@ const UserDashboard = () => {
   })
 
   const [editedInfo, setEditedInfo] = useState(userInfo)
+
+  // Aba do cartão de contato: 'pessoal' ou 'etec'
+  const [contactTab, setContactTab] = useState("pessoal")
+  // tooltip / popover state for personal info notice
+  const [contactInfoHover, setContactInfoHover] = useState(false)
+  const [contactInfoOpen, setContactInfoOpen] = useState(false)
+  const contactInfoRef = useRef(null)
+
+  // close tooltip on outside click or Escape
+  useEffect(() => {
+    if (!contactInfoOpen) return
+
+    function handleOutside(e) {
+      if (contactInfoRef.current && !contactInfoRef.current.contains(e.target)) {
+        setContactInfoOpen(false)
+        setContactInfoHover(false)
+      }
+    }
+
+    function handleEsc(e) {
+      if (e.key === "Escape") {
+        setContactInfoOpen(false)
+        setContactInfoHover(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleOutside)
+    document.addEventListener("keydown", handleEsc)
+    return () => {
+      document.removeEventListener("mousedown", handleOutside)
+      document.removeEventListener("keydown", handleEsc)
+    }
+  }, [contactInfoOpen])
+
+  
 
   // Dados de atividade recente
   const recentActivity = [
@@ -288,54 +330,61 @@ const UserDashboard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-4"
+              className="grid grid-cols-1 sm:grid-cols-3 gap-4"
             >
-              <div className="dark:bg-[#1E1E1E] bg-white rounded-xl p-4 shadow-sm border dark:border-[#30363D] border-gray-200">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-500/10 rounded-lg">
-                    <FileText size={20} className="text-blue-500" />
+              {/* Streak (mantido) */}
+              <div className="dark:bg-[#0D1117] bg-white rounded-2xl p-4 shadow-lg border dark:border-[#2a2a2a] border-gray-100 hover:shadow-xl transform hover:-translate-y-1 transition-all min-h-[120px] flex flex-col justify-between">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-orange-50 dark:bg-orange-900/20">
+                      <TrendingUp size={20} className="text-orange-500" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold dark:text-gray-300 text-gray-600">Dias seguidos</p>
+                      <p className="text-3xl font-extrabold dark:text-white text-gray-900">{userStats.studyStreak}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-2xl font-bold dark:text-white text-gray-900">{userStats.totalNotes}</p>
-                    <p className="text-sm dark:text-gray-400 text-gray-600">Anotações</p>
+                  <div className="text-xs text-gray-400">🔥</div>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Mantenha a sequência!</p>
+              </div>
+
+              {/* Carga Horária Estimada (novo cartão) */}
+              <div className="dark:bg-[#0D1117] bg-white rounded-2xl p-4 shadow-lg border dark:border-[#2a2a2a] border-gray-100 hover:shadow-xl transform hover:-translate-y-1 transition-all min-h-[140px] flex flex-col justify-between">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-gradient-to-br from-[#8C43FF]/20 to-[#6B28E6]/10">
+                      <Calendar size={20} className="text-[#8C43FF]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold dark:text-gray-300 text-gray-600">Carga horária estimada</p>
+                      <p className="text-3xl font-extrabold dark:text-white text-gray-900">{estimatedWeeklyLoad}h<span className="text-sm font-medium text-gray-500">/sem</span></p>
+                    </div>
                   </div>
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300">ESTIMADA</span>
+                </div>
+
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  <p>Baseada nas aulas semanais do aluno — valor aproximado.</p>
+                  <p className="mt-2">~ {estimatedMonthlyLoad}h / mês (estimado)</p>
                 </div>
               </div>
 
-              <div className="dark:bg-[#1E1E1E] bg-white rounded-xl p-4 shadow-sm border dark:border-[#30363D] border-gray-200">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-green-500/10 rounded-lg">
-                    <CheckSquare size={20} className="text-green-500" />
+              {/* Total de Horas Estudadas (mantido) */}
+              <div className="dark:bg-[#0D1117] bg-white rounded-2xl p-4 shadow-lg border dark:border-[#2a2a2a] border-gray-100 hover:shadow-xl transform hover:-translate-y-1 transition-all min-h-[120px] flex flex-col justify-between">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-purple-50 dark:bg-purple-900/20">
+                      <Clock size={20} className="text-purple-500" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold dark:text-gray-300 text-gray-600">Horas estudadas</p>
+                      <p className="text-3xl font-extrabold dark:text-white text-gray-900">{userStats.totalStudyHours}h</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-2xl font-bold dark:text-white text-gray-900">{userStats.completedTasks}</p>
-                    <p className="text-sm dark:text-gray-400 text-gray-600">Concluídas</p>
-                  </div>
+                  <div className="text-xs text-gray-400">⏱️</div>
                 </div>
-              </div>
-
-              <div className="dark:bg-[#1E1E1E] bg-white rounded-xl p-4 shadow-sm border dark:border-[#30363D] border-gray-200">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-orange-500/10 rounded-lg">
-                    <TrendingUp size={20} className="text-orange-500" />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold dark:text-white text-gray-900">{userStats.studyStreak}</p>
-                    <p className="text-sm dark:text-gray-400 text-gray-600">Dias seguidos</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="dark:bg-[#1E1E1E] bg-white rounded-xl p-4 shadow-sm border dark:border-[#30363D] border-gray-200">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-purple-500/10 rounded-lg">
-                    <Clock size={20} className="text-purple-500" />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold dark:text-white text-gray-900">{userStats.totalStudyHours}h</p>
-                    <p className="text-sm dark:text-gray-400 text-gray-600">Estudadas</p>
-                  </div>
-                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Total acumulado desde que você começou a usar o EtecNotes.</p>
               </div>
             </motion.div>
 
@@ -367,54 +416,7 @@ const UserDashboard = () => {
               </div>
             </motion.div>
 
-            {/* Achievements */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 p-6"
-            >
-              <div className="flex items-center gap-2 mb-6">
-                <Award size={20} className="text-[#8C43FF]" />
-                <h2 className="text-xl font-semibold dark:text-white text-gray-900">Conquistas</h2>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {achievements.map((achievement, index) => (
-                  <div
-                    key={index}
-                    className={`p-4 rounded-xl border-2 transition-all ${
-                      achievement.earned
-                        ? "border-[#8C43FF] bg-[#8C43FF]/5"
-                        : "border-gray-200 dark:border-[#30363D] dark:bg-[#0D1117] bg-gray-100 opacity-60"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`p-2 rounded-lg ${
-                          achievement.earned ? "bg-[#8C43FF]/10" : "bg-gray-100 dark:bg-[#21262D]"
-                        }`}
-                      >
-                        <achievement.icon
-                          size={20}
-                          className={achievement.earned ? "text-[#8C43FF]" : "dark:text-gray-500 text-gray-400"}
-                        />
-                      </div>
-                      <div>
-                        <p
-                          className={`font-medium ${
-                            achievement.earned ? "dark:text-white text-gray-900" : "dark:text-gray-500 text-gray-500"
-                          }`}
-                        >
-                          {achievement.name}
-                        </p>
-                        <p className="text-sm dark:text-gray-400 text-gray-600">{achievement.description}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+            {/* Achievements removed as requested */}
           </div>
 
           {/* Right Column - Settings & Info */}
@@ -516,36 +518,129 @@ const UserDashboard = () => {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="dark:bg-[#1E1E1E] bg-white rounded-2xl shadow-sm border dark:border-[#30363D] border-gray-200 p-6"
             >
-              <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Informações de Contato</h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <Mail size={16} className="dark:text-gray-400 text-gray-600" />
-                  <span className="dark:text-gray-300 text-gray-700 text-sm">{userInfo.email}</span>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold dark:text-white text-gray-900">Informações de Contato</h3>
+
+                <div className="pill-switch">
+                  <button
+                    role="tab"
+                    aria-selected={contactTab === "pessoal"}
+                    onClick={() => setContactTab("pessoal")}
+                    className={`px-4 py-1.5 text-sm font-medium h-8 flex items-center justify-center ${
+                      contactTab === "pessoal" ? "active" : ""
+                    }`}
+                  >
+                    Pessoal
+                  </button>
+
+                  <button
+                    role="tab"
+                    aria-selected={contactTab === "etec"}
+                    onClick={() => setContactTab("etec")}
+                    className={`px-4 py-1.5 text-sm font-medium h-8 flex items-center justify-center ${
+                      contactTab === "etec" ? "active" : ""
+                    }`}
+                  >
+                    Etec
+                  </button>
                 </div>
-                {userInfo.website && (
-                  <div className="flex items-center gap-3">
-                    <Globe size={16} className="dark:text-gray-400 text-gray-600" />
-                    <a
-                      href={userInfo.website}
-                      className="text-[#8C43FF] hover:underline text-sm"
-                      target="_blank"
-                      rel="noopener noreferrer"
+              </div>
+
+              <div className="space-y-3">
+                {contactTab === 'pessoal' ? (
+                  <div>
+                    <div
+                      ref={contactInfoRef}
+                      className="relative inline-flex items-center gap-3 mb-2"
+                      onMouseLeave={() => {
+                        setContactInfoHover(false)
+                        setContactInfoOpen(false)
+                      }}
                     >
-                      {userInfo.website}
-                    </a>
+                      <Mail size={16} className="dark:text-gray-400 text-gray-600" />
+                      <span className="text-sm font-medium dark:text-gray-300 text-gray-700">{userInfo.email}</span>
+
+                      {/* discreet info 'i' button */}
+                      <button
+                        onClick={() => setContactInfoOpen(!contactInfoOpen)}
+                        onMouseEnter={() => setContactInfoHover(true)}
+                        onFocus={() => setContactInfoHover(true)}
+                        className="ml-2 w-6 h-6 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 dark:hover:bg-[#161616] dark:text-gray-300 transition-colors"
+                        aria-label="Informação sobre edição de dados pessoais"
+                        aria-expanded={contactInfoOpen}
+                        aria-controls="contact-info-tooltip"
+                      >
+                        <Info size={14} />
+                      </button>
+
+                      {(contactInfoHover || contactInfoOpen) && (
+                        <div
+                          id="contact-info-tooltip"
+                          role="tooltip"
+                          className="absolute right-0 top-full mt-2 w-72 p-3 rounded-md bg-white border shadow-lg dark:bg-[#0D1117] dark:border-[#30363D] text-sm text-gray-700 dark:text-gray-300 transform origin-top-right animate-show"
+                        >
+                          <div className="absolute -top-2 right-3 w-3 h-3 rotate-45 bg-white border-l border-t dark:bg-[#0D1117] dark:border-[#30363D]" />
+                          <p>
+                            Se as informações pessoais estiverem incorretas (nome, turma, escola, etc.), procure a
+                            secretaria da sua Etec ou envie uma mensagem no chat solicitando a correção. Essas
+                            informações não são editáveis pelo aluno.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {userInfo.website && (
+                      <div className="flex items-center gap-3 mb-2">
+                        <Globe size={16} className="dark:text-gray-400 text-gray-600" />
+                        <a
+                          href={userInfo.website}
+                          className="text-[#8C43FF] hover:underline text-sm font-medium"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {userInfo.website}
+                        </a>
+                      </div>
+                    )}
+
+                    {userInfo.github && (
+                      <div className="flex items-center gap-3">
+                        <GitBranch size={16} className="dark:text-gray-400 text-gray-600" />
+                        <a
+                          href={userInfo.github}
+                          className="text-[#8C43FF] hover:underline text-sm font-medium"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          GitHub
+                        </a>
+                      </div>
+                    )}
                   </div>
-                )}
-                {userInfo.github && (
-                  <div className="flex items-center gap-3">
-                    <GitBranch size={16} className="dark:text-gray-400 text-gray-600" />
-                    <a
-                      href={userInfo.github}
-                      className="text-[#8C43FF] hover:underline text-sm"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      GitHub
-                    </a>
+                ) : (
+                  <div>
+                    <div className="flex items-center gap-3">
+                      <GraduationCap size={16} className="dark:text-gray-400 text-gray-600" />
+                      <div className="text-sm">
+                        <div className="font-medium dark:text-white text-gray-900">{userInfo.school}</div>
+                        <div className="text-xs dark:text-gray-400 text-gray-600">{userInfo.class} — {userInfo.course}</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 mt-2">
+                      <MapPin size={16} className="dark:text-gray-400 text-gray-600" />
+                      <span className="dark:text-gray-300 text-gray-700 text-sm">{userInfo.location}</span>
+                    </div>
+
+                    <div className="flex items-center gap-3 mt-2">
+                      <Mail size={16} className="dark:text-gray-400 text-gray-600" />
+                      <span className="dark:text-gray-300 text-gray-700 text-sm">secretaria@{userInfo.school.replace(/\s+/g, "").toLowerCase()}.edu.br</span>
+                    </div>
+
+                    <div className="flex items-center gap-3 mt-2">
+                      <span className="text-sm dark:text-gray-300 text-gray-700">Telefone:</span>
+                      <span className="text-sm dark:text-gray-300 text-gray-700">(13) 1234-5678</span>
+                    </div>
                   </div>
                 )}
               </div>
