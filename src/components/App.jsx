@@ -742,7 +742,7 @@ function AppContent() {
         {activeTab !== "Login" && 
          activeTab !== "Fórum" && 
          activeTab !== "Chat" && 
-         activrtab !== "Iatec" &&
+         activeTab !== "Iatec" &&
          activeTab !== "Calendário" && (
           <Footer isAuthenticated={isAuthenticated} onNavigate={(tab) => {
             // Map footer navigation names to app tabs

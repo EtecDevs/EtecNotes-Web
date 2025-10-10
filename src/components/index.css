@@ -1,10 +1,9 @@
+/* Import Accessibility Styles - DEVE estar no topo antes de qualquer outra regra */
+@import './accessibility/accessibility.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import Accessibility Styles */
-@import './accessibility/accessibility.css';
 
 :root {
   --background: 0 0% 100%;

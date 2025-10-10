@@ -109,9 +109,9 @@ const ForumChatArea = ({ course, currentUser, onProfileClick }) => {
   }
 
   return (
-    <div className="flex-1 flex flex-col dark:bg-gradient-to-br dark:from-[#0a0a0a] dark:to-[#121212] bg-gradient-to-br from-[#f3e8ff] to-[#e8d5ff]">
+    <div className="flex-1 flex flex-col h-full overflow-hidden dark:bg-gradient-to-br dark:from-[#0a0a0a] dark:to-[#121212] bg-gradient-to-br from-[#f3e8ff] to-[#e8d5ff]">
       {/* Course Header com gradiente moderno */}
-      <div className="h-20 border-b dark:border-gray-700/50 border-gray-300/50 px-6 flex items-center gap-4 dark:bg-gradient-to-r dark:from-[#1a1a1a] dark:to-[#1E1E1E] bg-gradient-to-r from-white to-gray-50 shadow-lg backdrop-blur-lg">
+      <div className="h-20 border-b dark:border-gray-700/50 border-gray-300/50 px-6 flex items-center gap-4 flex-shrink-0 dark:bg-gradient-to-r dark:from-[#1a1a1a] dark:to-[#1E1E1E] bg-gradient-to-r from-white to-gray-50 shadow-lg backdrop-blur-lg">
         <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#8C43FF] to-[#6B32C3] shadow-lg shadow-[#8C43FF]/30">
           <Hash className="h-7 w-7 text-white" />
         </div>
@@ -208,8 +208,8 @@ const ForumChatArea = ({ course, currentUser, onProfileClick }) => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Message Input modernizado */}
-      <div className="p-6 border-t dark:border-gray-700/50 border-gray-300/50 dark:bg-gradient-to-r dark:from-[#1a1a1a] dark:to-[#1E1E1E] bg-gradient-to-r from-white to-gray-50 backdrop-blur-lg">
+      {/* Message Input modernizado - FIXO EMBAIXO */}
+      <div className="p-6 border-t dark:border-gray-700/50 border-gray-300/50 flex-shrink-0 dark:bg-gradient-to-r dark:from-[#1a1a1a] dark:to-[#1E1E1E] bg-gradient-to-r from-white to-gray-50 backdrop-blur-lg">
         <form onSubmit={handleSendMessage} className="flex gap-3">
           <div className="flex-1 relative">
             <input
