@@ -18,15 +18,22 @@ import {
 const AccessibilityMenu = () => {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef(null)
+  const [notification, setNotification] = useState('')
   
   // Estados de acessibilidade
   const [settings, setSettings] = useState({
     libras: false,
     colorBlindMode: 'none', // none, protanopia, deuteranopia, tritanopia, achromatopsia
-    highContrast: false,
+    contrastMode: 'none', // none, high, ultra
     fontSize: 100, // porcentagem
     screenReader: true // sempre ativo para ARIA
   })
+
+  // Função para mostrar notificação de atalho
+  const showNotification = (message) => {
+    setNotification(message)
+    setTimeout(() => setNotification(''), 2000)
+  }
 
   // Carregar configurações do localStorage
   useEffect(() => {
@@ -49,15 +56,57 @@ const AccessibilityMenu = () => {
   // Aplicar configurações de acessibilidade
   const applyAccessibilitySettings = (settings) => {
     const root = document.documentElement
+    const body = document.body
 
     // Aplicar tamanho da fonte
     root.style.fontSize = `${settings.fontSize}%`
 
-    // Aplicar modo de alto contraste
-    if (settings.highContrast) {
+    // Remover classes de contraste anteriores
+    root.classList.remove('high-contrast', 'ultra-contrast')
+    
+    // Aplicar modo de contraste
+    if (settings.contrastMode === 'high') {
+      console.log('🎨 Ativando alto contraste (suave)')
       root.classList.add('high-contrast')
+    } else if (settings.contrastMode === 'ultra') {
+      console.log('🎨 Ativando ultra contraste (forte)')
+      
+      // Adicionar classe
+      root.classList.add('ultra-contrast')
+      
+      // Forçar estilos inline para ultra contraste
+      root.style.backgroundColor = '#000000'
+      root.style.color = '#FFFFFF'
+      body.style.backgroundColor = '#000000'
+      body.style.color = '#FFFFFF'
+      
+      // Aplicar em todos os elementos principais
+      setTimeout(() => {
+        const elements = document.querySelectorAll('div, section, header, main, footer, nav, article, aside')
+        elements.forEach(el => {
+          el.style.backgroundColor = '#000000'
+          el.style.color = '#FFFFFF'
+        })
+        
+        console.log('✅ Ultra contraste aplicado!')
+      }, 100)
     } else {
-      root.classList.remove('high-contrast')
+      console.log('🎨 Desativando contraste')
+      
+      // Remover estilos inline
+      root.style.backgroundColor = ''
+      root.style.color = ''
+      body.style.backgroundColor = ''
+      body.style.color = ''
+      
+      // Remover de todos os elementos
+      setTimeout(() => {
+        const elements = document.querySelectorAll('div, section, header, main, footer, nav, article, aside')
+        elements.forEach(el => {
+          el.style.backgroundColor = ''
+          el.style.color = ''
+        })
+      }, 100)
     }
 
     // Aplicar filtro de daltonismo
@@ -137,13 +186,23 @@ const AccessibilityMenu = () => {
 
   // Carregar Hand Talk API
   const loadHandTalk = () => {
-    if (!window.ht) {
+    // Verificar se já existe uma instância
+    const existingWidget = document.querySelector('.ht-skip, [data-ht], #htWidget')
+    if (existingWidget) {
+      // Se já existe, apenas mostrar
+      existingWidget.style.display = 'block'
+      return
+    }
+
+    // Se não existe, criar nova instância
+    if (!document.getElementById('handtalk-script')) {
       const script = document.createElement('script')
+      script.id = 'handtalk-script'
       script.src = 'https://plugin.handtalk.me/web/latest/handtalk.min.js'
       script.async = true
       script.onload = () => {
         if (window.HT) {
-          new window.HT({
+          window.htInstance = new window.HT({
             token: 'seu-token-handtalk', // Você precisa se registrar em handtalk.me
             align: 'right',
             maxTextSize: 500,
@@ -158,11 +217,26 @@ const AccessibilityMenu = () => {
     }
   }
 
-  // Remover Hand Talk
+  // Remover Hand Talk (ocultar widget)
   const removeHandTalk = () => {
-    const htElement = document.querySelector('[data-ht]')
-    if (htElement) {
-      htElement.remove()
+    // Encontrar todos os elementos do Hand Talk
+    const htElements = [
+      document.querySelector('.ht-skip'),
+      document.querySelector('[data-ht]'),
+      document.querySelector('#htWidget'),
+      document.querySelector('.ht-widget-container')
+    ]
+
+    htElements.forEach(element => {
+      if (element) {
+        element.style.display = 'none'
+      }
+    })
+
+    // Fechar qualquer janela/modal aberta do Hand Talk
+    const htModal = document.querySelector('.ht-modal, .ht-player')
+    if (htModal) {
+      htModal.style.display = 'none'
     }
   }
 
@@ -183,11 +257,96 @@ const AccessibilityMenu = () => {
     }
   }, [isOpen])
 
-  // Suporte a teclado
+  // Navegação por teclado e atalhos globais
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false)
+    const handleKeyDown = (event) => {
+      // Atalho global: Alt + A = Abrir menu de Acessibilidade
+      if (event.altKey && event.key.toLowerCase() === 'a') {
+        event.preventDefault()
+        setIsOpen(prev => !prev)
+        showNotification(isOpen ? '❌ Menu fechado' : '✅ Menu de acessibilidade aberto')
+        return
+      }
+
+      // Atalho global: Alt + 1 = Toggle Libras
+      if (event.altKey && event.key === '1') {
+        event.preventDefault()
+        setSettings(prev => {
+          const newValue = !prev.libras
+          showNotification(newValue ? '🤟 Libras ativado' : '🤟 Libras desativado')
+          return { ...prev, libras: newValue }
+        })
+        return
+      }
+
+      // Atalho global: Alt + 2 = Toggle Alto Contraste
+      if (event.altKey && event.key === '2') {
+        event.preventDefault()
+        setSettings(prev => {
+          const newMode = prev.contrastMode === 'high' ? 'none' : 'high'
+          showNotification(newMode === 'high' ? '🎨 Alto contraste ativado' : '🎨 Contraste normal')
+          return { ...prev, contrastMode: newMode }
+        })
+        return
+      }
+
+      // Atalho global: Alt + 3 = Toggle Ultra Contraste
+      if (event.altKey && event.key === '3') {
+        event.preventDefault()
+        setSettings(prev => {
+          const newMode = prev.contrastMode === 'ultra' ? 'none' : 'ultra'
+          showNotification(newMode === 'ultra' ? '⚫⚪ Ultra contraste ativado' : '🎨 Contraste normal')
+          return { ...prev, contrastMode: newMode }
+        })
+        return
+      }
+
+      // Atalho global: Alt + '+' = Aumentar fonte
+      if (event.altKey && (event.key === '+' || event.key === '=')) {
+        event.preventDefault()
+        adjustFontSize(5)
+        showNotification(`🔤 Fonte: ${Math.min(settings.fontSize + 5, 150)}%`)
+        return
+      }
+
+      // Atalho global: Alt + '-' = Diminuir fonte
+      if (event.altKey && event.key === '-') {
+        event.preventDefault()
+        adjustFontSize(-5)
+        showNotification(`🔤 Fonte: ${Math.max(settings.fontSize - 5, 75)}%`)
+        return
+      }
+
+      // Se o menu estiver aberto, permitir navegação
+      if (isOpen) {
+        // ESC = Fechar menu
+        if (event.key === 'Escape') {
+          setIsOpen(false)
+          return
+        }
+
+        // Navegação por setas dentro do menu
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault()
+          const focusableElements = menuRef.current?.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          )
+          
+          if (focusableElements && focusableElements.length > 0) {
+            const currentIndex = Array.from(focusableElements).indexOf(document.activeElement)
+            let nextIndex
+            
+            if (event.key === 'ArrowDown') {
+              nextIndex = currentIndex + 1
+              if (nextIndex >= focusableElements.length) nextIndex = 0
+            } else {
+              nextIndex = currentIndex - 1
+              if (nextIndex < 0) nextIndex = focusableElements.length - 1
+            }
+            
+            focusableElements[nextIndex]?.focus()
+          }
+        }
       }
     }
 
@@ -220,13 +379,30 @@ const AccessibilityMenu = () => {
 
   return (
     <div className="relative" ref={menuRef}>
+      {/* Notificação de Atalho de Teclado */}
+      <AnimatePresence>
+        {notification && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: -20, x: '-50%' }}
+            className="fixed top-20 left-1/2 transform z-[10000] bg-[#8C43FF] text-white px-6 py-3 rounded-full shadow-2xl font-medium text-sm flex items-center gap-2"
+            role="status"
+            aria-live="polite"
+          >
+            <span>{notification}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Botão de Ajuda/Acessibilidade */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="p-1.5 rounded-full border dark:border-gray-600 border-black cursor-pointer dark:bg-[#333333] bg-white transition-colors duration-300 hover:bg-gray-100 dark:hover:bg-[#21262D]"
-        aria-label="Menu de Acessibilidade"
+        aria-label="Menu de Acessibilidade (Atalho: Alt + A)"
         aria-expanded={isOpen}
         aria-haspopup="true"
+        title="Alt + A para abrir"
       >
         <HelpCircle size={20} className="dark:text-gray-400 text-black" />
       </button>
@@ -328,28 +504,69 @@ const AccessibilityMenu = () => {
                 </div>
               </div>
 
-              {/* Alto Contraste */}
+              {/* Alto Contraste (Suave) */}
               <div className="mb-4">
                 <button
-                  onClick={() => toggleSetting('highContrast')}
+                  onClick={() => {
+                    setSettings(prev => ({ 
+                      ...prev, 
+                      contrastMode: prev.contrastMode === 'high' ? 'none' : 'high' 
+                    }))
+                  }}
                   className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
-                    settings.highContrast
+                    settings.contrastMode === 'high'
                       ? 'bg-[#8C43FF]/10 border-2 border-[#8C43FF]'
                       : 'dark:bg-[#2D2D2D] bg-gray-100 border-2 border-transparent hover:border-[#8C43FF]/30'
                   }`}
-                  aria-label={`Alto contraste ${settings.highContrast ? 'ativado' : 'desativado'}`}
-                  aria-pressed={settings.highContrast}
+                  aria-label={`Alto contraste ${settings.contrastMode === 'high' ? 'ativado' : 'desativado'}`}
+                  aria-pressed={settings.contrastMode === 'high'}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${settings.highContrast ? 'bg-[#8C43FF]' : 'dark:bg-[#3D3D3D] bg-gray-200'}`}>
-                      <Eye size={20} className={settings.highContrast ? 'text-white' : 'dark:text-gray-400 text-gray-600'} />
+                    <div className={`p-2 rounded-lg ${settings.contrastMode === 'high' ? 'bg-[#8C43FF]' : 'dark:bg-[#3D3D3D] bg-gray-200'}`}>
+                      <Eye size={20} className={settings.contrastMode === 'high' ? 'text-white' : 'dark:text-gray-400 text-gray-600'} />
                     </div>
                     <div className="text-left">
                       <p className="font-medium dark:text-white text-gray-900">Alto Contraste</p>
-                      <p className="text-xs dark:text-gray-400 text-gray-600">Melhora a legibilidade</p>
+                      <p className="text-xs dark:text-gray-400 text-gray-600">
+                        {settings.contrastMode === 'high' ? '🎨 Ativo - Contraste Suave' : 'Melhora a legibilidade'}
+                      </p>
                     </div>
                   </div>
-                  {settings.highContrast && (
+                  {settings.contrastMode === 'high' && (
+                    <Check size={20} className="text-[#8C43FF]" />
+                  )}
+                </button>
+              </div>
+
+              {/* Ultra Contraste (Forte) */}
+              <div className="mb-4">
+                <button
+                  onClick={() => {
+                    setSettings(prev => ({ 
+                      ...prev, 
+                      contrastMode: prev.contrastMode === 'ultra' ? 'none' : 'ultra' 
+                    }))
+                  }}
+                  className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
+                    settings.contrastMode === 'ultra'
+                      ? 'bg-[#8C43FF]/10 border-2 border-[#8C43FF]'
+                      : 'dark:bg-[#2D2D2D] bg-gray-100 border-2 border-transparent hover:border-[#8C43FF]/30'
+                  }`}
+                  aria-label={`Ultra contraste ${settings.contrastMode === 'ultra' ? 'ativado' : 'desativado'}`}
+                  aria-pressed={settings.contrastMode === 'ultra'}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-lg ${settings.contrastMode === 'ultra' ? 'bg-[#8C43FF]' : 'dark:bg-[#3D3D3D] bg-gray-200'}`}>
+                      <Eye size={20} className={settings.contrastMode === 'ultra' ? 'text-white' : 'dark:text-gray-400 text-gray-600'} />
+                    </div>
+                    <div className="text-left">
+                      <p className="font-medium dark:text-white text-gray-900">Ultra Contraste</p>
+                      <p className="text-xs dark:text-gray-400 text-gray-600">
+                        {settings.contrastMode === 'ultra' ? '⚫⚪ Ativo - Preto e Branco' : 'Máximo contraste possível'}
+                      </p>
+                    </div>
+                  </div>
+                  {settings.contrastMode === 'ultra' && (
                     <Check size={20} className="text-[#8C43FF]" />
                   )}
                 </button>
@@ -393,8 +610,55 @@ const AccessibilityMenu = () => {
                   <div>
                     <p className="font-medium text-sm dark:text-white text-gray-900 mb-1">Leitor de Tela</p>
                     <p className="text-xs dark:text-gray-400 text-gray-600">
-                      Esta interface é compatível com leitores de tela e navegação por teclado (Tab, Enter, Esc)
+                      Esta interface é compatível com leitores de tela e navegação por teclado
                     </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Atalhos de Teclado */}
+              <div className="mt-4 p-3 rounded-xl dark:bg-[#2D2D2D]/50 bg-purple-50 border dark:border-[#3D3D3D] border-purple-200">
+                <div className="mb-2">
+                  <p className="font-semibold text-sm dark:text-white text-gray-900 mb-1 flex items-center gap-2">
+                    ⌨️ Atalhos de Teclado
+                  </p>
+                </div>
+                <div className="space-y-1.5 text-xs dark:text-gray-300 text-gray-700">
+                  <div className="flex justify-between items-center">
+                    <span>Abrir/Fechar Menu</span>
+                    <kbd className="px-2 py-0.5 rounded dark:bg-[#1E1E1E] bg-white border dark:border-gray-600 border-gray-300 font-mono text-xs">Alt + A</kbd>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Modo Navegação Total</span>
+                    <kbd className="px-2 py-0.5 rounded dark:bg-[#1E1E1E] bg-white border dark:border-gray-600 border-gray-300 font-mono text-xs font-bold">N</kbd>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Libras On/Off</span>
+                    <kbd className="px-2 py-0.5 rounded dark:bg-[#1E1E1E] bg-white border dark:border-gray-600 border-gray-300 font-mono text-xs">Alt + 1</kbd>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Alto Contraste</span>
+                    <kbd className="px-2 py-0.5 rounded dark:bg-[#1E1E1E] bg-white border dark:border-gray-600 border-gray-300 font-mono text-xs">Alt + 2</kbd>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Ultra Contraste</span>
+                    <kbd className="px-2 py-0.5 rounded dark:bg-[#1E1E1E] bg-white border dark:border-gray-600 border-gray-300 font-mono text-xs">Alt + 3</kbd>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Aumentar Fonte</span>
+                    <kbd className="px-2 py-0.5 rounded dark:bg-[#1E1E1E] bg-white border dark:border-gray-600 border-gray-300 font-mono text-xs">Alt + +</kbd>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Diminuir Fonte</span>
+                    <kbd className="px-2 py-0.5 rounded dark:bg-[#1E1E1E] bg-white border dark:border-gray-600 border-gray-300 font-mono text-xs">Alt + -</kbd>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Navegar Menu</span>
+                    <kbd className="px-2 py-0.5 rounded dark:bg-[#1E1E1E] bg-white border dark:border-gray-600 border-gray-300 font-mono text-xs">↑ ↓</kbd>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Fechar Menu</span>
+                    <kbd className="px-2 py-0.5 rounded dark:bg-[#1E1E1E] bg-white border dark:border-gray-600 border-gray-300 font-mono text-xs">ESC</kbd>
                   </div>
                 </div>
               </div>

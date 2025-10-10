@@ -2,6 +2,177 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================
+   SISTEMA DE ACESSIBILIDADE - CONTRASTES
+   ======================================== */
+@layer utilities {
+  /* Alto Contraste (Suave) - Melhora legibilidade sem ser extremo */
+  html.high-contrast {
+    /* Cores de alto contraste suave */
+    --hc-bg-light: #FFFFFF;
+    --hc-bg-dark: #1A1A1A;
+    --hc-text-light: #000000;
+    --hc-text-dark: #FFFFFF;
+    --hc-primary: #8C43FF;
+    --hc-border: #666666;
+  }
+
+  /* Tema claro com alto contraste */
+  html.high-contrast:not(.dark) {
+    background-color: var(--hc-bg-light) !important;
+    color: var(--hc-text-light) !important;
+  }
+
+  html.high-contrast:not(.dark) body {
+    background-color: var(--hc-bg-light) !important;
+    color: var(--hc-text-light) !important;
+  }
+
+  html.high-contrast:not(.dark) *:not(svg):not(path):not(circle):not(rect):not(line) {
+    color: var(--hc-text-light) !important;
+  }
+
+  /* Tema escuro com alto contraste */
+  html.high-contrast.dark {
+    background-color: var(--hc-bg-dark) !important;
+    color: var(--hc-text-dark) !important;
+  }
+
+  html.high-contrast.dark body {
+    background-color: var(--hc-bg-dark) !important;
+    color: var(--hc-text-dark) !important;
+  }
+
+  html.high-contrast.dark *:not(svg):not(path):not(circle):not(rect):not(line) {
+    color: var(--hc-text-dark) !important;
+  }
+
+  /* Botões e links com alto contraste */
+  html.high-contrast button,
+  html.high-contrast a {
+    border: 2px solid var(--hc-border) !important;
+  }
+
+  html.high-contrast button:hover,
+  html.high-contrast button:focus,
+  html.high-contrast a:hover,
+  html.high-contrast a:focus {
+    background-color: var(--hc-primary) !important;
+    color: white !important;
+    outline: 3px solid var(--hc-primary) !important;
+    outline-offset: 2px;
+  }
+
+  /* Inputs com alto contraste */
+  html.high-contrast input,
+  html.high-contrast select,
+  html.high-contrast textarea {
+    border: 2px solid var(--hc-border) !important;
+    background-color: transparent !important;
+  }
+
+  /* ========================================
+     ULTRA CONTRASTE (Forte) - Preto e Branco Total
+     ======================================== */
+  html.ultra-contrast {
+    /* Cores de ultra contraste */
+    --uc-bg: #000000 !important;
+    --uc-text: #FFFFFF !important;
+    --uc-primary: #FFFF00 !important;
+    --uc-secondary: #00FFFF !important;
+    --uc-border: #FFFFFF !important;
+    --uc-link: #00FF00 !important;
+    --uc-visited: #FF00FF !important;
+    --uc-focus: #FFFF00 !important;
+    
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+  }
+
+  html.ultra-contrast body {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+  }
+
+  /* Forçar fundo preto e texto branco em TODOS os elementos */
+  html.ultra-contrast *:not(svg):not(path):not(circle):not(rect):not(line):not(polyline):not(polygon) {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+  }
+
+  /* Header, nav, main, footer */
+  html.ultra-contrast header,
+  html.ultra-contrast nav,
+  html.ultra-contrast main,
+  html.ultra-contrast footer,
+  html.ultra-contrast div,
+  html.ultra-contrast section,
+  html.ultra-contrast article {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+  }
+
+  /* Links */
+  html.ultra-contrast a {
+    color: #00FF00 !important;
+    text-decoration: underline !important;
+  }
+
+  html.ultra-contrast a:visited {
+    color: #FF00FF !important;
+  }
+
+  /* Botões e inputs */
+  html.ultra-contrast button,
+  html.ultra-contrast input,
+  html.ultra-contrast select,
+  html.ultra-contrast textarea {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #FFFFFF !important;
+  }
+
+  html.ultra-contrast button:hover,
+  html.ultra-contrast button:focus {
+    background-color: #FFFF00 !important;
+    color: #000000 !important;
+    outline: 3px solid #FFFF00 !important;
+    outline-offset: 2px;
+  }
+
+  /* Focus geral */
+  html.ultra-contrast *:focus {
+    outline: 3px solid #FFFF00 !important;
+    outline-offset: 2px;
+  }
+
+  /* Imagens */
+  html.ultra-contrast img {
+    border: 2px solid #FFFFFF !important;
+    filter: contrast(1.5) brightness(1.2) !important;
+  }
+
+  /* SVG icons */
+  html.ultra-contrast svg {
+    color: #FFFFFF !important;
+    fill: currentColor !important;
+  }
+
+  /* Remover shadows */
+  html.ultra-contrast * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Gradientes */
+  html.ultra-contrast [class*="bg-gradient"],
+  html.ultra-contrast [class*="gradient"] {
+    background: #000000 !important;
+    background-image: none !important;
+  }
+}
+
 /* Custom scrollbar styles */
 @layer utilities {
   .scrollbar-thin {

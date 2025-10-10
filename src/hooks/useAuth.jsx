@@ -1,4 +1,6 @@
 import { useState, useEffect, useContext, createContext } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../config/firebase';
 import authService from '../services/authService';
 
 const AuthContext = createContext();
@@ -14,8 +16,52 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [firebaseUser, setFirebaseUser] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Mudado para true inicialmente
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // 🔥 Observer do Firebase Auth para pegar o usuário autenticado
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseAuthUser) => {
+      console.log('🔥 Firebase Auth State Changed:', firebaseAuthUser?.email, firebaseAuthUser?.uid);
+      
+      if (firebaseAuthUser) {
+        // Usuário autenticado no Firebase
+        const localUser = authService.getCurrentUser();
+        
+        if (localUser) {
+          // Mesclar dados do localStorage com Firebase Auth
+          const mergedUser = {
+            ...localUser,
+            uid: firebaseAuthUser.uid,
+            email: firebaseAuthUser.email,
+            displayName: localUser.nome || firebaseAuthUser.displayName,
+          };
+          setUser(mergedUser);
+          setFirebaseUser(firebaseAuthUser);
+          setIsAuthenticated(true);
+        } else {
+          // Criar usuário básico a partir do Firebase Auth
+          const basicUser = {
+            uid: firebaseAuthUser.uid,
+            email: firebaseAuthUser.email,
+            displayName: firebaseAuthUser.displayName,
+          };
+          setUser(basicUser);
+          setFirebaseUser(firebaseAuthUser);
+          setIsAuthenticated(true);
+        }
+      } else {
+        // Não autenticado
+        setUser(null);
+        setFirebaseUser(null);
+        setIsAuthenticated(false);
+      }
+      
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // Login com role
   const login = async (email, password, role, rm = null) => {

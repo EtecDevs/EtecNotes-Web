@@ -23,10 +23,47 @@ class AuthService {
         return await this.loginSecretariaWithPassword(email, password, role);
       }
 
-      // Para usuários de teste (aluno e professor)
-      if (role === 'aluno' || role === 'professor') {
-        console.log(`Login de ${role} detectado`);
-        return await this.loginTestUser(email, password, role, rm);
+      // ========================================
+      // 🔥 LOGIN REAL FIREBASE PARA 4 TIPOS DE USUÁRIOS
+      // ========================================
+      // Mapear emails e roles para os 4 tipos de usuários
+      const firebaseTestUsers = {
+        'aluno@teste.com': { role: 'aluno', nome: 'João Santos (Aluno)' },
+        'professor@teste.com': { role: 'professor', nome: 'Maria Silva (Professor)' },
+        'admin@teste.com': { role: 'admin', nome: 'Admin Master' },
+        'dev@teste.com': { role: 'dev', nome: 'Dev EtecNotes' }
+      };
+
+      const userConfig = firebaseTestUsers[email];
+      
+      // Se o email está na lista de usuários Firebase E o role bate, fazer login REAL
+      if (userConfig && userConfig.role === role) {
+        console.log(`🔥 Login REAL de ${role} no Firebase Auth`);
+        
+        // Fazer login no Firebase Auth
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const firebaseUser = userCredential.user;
+        console.log('✅ Firebase Auth OK:', firebaseUser.uid, firebaseUser.email);
+        
+        // Criar objeto de usuário completo
+        const user = {
+          id: firebaseUser.uid,
+          uid: firebaseUser.uid,
+          nome: userConfig.nome,
+          email: firebaseUser.email,
+          role: role,
+          displayName: userConfig.nome,
+          active: true
+        };
+        
+        // Salvar no localStorage
+        const token = await firebaseUser.getIdToken();
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('userRole', user.role);
+        localStorage.setItem('token', token);
+        
+        console.log('✅ Login completo:', user);
+        return user;
       }
 
       // Login normal com Firebase Auth (para outros usuários)

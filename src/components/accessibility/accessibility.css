@@ -11,6 +11,10 @@ html.high-contrast {
   --hc-link: #00FF00;
   --hc-visited: #FF00FF;
   --hc-focus: #FFFF00;
+  
+  /* Forçar cores base */
+  background-color: var(--hc-bg) !important;
+  color: var(--hc-text) !important;
 }
 
 html.high-contrast body {
@@ -18,8 +22,20 @@ html.high-contrast body {
   color: var(--hc-text) !important;
 }
 
-html.high-contrast * {
+/* Forçar fundo preto e texto branco em todos os elementos */
+html.high-contrast *:not(svg):not(path):not(circle):not(rect):not(line) {
+  background-color: var(--hc-bg) !important;
+  color: var(--hc-text) !important;
   border-color: var(--hc-border) !important;
+}
+
+/* Header e elementos importantes */
+html.high-contrast header,
+html.high-contrast nav,
+html.high-contrast main,
+html.high-contrast footer {
+  background-color: var(--hc-bg) !important;
+  color: var(--hc-text) !important;
 }
 
 html.high-contrast a {
@@ -56,13 +72,28 @@ html.high-contrast *:focus {
 /* Garantir que imagens tenham borda visível */
 html.high-contrast img {
   border: 2px solid var(--hc-border) !important;
+  filter: contrast(1.5) brightness(1.2);
+}
+
+/* SVG icons - manter visíveis */
+html.high-contrast svg {
+  color: var(--hc-text) !important;
+  fill: currentColor !important;
 }
 
 /* Cards e containers */
-html.high-contrast [class*="bg-"],
-html.high-contrast [class*="dark:bg-"] {
+html.high-contrast div,
+html.high-contrast section,
+html.high-contrast article,
+html.high-contrast aside {
   background-color: var(--hc-bg) !important;
-  border: 2px solid var(--hc-border) !important;
+  color: var(--hc-text) !important;
+}
+
+/* Elementos com borda */
+html.high-contrast [class*="border"],
+html.high-contrast [class*="rounded"] {
+  border-color: var(--hc-border) !important;
 }
 
 /* Textos em gradiente para alto contraste */
@@ -78,38 +109,88 @@ html.high-contrast * {
   text-shadow: none !important;
 }
 
-/* Focus visible sempre ativo */
+/* Focus visible sempre ativo com animação */
 html *:focus-visible {
-  outline: 2px solid #8C43FF;
-  outline-offset: 2px;
+  outline: 3px solid #8C43FF;
+  outline-offset: 3px;
+  transition: outline-offset 0.2s ease;
+  animation: focusPulse 2s ease-in-out infinite;
 }
 
-/* Suporte para navegação por teclado */
+@keyframes focusPulse {
+  0%, 100% {
+    outline-offset: 3px;
+  }
+  50% {
+    outline-offset: 5px;
+  }
+}
+
+/* Suporte para navegação por teclado com indicadores fortes */
 [tabindex]:focus,
 button:focus,
 a:focus,
 input:focus,
 select:focus,
 textarea:focus {
-  outline: 2px solid #8C43FF;
-  outline-offset: 2px;
+  outline: 3px solid #8C43FF !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 4px rgba(140, 67, 255, 0.2) !important;
+}
+
+/* Hover também destaca para melhor feedback visual */
+button:hover,
+a:hover {
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
 }
 
 /* Skip to main content link */
 .skip-to-main {
-  position: absolute;
-  top: -40px;
-  left: 0;
+  position: fixed;
+  top: -100px;
+  left: 10px;
   background: #8C43FF;
   color: white;
-  padding: 8px 16px;
+  padding: 12px 20px;
   text-decoration: none;
-  z-index: 9999;
-  border-radius: 0 0 4px 0;
+  z-index: 99999;
+  border-radius: 0 0 8px 8px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: top 0.3s ease;
 }
 
 .skip-to-main:focus {
   top: 0;
+  outline: 3px solid #FFFF00;
+  outline-offset: 3px;
+}
+
+/* Visual feedback para elementos interativos */
+button:active,
+a:active {
+  transform: scale(0.98);
+}
+
+/* Indicador de elemento focável */
+[tabindex="0"]::before,
+button::before,
+a::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+[tabindex="0"]:focus-visible::before,
+button:focus-visible::before,
+a:focus-visible::before {
+  opacity: 1;
+  background: rgba(140, 67, 255, 0.1);
 }
 
 /* Indicadores de estado para leitores de tela */
