@@ -738,7 +738,12 @@ function AppContent() {
         )}
 
   {/* Footer component (renders differently for guest vs auth) */}
-        {activeTab !== "Login" && (
+        {/* Não mostrar Footer em: Login, Fórum, Chat e Calendário */}
+        {activeTab !== "Login" && 
+         activeTab !== "Fórum" && 
+         activeTab !== "Chat" && 
+         activrtab !== "Iatec" &&
+         activeTab !== "Calendário" && (
           <Footer isAuthenticated={isAuthenticated} onNavigate={(tab) => {
             // Map footer navigation names to app tabs
             const map = {
