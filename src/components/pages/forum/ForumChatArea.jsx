@@ -22,14 +22,43 @@ const ForumChatArea = ({ course, currentUser, onProfileClick }) => {
   const [isLoading, setIsLoading] = useState(false)
   const scrollRef = useRef(null)
   const messagesEndRef = useRef(null)
+  const isFirstLoad = useRef(true) // Rastrear se é a primeira carga
+
+  // 🎨 Mapeamento de ícones como fallback (caso o curso não tenha icon no Firestore)
+  const courseIconsFallback = {
+    "ds": "💻",
+    "adm": "📊",
+    "rh": "👥",
+    "info": "🌐",
+    "log": "📦",
+    "contabilidade": "💰",
+    "enfermagem": "🏥",
+    "mecanica": "⚙️"
+  }
+
+  // Função para obter o ícone do curso
+  const getCourseIcon = () => {
+    // 1. Prioridade: ícone do banco de dados
+    if (course?.icon) {
+      return course.icon
+    }
+    // 2. Fallback: mapeamento local por ID
+    if (course?.id && courseIconsFallback[course.id]) {
+      return courseIconsFallback[course.id]
+    }
+    // 3. Fallback final: hashtag
+    return null
+  }
 
   // Buscar mensagens do curso selecionado
   useEffect(() => {
     if (!course) {
       setMessages([])
+      isFirstLoad.current = true // Reset ao mudar de curso
       return
     }
 
+    isFirstLoad.current = true // Reset ao mudar de curso
     const messagesRef = collection(db, "messages")
     const q = query(
       messagesRef,
@@ -50,10 +79,8 @@ const ForumChatArea = ({ course, currentUser, onProfileClick }) => {
     return () => unsubscribe()
   }, [course])
 
-  // Auto scroll para o final quando novas mensagens chegam
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+  // Auto scroll REMOVIDO - usuário controla o scroll manualmente
+  // Scroll automático só acontece ao enviar uma nova mensagem (ver handleSendMessage)
 
   const handleSendMessage = async (e) => {
     e.preventDefault()
@@ -73,6 +100,11 @@ const ForumChatArea = ({ course, currentUser, onProfileClick }) => {
       })
 
       setNewMessage("")
+      
+      // Scroll suave apenas quando o usuário envia uma mensagem
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+      }, 100)
     } catch (error) {
       console.error("Erro ao enviar mensagem:", error)
     } finally {
@@ -112,8 +144,13 @@ const ForumChatArea = ({ course, currentUser, onProfileClick }) => {
     <div className="flex-1 flex flex-col h-full overflow-hidden dark:bg-gradient-to-br dark:from-[#0a0a0a] dark:to-[#121212] bg-gradient-to-br from-[#f3e8ff] to-[#e8d5ff]">
       {/* Course Header com gradiente moderno */}
       <div className="h-20 border-b dark:border-gray-700/50 border-gray-300/50 px-6 flex items-center gap-4 flex-shrink-0 dark:bg-gradient-to-r dark:from-[#1a1a1a] dark:to-[#1E1E1E] bg-gradient-to-r from-white to-gray-50 shadow-lg backdrop-blur-lg">
+        {/* Ícone do curso (emoji ou ícone padrão) */}
         <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#8C43FF] to-[#6B32C3] shadow-lg shadow-[#8C43FF]/30">
-          <Hash className="h-7 w-7 text-white" />
+          {getCourseIcon() ? (
+            <span className="text-3xl">{getCourseIcon()}</span>
+          ) : (
+            <Hash className="h-7 w-7 text-white" />
+          )}
         </div>
         <div className="flex-1">
           <h2 className="font-bold dark:text-white text-gray-900 text-xl tracking-tight">
@@ -140,7 +177,7 @@ const ForumChatArea = ({ course, currentUser, onProfileClick }) => {
           <div className="flex items-center justify-center h-full">
             <div className="text-center p-8 rounded-3xl dark:bg-[#1a1a1a]/50 bg-white/50 backdrop-blur-sm border dark:border-gray-700/50 border-gray-200">
               <div className="mb-4">
-                <span className="text-6xl">💬</span>
+                <span className="text-6xl">;-;</span>
               </div>
               <p className="dark:text-gray-300 text-gray-700 font-semibold text-lg mb-2">
                 Nenhuma mensagem ainda

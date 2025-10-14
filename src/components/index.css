@@ -114,6 +114,152 @@ html.dark {
   animation: show-pop 160ms cubic-bezier(0.2, 0, 0, 1) both;
 }
 
+/* ===================================
+   🎯 SISTEMA DE FOCUS - Opção 2
+   Remove outline de TODOS os elementos
+   EXCETO quando navegando por teclado (classe .keyboard-navigating)
+   =================================== */
+
+/* Remover outline padrão de TODOS os elementos - MAIS AGRESSIVO */
+*,
+*:focus,
+*:focus-visible,
+*:active,
+button,
+button:focus,
+button:focus-visible,
+button:active,
+input,
+input:focus,
+input:focus-visible,
+textarea,
+textarea:focus,
+textarea:focus-visible,
+select,
+select:focus,
+select:focus-visible,
+a,
+a:focus,
+a:focus-visible,
+div,
+div:focus,
+body,
+body:focus,
+body:focus-visible,
+main,
+main:focus,
+section,
+section:focus,
+article,
+article:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 🎯 EXCEÇÃO: Botões de navegação do header PODEM ter outline */
+header button:focus,
+header button:focus-visible {
+  outline: 2px solid rgba(139, 92, 246, 0.6) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+/* Animação suave para navegação por teclado */
+header button {
+  transition: all 0.2s ease-in-out !important;
+}
+
+/* Efeito de escala e destaque quando navegando por teclado */
+header button.ring-4 {
+  transform: scale(1.1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* 🎯 FIX: Remover o ::before do accessibility.css dos botões do header (causa círculo roxo gigante) */
+header button::before,
+header button:focus-visible::before,
+header button:hover::before,
+header button:active::before {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: none !important;
+}
+
+/* Animação fade-in para indicadores de navegação */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+/* Prevenir que elementos estruturais recebam foco */
+body,
+main,
+div:not([role="button"]):not([onclick]),
+section,
+article,
+header,
+footer {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Remover ring do Tailwind */
+.focus\:ring:focus,
+.focus\:ring-2:focus,
+.focus-visible\:ring:focus-visible,
+.focus-visible\:ring-2:focus-visible,
+.focus\:ring-purple-400:focus,
+.focus-visible\:ring-purple-400:focus-visible {
+  --tw-ring-shadow: 0 0 #0000 !important;
+  box-shadow: none !important;
+}
+
+/* Remover border roxo do Tailwind ao focar */
+.focus\:border-purple-400:focus,
+.focus-visible\:border-purple-400:focus-visible {
+  border-color: inherit !important;
+}
+
+/* Permitir outline APENAS quando navegando por teclado */
+.keyboard-navigating:focus {
+  outline: 3px solid #8C43FF !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 6px rgba(140, 67, 255, 0.2) !important;
+  position: relative;
+  z-index: 10;
+  transition: all 0.15s ease-in-out !important;
+}
+
+/* Garantir que a classe keyboard-navigating funcione mesmo sem :focus */
+.keyboard-navigating {
+  outline: 3px solid #8C43FF !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 6px rgba(140, 67, 255, 0.2) !important;
+  position: relative;
+  z-index: 10;
+  transition: all 0.15s ease-in-out !important;
+}
+
+/* Dark mode - outline mais brilhante para melhor visibilidade */
+.dark .keyboard-navigating,
+.dark .keyboard-navigating:focus {
+  outline: 3px solid #A78BFA !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 6px rgba(167, 139, 250, 0.3) !important;
+}
+
 /* Pill switcher (used in Contact Info card) */
 .pill-switch {
   display: inline-flex;

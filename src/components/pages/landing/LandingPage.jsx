@@ -523,145 +523,139 @@ const LandingPage = ({ onGetStarted }) => {
       </section>
 
       {/* Team Section */}
-      <section id="equipe" className="py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold dark:text-white text-gray-800 mb-6">Conheça nossa equipe</h2>
-            <p className="text-xl dark:text-gray-300 text-gray-600 max-w-3xl mx-auto">
-              Desenvolvedores apaixonados por educação e tecnologia que tornaram o EtecNotes realidade
-            </p>
-          </motion.div>
+        <section id="equipe" className="py-20">
+          <div className="max-w-7xl mx-auto px-6">
+            <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+            >
+          <h2 className="text-4xl md:text-5xl font-bold dark:text-white text-gray-800 mb-6">Conheça nossa equipe</h2>
+          <p className="text-xl dark:text-gray-300 text-gray-600 max-w-3xl mx-auto">
+            Desenvolvedores apaixonados por educação e tecnologia que tornaram o EtecNotes realidade
+          </p>
+            </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {teamMembers.map((member, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="group"
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {teamMembers.map((member, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="group"
+            >
+              <div className="dark:bg-[#1A1A1A] bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all group-hover:scale-105 min-h-[500px] flex flex-col">
+            <div className="relative mb-6">
+              <img
+                src={member.image || "/placeholder.svg"}
+                alt={member.name}
+                className="w-32 h-32 rounded-2xl mx-auto object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#CCA9DD]/20 to-transparent rounded-2xl"></div>
+            </div>
+
+            <div className="text-center mb-4 flex-grow">
+              <h3 className="text-xl font-semibold dark:text-white text-gray-800 mb-2">{member.name}</h3>
+              <p className="text-[#CCA9DD] font-medium mb-3">{member.role}</p>
+              <p className="dark:text-gray-400 text-gray-600 text-sm leading-relaxed mb-4">
+                {member.description}
+              </p>
+
+              {/* Skills */}
+              <div className="flex flex-wrap gap-2 mb-4 justify-center">
+                {member.skills.map((skill, idx) => (
+              <span
+                key={idx}
+                className="px-2 py-1 text-xs dark:bg-[#2D2D2D] bg-gray-100 dark:text-gray-300 text-gray-600 rounded-full"
               >
-                <div className="dark:bg-[#1A1A1A] bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all group-hover:scale-105 min-h-[500px]">
-                  <div className="relative mb-6">
-                    <img
-                      src={member.image || "/placeholder.svg"}
-                      alt={member.name}
-                      className="w-32 h-32 rounded-2xl mx-auto object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#CCA9DD]/20 to-transparent rounded-2xl"></div>
-                  </div>
+                {skill}
+              </span>
+                ))}
+              </div>
+            </div>
 
-                  <div className="text-center mb-4">
-                    <h3 className="text-xl font-semibold dark:text-white text-gray-800 mb-2">{member.name}</h3>
-                    <p className="text-[#CCA9DD] font-medium mb-3">{member.role}</p>
-                    <p className="dark:text-gray-400 text-gray-600 text-sm leading-relaxed mb-4">
-                      {member.description}
-                    </p>
-                  </div>
-
-                  {/* Skills */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {member.skills.map((skill, idx) => (
-                      <span
-                        key={idx}
-                        className="px-2 py-1 text-xs dark:bg-[#2D2D2D] bg-gray-100 dark:text-gray-300 text-gray-600 rounded-full"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Social Links */}
-                  <div className="flex justify-center space-x-3">
-                    <a
-                      href={member.social.github}
-                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#CCA9DD] hover:text-white transition-colors"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Github size={18} />
-                    </a>
-                    <a
-                      href={member.social.linkedin}
-                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#CCA9DD] hover:text-white transition-colors"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Linkedin size={18} />
-                    </a>
-                    <a
-                      href={`mailto:${member.social.email}`}
-                      className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#CCA9DD] hover:text-white transition-colors"
-                    >
-                      <Mail size={18} />
-                    </a>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="py-20 dark:bg-[#0F0F0F] bg-[#f8f4ff]">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold dark:text-white text-gray-800 mb-6">
-              O que nossos usuários dizem
-            </h2>
-            <p className="text-xl dark:text-gray-300 text-gray-600 max-w-3xl mx-auto">
-              Depoimentos reais de estudantes que transformaram sua experiência acadêmica com o EtecNotes
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="dark:bg-[#1A1A1A] bg-white rounded-2xl p-6 shadow-lg"
+            {/* Social Links - Fixed at bottom */}
+            <div className="flex justify-center space-x-3 mt-auto pt-4">
+              <a
+                href={member.social.github}
+                className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#CCA9DD] hover:text-white transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <div className="flex items-center mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} size={16} className="text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <p className="dark:text-gray-300 text-gray-600 mb-6 leading-relaxed">"{testimonial.content}"</p>
-                <div className="flex items-center gap-3">
-                  <img
-                    src={testimonial.avatar || "/placeholder.svg"}
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div>
-                    <h4 className="font-semibold dark:text-white text-gray-800">{testimonial.name}</h4>
-                    <p className="text-sm dark:text-gray-400 text-gray-600">{testimonial.role}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                <Github size={18} />
+              </a>
+              <a
+                href={member.social.linkedin}
+                className="p-2 dark:bg-[#2D2D2D] bg-gray-100 rounded-lg hover:bg-[#CCA9DD] hover:text-white transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Linkedin size={18} />
+              </a>
+            </div>
+              </div>
+            </motion.div>
+          ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA Section */}
+        {/* Testimonials Section */}
+        <section className="py-20 dark:bg-[#0F0F0F] bg-[#f8f4ff]">
+          <div className="max-w-7xl mx-auto px-6">
+            <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+            >
+          <h2 className="text-4xl md:text-5xl font-bold dark:text-white text-gray-800 mb-6">
+            O que nossos usuários dizem
+          </h2>
+          <p className="text-xl dark:text-gray-300 text-gray-600 max-w-3xl mx-auto">
+            Depoimentos reais de estudantes que transformaram sua experiência acadêmica com o EtecNotes
+          </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="dark:bg-[#1A1A1A] bg-white rounded-2xl p-6 shadow-lg"
+            >
+              <div className="flex items-center mb-4">
+            {[...Array(testimonial.rating)].map((_, i) => (
+              <Star key={i} size={16} className="text-yellow-400 fill-current" />
+            ))}
+              </div>
+              <p className="dark:text-gray-300 text-gray-600 mb-6 leading-relaxed">"{testimonial.content}"</p>
+              <div className="flex items-center gap-3">
+            <img
+              src={testimonial.avatar || "/placeholder.svg"}
+              alt={testimonial.name}
+              className="w-12 h-12 rounded-full object-cover"
+            />
+            <div>
+              <h4 className="font-semibold dark:text-white text-gray-800">{testimonial.name}</h4>
+              <p className="text-sm dark:text-gray-400 text-gray-600">{testimonial.role}</p>
+            </div>
+              </div>
+            </motion.div>
+          ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div

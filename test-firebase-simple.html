@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Firebase</title>
+</head>
+<body>
+    <h1>Teste de Conexão Firebase</h1>
+    <div id="status">Testando...</div>
+    <button onclick="testarLogin()">Testar Login</button>
+    
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyBTwYLOnCJAEqDAxxJGn_Yb1XnD0u1XWl0",
+            authDomain: "etecnotes.firebaseapp.com",
+            projectId: "etecnotes",
+            storageBucket: "etecnotes.firebasestorage.app",
+            messagingSenderId: "268058028102",
+            appId: "1:268058028102:web:4d953d3a48b7f2e6dff8bf",
+            measurementId: "G-GNHEMZSM1L"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        const statusDiv = document.getElementById('status');
+        
+        // Teste de inicialização
+        statusDiv.innerHTML += '<br>✅ Firebase inicializado';
+        statusDiv.innerHTML += '<br>📡 Projeto: ' + firebaseConfig.projectId;
+        statusDiv.innerHTML += '<br>🌐 Auth Domain: ' + firebaseConfig.authDomain;
+        
+        // Teste de DNS
+        fetch('https://etecnotes.firebaseapp.com/__/auth/handler')
+            .then(() => {
+                statusDiv.innerHTML += '<br>✅ DNS resolve corretamente';
+            })
+            .catch((error) => {
+                statusDiv.innerHTML += '<br>❌ Erro de DNS: ' + error.message;
+                statusDiv.innerHTML += '<br>⚠️ PROBLEMA: Seu navegador não consegue acessar o Firebase!';
+                statusDiv.innerHTML += '<br>💡 SOLUÇÕES:';
+                statusDiv.innerHTML += '<br>  1. Verifique sua conexão com a internet';
+                statusDiv.innerHTML += '<br>  2. Desative VPN/Proxy se estiver usando';
+                statusDiv.innerHTML += '<br>  3. Verifique se o firewall está bloqueando o Firebase';
+                statusDiv.innerHTML += '<br>  4. Tente em outro navegador';
+            });
+        
+        window.testarLogin = async function() {
+            try {
+                statusDiv.innerHTML += '<br>🔄 Tentando login...';
+                const userCredential = await signInWithEmailAndPassword(auth, 'aluno@teste.com', '123456');
+                statusDiv.innerHTML += '<br>✅ LOGIN OK! UID: ' + userCredential.user.uid;
+            } catch (error) {
+                statusDiv.innerHTML += '<br>❌ Erro no login: ' + error.code;
+                statusDiv.innerHTML += '<br>📝 Mensagem: ' + error.message;
+                
+                if (error.code === 'auth/network-request-failed') {
+                    statusDiv.innerHTML += '<br><br>🚨 DIAGNÓSTICO:';
+                    statusDiv.innerHTML += '<br>Seu computador não consegue conectar aos servidores do Firebase.';
+                    statusDiv.innerHTML += '<br><br>💡 SOLUÇÕES POSSÍVEIS:';
+                    statusDiv.innerHTML += '<br>1. Verifique se você está conectado à internet';
+                    statusDiv.innerHTML += '<br>2. Desative qualquer VPN ou proxy';
+                    statusDiv.innerHTML += '<br>3. Verifique configurações de firewall';
+                    statusDiv.innerHTML += '<br>4. Tente usar outra rede (ex: dados móveis)';
+                    statusDiv.innerHTML += '<br>5. Verifique se googleapis.com está acessível';
+                }
+            }
+        };
+    </script>
+</body>
+</html>

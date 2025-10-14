@@ -176,7 +176,7 @@ const EventsPage = () => {
             <div className="bg-[#58417d] dark:bg-[#58417d] rounded-3xl p-8 max-w-2xl w-full shadow-2xl border-2 border-[#8C43FF]/40 relative">
           <button
             onClick={() => setSelectedEvent(null)}
-            className="absolute top-4 right-4 px-3 py-1 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg shadow transition-colors z-50"
+            className="absolute top-4 right-4 px-4 py-1.5 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-full shadow transition-colors z-50"
           >
             Fechar
           </button>

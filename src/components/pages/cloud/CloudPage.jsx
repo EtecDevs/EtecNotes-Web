@@ -2,9 +2,9 @@
 
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Send, Bot, User, Loader2, Trash2, Copy, Music, Play, Pause, Volume2, GamepadIcon, Heart, Smile } from "lucide-react"
+import { Send, Bot, User, Loader2, Trash2, Copy, Music, Play, Pause, Volume2, VolumeX, Volume1, GamepadIcon, Heart, Smile, Timer } from "lucide-react"
 
-const CloudPage = () => {
+const CloudPage = ({ onOpenPomodoro }) => {
   const [activeTab, setActiveTab] = useState("iatec")
   
   // Estados da IATEC
@@ -26,6 +26,9 @@ const CloudPage = () => {
   const [currentMusic, setCurrentMusic] = useState(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentGame, setCurrentGame] = useState(null)
+  const [volume, setVolume] = useState(70) // Volume de 0 a 100
+  const [audioError, setAudioError] = useState(false) // Estado de erro do áudio
+  const audioRef = useRef(null) // Referência para o elemento de áudio
 
   // Do not autofocus when navigating to the page to avoid scrolling the viewport.
   // The user can click the input to focus when ready.
@@ -121,31 +124,162 @@ const CloudPage = () => {
   }
 
   const musicOptions = [
-    { id: 1, name: "Chuva Relaxante", duration: "30 min", type: "nature" },
-    { id: 2, name: "Sons da Floresta", duration: "45 min", type: "nature" },
-    { id: 3, name: "Meditação Guiada", duration: "15 min", type: "guided" },
-    { id: 4, name: "Ondas do Mar", duration: "60 min", type: "nature" },
-    { id: 5, name: "Música Instrumental", duration: "25 min", type: "music" },
+    { 
+      id: 1, 
+      name: "Chuva Relaxante", 
+      duration: "Loop contínuo", 
+      type: "nature",
+      // Som de chuva relaxante (domínio público)
+      url: "https://www.soundjay.com/nature/rain-03.mp3"
+    },
+    { 
+      id: 2, 
+      name: "Ruído de Cachoreira", 
+      duration: "Loop contínuo", 
+      type: "nature",
+      // Sons de pássaros e natureza
+      url: "https://www.soundjay.com/nature/waterfall-1.mp3"
+    },
+    { 
+      id: 3, 
+      name: "Piano Suave", 
+      duration: "Loop contínuo", 
+      type: "music",
+      // Piano relaxante
+      url: "https://cdn.pixabay.com/download/audio/2025/09/05/audio_6bf25415fa.mp3?filename=soft-piano-inspiration-399920.mp3"
+    },
+    { 
+      id: 4, 
+      name: "Ondas do Oceano", 
+      duration: "Loop contínuo", 
+      type: "nature",
+      // Som de ondas do mar
+      url: "https://www.soundjay.com/nature/sounds/ocean-wave-1.mp3"
+    },
+    { 
+      id: 5, 
+      name: "Vento Suave", 
+      duration: "Loop contínuo", 
+      type: "nature",
+      // Som de vento suave
+      url: "https://www.soundjay.com/nature/sounds/wind-1.mp3"
+    },
   ]
 
   const miniGames = [
     { id: 1, name: "Respiração Consciente", description: "Exercício de respiração 4-7-8", icon: Heart },
     { id: 2, name: "Mindfulness", description: "Atenção plena por 5 minutos", icon: Smile },
-    { id: 3, name: "Contagem Reversa", description: "Relaxamento progressivo", icon: GamepadIcon },
+    { id: 3, name: "Técnica Pomodoro", description: "Ciclos de foco e descanso", icon: Timer },
   ]
 
   const playMusic = (music) => {
+    // Pausar áudio anterior se existir
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    }
+    
+    setAudioError(false) // Resetar erro ao trocar de música
     setCurrentMusic(music)
     setIsPlaying(true)
   }
 
   const togglePlay = () => {
-    setIsPlaying(!isPlaying)
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause()
+      } else {
+        audioRef.current.play()
+      }
+      setIsPlaying(!isPlaying)
+    }
+  }
+
+  const handleVolumeChange = (newVolume) => {
+    setVolume(newVolume)
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume / 100
+    }
+  }
+
+  const toggleMute = () => {
+    if (volume > 0) {
+      // Salvar volume atual e mutar
+      setVolume(0)
+      if (audioRef.current) {
+        audioRef.current.volume = 0
+      }
+    } else {
+      // Restaurar para 70% ou último volume não-zero
+      setVolume(70)
+      if (audioRef.current) {
+        audioRef.current.volume = 0.7
+      }
+    }
+  }
+
+  const getVolumeIcon = () => {
+    if (volume === 0) return VolumeX
+    if (volume < 50) return Volume1
+    return Volume2
   }
 
   const startGame = (game) => {
-    setCurrentGame(game)
+    if (game.id === 3) {
+      // Pomodoro - abrir modal global
+      if (onOpenPomodoro) {
+        onOpenPomodoro()
+      }
+    } else {
+      setCurrentGame(game)
+    }
   }
+
+  // Efeito para carregar e preparar o áudio quando música muda
+  useEffect(() => {
+    if (currentMusic && audioRef.current) {
+      // Configurar volume
+      audioRef.current.volume = volume / 100
+      
+      // Tentar carregar o áudio
+      audioRef.current.load()
+      
+      // Se isPlaying for true, tentar tocar após carregar
+      if (isPlaying) {
+        const playPromise = audioRef.current.play()
+        if (playPromise !== undefined) {
+          playPromise.catch(err => {
+            console.error('⚠️ Não foi possível reproduzir o áudio:', err.message)
+            setIsPlaying(false)
+          })
+        }
+      }
+    }
+  }, [currentMusic])
+
+  // Efeito para atualizar volume
+  useEffect(() => {
+    if (audioRef.current && currentMusic) {
+      audioRef.current.volume = volume / 100
+    }
+  }, [volume, currentMusic])
+
+  // Efeito para controlar play/pause
+  useEffect(() => {
+    if (audioRef.current && currentMusic) {
+      if (isPlaying) {
+        const playPromise = audioRef.current.play()
+        if (playPromise !== undefined) {
+          playPromise.catch(err => {
+            console.error('⚠️ Erro ao reproduzir:', err.message)
+            setIsPlaying(false)
+          })
+        }
+      } else {
+        audioRef.current.pause()
+      }
+    }
+  }, [isPlaying, currentMusic])
 
   return (
     <div className="flex flex-col h-full bg-[#f3e8ff] dark:bg-[#121212]">
@@ -196,6 +330,46 @@ const CloudPage = () => {
             scrollbar-color: #8c43ff #f1f5f9;
             scrollbar-width: thin;
           }
+        }
+
+        /* Estilos do slider de volume - Compacto */
+        .slider::-webkit-slider-thumb {
+          appearance: none;
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #8C43FF;
+          cursor: pointer;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+          transition: all 0.2s ease;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+          background: #9955FF;
+          transform: scale(1.3);
+          box-shadow: 0 2px 6px rgba(140, 67, 255, 0.4);
+        }
+
+        .slider::-moz-range-thumb {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #8C43FF;
+          cursor: pointer;
+          border: none;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+          transition: all 0.2s ease;
+        }
+
+        .slider::-moz-range-thumb:hover {
+          background: #9955FF;
+          transform: scale(1.3);
+          box-shadow: 0 2px 6px rgba(140, 67, 255, 0.4);
+        }
+
+        /* Ajuste do background dinâmico para dark mode */
+        .dark .slider {
+          background: linear-gradient(to right, #8C43FF 0%, #8C43FF var(--volume), #4b5563 var(--volume), #4b5563 100%) !important;
         }
       `}</style>
 
@@ -371,35 +545,110 @@ const CloudPage = () => {
                 
                 {currentMusic && (
                   <div className="dark:bg-[#2D2D2D] bg-gray-100 rounded-2xl p-4 mb-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium dark:text-white text-gray-800">{currentMusic.name}</h4>
-                        <p className="text-sm dark:text-gray-400 text-gray-600">{currentMusic.duration}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
+                    {/* Elemento de áudio oculto */}
+                    <audio
+                      ref={audioRef}
+                      src={currentMusic.url}
+                      loop
+                      preload="auto"
+                      onError={(e) => {
+                        console.error('❌ Erro ao carregar áudio:', e.target.error)
+                        setAudioError(true)
+                        setIsPlaying(false)
+                      }}
+                      onCanPlay={() => {
+                        setAudioError(false)
+                      }}
+                      onEnded={() => setIsPlaying(false)}
+                    />
+                    
+                    <div className="space-y-3">
+                      {audioError && (
+                        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-2 mb-2">
+                          <p className="text-xs text-red-600 dark:text-red-400">
+                            ⚠️ Erro ao carregar o áudio. Tente outra música.
+                          </p>
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="font-medium dark:text-white text-gray-800">{currentMusic.name}</h4>
+                          <p className="text-sm dark:text-gray-400 text-gray-600">{currentMusic.duration}</p>
+                        </div>
                         <button
                           onClick={togglePlay}
-                          className="p-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-full transition-colors"
+                          disabled={audioError}
+                          className={`p-3 rounded-full transition-colors ${
+                            audioError 
+                              ? 'bg-gray-400 cursor-not-allowed' 
+                              : 'bg-[#8C43FF] hover:bg-[#9955FF] text-white'
+                          }`}
                         >
-                          {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+                          {isPlaying ? <Pause size={20} /> : <Play size={20} />}
                         </button>
-                        <Volume2 size={16} className="dark:text-gray-400 text-gray-600" />
+                      </div>
+                      
+                      {/* Controle de Volume - Compacto e Estilizado */}
+                      <div className="flex items-center gap-2 bg-gray-200 dark:bg-[#3D3D3D] rounded-full px-3 py-2 w-fit mx-auto">
+                        <button
+                          onClick={toggleMute}
+                          className="p-1.5 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-full transition-colors"
+                          title={volume === 0 ? "Ativar som" : "Silenciar"}
+                        >
+                          {(() => {
+                            const VolumeIcon = getVolumeIcon()
+                            return <VolumeIcon size={16} className="dark:text-gray-300 text-gray-700" />
+                          })()}
+                        </button>
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={volume}
+                          onChange={(e) => handleVolumeChange(Number(e.target.value))}
+                          className="w-24 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full appearance-none cursor-pointer slider"
+                          style={{
+                            background: `linear-gradient(to right, #8C43FF 0%, #8C43FF ${volume}%, #d1d5db ${volume}%, #d1d5db 100%)`
+                          }}
+                        />
+                        <span className="text-xs dark:text-gray-300 text-gray-700 w-8 text-center font-medium tabular-nums">
+                          {volume}%
+                        </span>
                       </div>
                     </div>
                   </div>
                 )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {musicOptions.map((music) => (
-                    <button
-                      key={music.id}
-                      onClick={() => playMusic(music)}
-                      className="p-4 dark:bg-[#2D2D2D] bg-gray-100 hover:bg-[#8C43FF] hover:text-white rounded-2xl transition-colors text-left"
-                    >
-                      <h4 className="font-medium mb-1">{music.name}</h4>
-                      <p className="text-sm opacity-70">{music.duration}</p>
-                    </button>
-                  ))}
+                  {musicOptions.map((music) => {
+                    const isActive = currentMusic?.id === music.id
+                    return (
+                      <button
+                        key={music.id}
+                        onClick={() => playMusic(music)}
+                        className={`p-4 rounded-2xl transition-all text-left border-2 ${
+                          isActive
+                            ? 'bg-[#8C43FF] text-white border-[#8C43FF] shadow-lg'
+                            : 'dark:bg-[#2D2D2D] bg-gray-100 border-transparent hover:bg-[#8C43FF] hover:text-white hover:border-[#8C43FF]'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-medium mb-1">{music.name}</h4>
+                            <p className="text-sm opacity-70">{music.duration}</p>
+                          </div>
+                          {isActive && isPlaying && (
+                            <div className="flex items-center gap-1">
+                              <div className="w-1 h-3 bg-white rounded-full animate-pulse" style={{animationDelay: '0ms'}}></div>
+                              <div className="w-1 h-4 bg-white rounded-full animate-pulse" style={{animationDelay: '150ms'}}></div>
+                              <div className="w-1 h-3 bg-white rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
+                            </div>
+                          )}
+                        </div>
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
 

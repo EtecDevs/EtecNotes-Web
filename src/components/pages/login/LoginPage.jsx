@@ -125,11 +125,19 @@ export default function LoginPage({ onLogin, onCancel }) {
   }
 
   const userTypes = [
-    { id: "aluno", label: "Aluno", icon: GraduationCap },
-    { id: "professor", label: "Professor", icon: Users },
-    { id: "etec", label: "Secretaria", icon: Building2 },
-    { id: "administrador", icon: Shield },
+    { id: "aluno", label: "Aluno", icon: GraduationCap, message: "Aluno" },
+    { id: "professor", label: "Professor", icon: Users, message: "Professor" },
+    { id: "etec", label: "Secretaria", icon: Building2, message: "Secretaria" },
+    { id: "administrador", icon: Shield, message: "Administrador" },
   ]
+
+  // Obter informações do tipo de usuário selecionado
+  const getCurrentUserType = () => {
+    return userTypes.find(type => type.id === userType) || userTypes[0]
+  }
+
+  const currentType = getCurrentUserType()
+  const CurrentIcon = currentType.icon
 
   return (
     <div className="relative isolate min-h-dvh flex items-center justify-center p-4">
@@ -145,19 +153,115 @@ export default function LoginPage({ onLogin, onCancel }) {
       </div>
 
   <div className="fixed z-10 w-full max-w-md left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl mb-4 shadow-lg">
-            <GraduationCap className="w-8 h-8 text-white" />
+        {/* Header Dinâmico com Animação - COMPACTADO */}
+        <div className="text-center mb-5">
+          {/* Ícone Animado que muda com o tipo de usuário - MENOR */}
+          <div 
+            key={userType} 
+            className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 via-purple-600 to-purple-700 rounded-3xl mb-3 shadow-2xl shadow-purple-500/50 animate-bounce-in relative overflow-hidden"
+          >
+            {/* Efeito de brilho */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 animate-shine" />
+            <CurrentIcon className="w-8 h-8 text-white relative z-10 animate-icon-pop" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-lg"></h1>
-          <p className="text-white">Acesse sua conta</p>
+          
+          {/* Mensagem Dinâmica com Animação - MENOR */}
+          <div className="overflow-hidden">
+            <h1 
+              key={`title-${userType}`}
+              className="text-2xl font-bold text-white mb-1 drop-shadow-lg animate-slide-down"
+            >
+              Entre como {currentType.message}!
+            </h1>
+          </div>
+          
+          <p className="text-white/90 text-xs font-medium animate-fade-in">
+            Acesse sua conta para continuar
+          </p>
         </div>
 
+        {/* CSS para animações */}
+        <style jsx>{`
+          @keyframes bounce-in {
+            0% {
+              transform: scale(0) rotate(-180deg);
+              opacity: 0;
+            }
+            50% {
+              transform: scale(1.1) rotate(10deg);
+            }
+            100% {
+              transform: scale(1) rotate(0deg);
+              opacity: 1;
+            }
+          }
+
+          @keyframes icon-pop {
+            0% {
+              transform: scale(0.8);
+            }
+            50% {
+              transform: scale(1.1);
+            }
+            100% {
+              transform: scale(1);
+            }
+          }
+
+          @keyframes slide-down {
+            from {
+              transform: translateY(-20px);
+              opacity: 0;
+            }
+            to {
+              transform: translateY(0);
+              opacity: 1;
+            }
+          }
+
+          @keyframes fade-in {
+            from {
+              opacity: 0;
+            }
+            to {
+              opacity: 1;
+            }
+          }
+
+          @keyframes shine {
+            0% {
+              transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+            100% {
+              transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+          }
+
+          .animate-bounce-in {
+            animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          }
+
+          .animate-icon-pop {
+            animation: icon-pop 0.4s ease-out 0.2s;
+          }
+
+          .animate-slide-down {
+            animation: slide-down 0.5s ease-out;
+          }
+
+          .animate-fade-in {
+            animation: fade-in 0.6s ease-out 0.3s both;
+          }
+
+          .animate-shine {
+            animation: shine 2s ease-in-out infinite;
+          }
+        `}</style>
+
         <Card className="bg-gray-800/90 backdrop-blur-xl border-gray-600 shadow-2xl">
-          <CardContent className="p-6">
-            {/* User Type Tabs */}
-            <div className="flex bg-gray-700/50 rounded-xl overflow-hidden h-12 mb-6">
+          <CardContent className="p-4">
+            {/* User Type Tabs - COMPACTADO */}
+            <div className="flex bg-gray-700/50 rounded-xl overflow-hidden h-10 mb-4">
               {userTypes.map((type, idx) => {
                 const Icon = type.icon
                 const isActive = userType === type.id
@@ -253,11 +357,11 @@ export default function LoginPage({ onLogin, onCancel }) {
 
 
 
-            {/* Login Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Login Form - ESPAÇAMENTO REDUZIDO */}
+            <form onSubmit={handleSubmit} className="space-y-3">
               {/* Email Field */}
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-white font-medium">
+              <div className="space-y-1.5">
+                <Label htmlFor="email" className="text-white font-medium text-sm">
                   Email
                 </Label>
                 <Input
@@ -266,17 +370,17 @@ export default function LoginPage({ onLogin, onCancel }) {
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   className="bg-gray-700/50 border-gray-500 text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20"
-                  placeholder="seu-e</button>mail@etec.sp.gov.br"
+                  placeholder="Digite seu Email"
                   required
                 />
               </div>
 
               {/* RM Field (only for aluno) */}
               {userType === "aluno" && (
-                <div className="space-y-2">
-                  <Label htmlFor="rm" className="text-white font-medium">
+                <div className="space-y-1.5">
+                  <Label htmlFor="rm" className="text-white font-medium text-sm">
                     RM
-                  </Label>
+                  </Label>0
                   <Input
                     id="rm"
                     type="text"
@@ -287,12 +391,12 @@ export default function LoginPage({ onLogin, onCancel }) {
                     required
                   />
                 </div>
-              )}
+              )}  
 
               {/* Password Field */}
-              <div className="space-y-2">
-                <Label htmlFor="senha" className="text-white font-medium">
-                  {userType === "administrador" ? "Senha (opcional para administrador)" : "Senha"}
+              <div className="space-y-1.5">
+                <Label htmlFor="senha" className="text-white font-medium text-sm">
+                  {userType === "administrador" ? "Senha (opcional)" : "Senha"}
                 </Label>
                 <div className="relative">
                   <Input
@@ -301,7 +405,7 @@ export default function LoginPage({ onLogin, onCancel }) {
                     value={formData.senha}
                     onChange={(e) => handleInputChange("senha", e.target.value)}
                     className="bg-gray-700/50 border-gray-500 text-white placeholder:text-gray-300 focus:border-purple-400 focus:ring-purple-400/20 pr-10"
-                    placeholder={userType === "administrador" ? "Deixe em branco para acesso direto" : "Digite sua senha"}
+                    placeholder={userType === "administrador" ? "Deixe em branco para acesso direto" : "Digite sua Senha"}
                     required={userType !== "administrador"}
                   />
                   <button
@@ -319,25 +423,25 @@ export default function LoginPage({ onLogin, onCancel }) {
                 )}
               </div>
 
-              {/* Submit Button */}
+              {/* Submit Button - COMPACTADO */}
               <Button
                 type="submit"
                 disabled={localLoading || loading}
-                className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm"
               >
                 {(localLoading || loading) ? "Entrando..." : "Entrar"}
               </Button>
             </form>
 
-            {/* Footer Links */}
-            <div className="mt-6 text-center space-y-2">
-              <button className="text-white hover:text-purple-300 text-sm transition-colors block w-full">
+            {/* Footer Links - COMPACTADO */}
+            <div className="mt-4 text-center space-y-1">
+              <button className="text-white hover:text-purple-300 text-xs transition-colors block w-full">
                 Esqueceu sua senha?
               </button>
               <button
                 type="button"
                 onClick={onCancel}
-                className="mt-2 text-gray-300 hover:text-white text-xs px-3 py-1 rounded transition-colors bg-transparent border-none"
+                className="text-gray-300 hover:text-white text-xs px-3 py-0.5 rounded transition-colors bg-transparent border-none"
                 style={{textDecoration: 'underline', opacity: 0.8}}
               >
                 Voltar ao início
@@ -346,9 +450,9 @@ export default function LoginPage({ onLogin, onCancel }) {
           </CardContent>
         </Card>
 
-        {/* Footer */}
-        <div className="text-center mt-6">
-          <p className="text-white text-sm">Sistema de Gestão Educacional ETEC</p>
+        {/* Footer - COMPACTADO */}
+        <div className="text-center mt-4">
+          <p className="text-white text-xs">Sistema de Gestão Educacional ETEC</p>
         </div>
       </div>
     </div>

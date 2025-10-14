@@ -12,7 +12,7 @@ const ForumSidebar = ({ courses, selectedCourse, onSelectCourse, currentUser }) 
       {/* Header com gradiente moderno */}
       <div className="p-5 border-b dark:border-gray-700/50 border-gray-300/50 bg-gradient-to-r from-[#8C43FF] via-[#7B3FE4] to-[#6B32C3] shadow-lg">
         <div className="flex items-center justify-between mb-1">
-          <h1 className="text-2xl font-bold text-white tracking-tight">EtecNotes</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">TecTalk</h1>
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-lg shadow-green-400/50" title="Online" />
         </div>
         <p className="text-sm text-white/90 font-medium">Fórum Estudantil</p>

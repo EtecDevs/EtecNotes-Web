@@ -12,8 +12,10 @@ class AuthService {
       console.log('Iniciando login Firebase:', { email, role });
 
       // Lógica especial para administrador (sem senha ou senha vazia)
-      if (role === 'ADMINISTRADOR' && email === 'adm@teste.com' && (!password || password.trim() === '')) {
-        console.log('Login de administrador sem senha detectado');
+      // Aceita tanto 'adm@teste.com' quanto 'admin@teste.com'
+      const isAdminEmail = email === 'adm@teste.com' || email === 'admin@teste.com';
+      if (role === 'ADMINISTRADOR' && isAdminEmail && (!password || password.trim() === '')) {
+        console.log('🔑 Login de administrador sem senha detectado');
         return await this.loginAdminWithoutPassword(email, role);
       }
 
@@ -30,7 +32,7 @@ class AuthService {
       const firebaseTestUsers = {
         'aluno@teste.com': { role: 'aluno', nome: 'João Santos (Aluno)' },
         'professor@teste.com': { role: 'professor', nome: 'Maria Silva (Professor)' },
-        'admin@teste.com': { role: 'admin', nome: 'Admin Master' },
+        'admin@teste.com': { role: 'ADMINISTRADOR', nome: 'Admin Master' },  // Corrigido para ADMINISTRADOR
         'dev@teste.com': { role: 'dev', nome: 'Dev EtecNotes' }
       };
 
@@ -131,6 +133,9 @@ class AuthService {
       if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
         error.message = 'Email ou senha incorretos';
         error.suggestion = 'Verifique suas credenciais e tente novamente.';
+      } else if (error.code === 'auth/missing-password') {
+        error.message = 'Senha obrigatória';
+        error.suggestion = 'Para administrador, deixe o campo de senha vazio. Para outros usuários, digite a senha.';
       } else if (error.code === 'auth/too-many-requests') {
         error.message = 'Muitas tentativas de login';
         error.suggestion = 'Aguarde alguns minutos antes de tentar novamente.';
@@ -155,12 +160,13 @@ class AuthService {
   // Login especial para administrador sem senha
   async loginAdminWithoutPassword(email, role) {
     try {
-      console.log('Processando login de administrador sem senha');
+      console.log('🔑 Processando login de administrador sem senha');
 
-      // Verificar se é o email do administrador cadastrado
-      if (email !== 'adm@teste.com') {
+      // Verificar se é o email do administrador cadastrado (aceita adm ou admin)
+      const isValidAdminEmail = email === 'adm@teste.com' || email === 'admin@teste.com';
+      if (!isValidAdminEmail) {
         const error = new Error('Email de administrador não reconhecido');
-        error.suggestion = 'Verifique se o email está correto. Use adm@teste.com';
+        error.suggestion = 'Verifique se o email está correto. Use adm@teste.com ou admin@teste.com';
         throw error;
       }
 
@@ -168,8 +174,8 @@ class AuthService {
       // Document ID: XbL499e4XVZm4iGA2hyIcmZWioq2
       const adminUser = {
         id: 'XbL499e4XVZm4iGA2hyIcmZWioq2',
-        nome: 'Adm God',
-        email: 'adm@teste.com',
+        nome: 'Admin Master',
+        email: email, // Usar o email fornecido (adm ou admin)
         role: 'ADMINISTRADOR',
         active: true,
         isBootstrap: true,

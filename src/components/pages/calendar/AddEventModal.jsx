@@ -55,7 +55,7 @@ const AddEventModal = ({ isOpen, onClose, onSave, selectedDate }) => {
             name="title"
             value={eventData.title}
             onChange={handleChange}
-            className="w-full p-2 border rounded-lg dark:bg-[#2D2D2D] dark:border-[#3D3D3D] dark:text-white bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#8C43FF]"
+            className="w-full p-2.5 border rounded-full dark:bg-[#2D2D2D] dark:border-[#3D3D3D] dark:text-white bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#8C43FF]"
             placeholder="Título do evento"
             required
           />
@@ -72,7 +72,7 @@ const AddEventModal = ({ isOpen, onClose, onSave, selectedDate }) => {
               name="time"
               value={eventData.time}
               onChange={handleChange}
-              className="w-full p-2 pl-8 border rounded-lg dark:bg-[#2D2D2D] dark:border-[#3D3D3D] dark:text-white bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#8C43FF]"
+              className="w-full p-2.5 pl-9 border rounded-full dark:bg-[#2D2D2D] dark:border-[#3D3D3D] dark:text-white bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#8C43FF]"
             />
             <Clock
               size={16}
@@ -90,7 +90,7 @@ const AddEventModal = ({ isOpen, onClose, onSave, selectedDate }) => {
             name="type"
             value={eventData.type}
             onChange={handleChange}
-            className="w-full p-2 border rounded-lg dark:bg-[#2D2D2D] dark:border-[#3D3D3D] dark:text-white bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#8C43FF]"
+            className="w-full p-2.5 border rounded-full dark:bg-[#2D2D2D] dark:border-[#3D3D3D] dark:text-white bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#8C43FF]"
           >
             <option value="event">Evento</option>
             <option value="reminder">Lembrete</option>
@@ -108,7 +108,7 @@ const AddEventModal = ({ isOpen, onClose, onSave, selectedDate }) => {
             value={eventData.description}
             onChange={handleChange}
             rows="3"
-            className="w-full p-2 border rounded-lg dark:bg-[#2D2D2D] dark:border-[#3D3D3D] dark:text-white bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#8C43FF]"
+            className="w-full p-2.5 border rounded-2xl dark:bg-[#2D2D2D] dark:border-[#3D3D3D] dark:text-white bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#8C43FF]"
             placeholder="Descrição do evento"
           ></textarea>
         </div>
@@ -117,13 +117,13 @@ const AddEventModal = ({ isOpen, onClose, onSave, selectedDate }) => {
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium rounded-lg dark:bg-[#2D2D2D] dark:text-white dark:hover:bg-[#3D3D3D] bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+            className="px-4 py-2 text-sm font-medium rounded-full dark:bg-[#2D2D2D] dark:text-white dark:hover:bg-[#3D3D3D] bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
           >
             Cancelar
           </button>
           <button
             type="submit"
-            className="px-4 py-2 text-sm font-medium text-white rounded-lg bg-[#8C43FF] hover:bg-[#9955FF] transition-colors"
+            className="px-4 py-2 text-sm font-medium text-white rounded-full bg-[#8C43FF] hover:bg-[#9955FF] transition-colors"
           >
             Salvar
           </button>
