@@ -571,6 +571,16 @@ function AppContent() {
       const target = e.target
       const tagName = target.tagName
       
+      // 🔥 EXCEÇÃO: Permitir foco em inputs e elementos interativos
+      if (tagName === 'INPUT' || 
+          tagName === 'TEXTAREA' || 
+          tagName === 'BUTTON' ||
+          tagName === 'SELECT' ||
+          tagName === 'A' ||
+          target.contentEditable === 'true') {
+        return // Permite foco normal
+      }
+      
       // Prevenir foco em elementos estruturais
       if (tagName === 'BODY' || 
           tagName === 'HTML' || 

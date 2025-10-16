@@ -52,7 +52,7 @@ const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
             <h2 className="text-xl font-semibold dark:text-white text-gray-900">{title}</h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-[#21262D] rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-[#21262D] rounded-2xl transition-colors"
             >
               <X size={20} className="dark:text-gray-400 text-gray-600" />
             </button>
@@ -253,7 +253,7 @@ const TeacherDashboard = ({ teacherData }) => {
             type="text"
             value={newEvent.title}
             onChange={handleTitleChange}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             placeholder="Ex: Prova de JavaScript, Apresentação de Projeto..."
           />
         </div>
@@ -265,7 +265,7 @@ const TeacherDashboard = ({ teacherData }) => {
               type="date"
               value={newEvent.date}
               onChange={handleDateChange}
-              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             />
           </div>
           <div>
@@ -274,7 +274,7 @@ const TeacherDashboard = ({ teacherData }) => {
               type="time"
               value={newEvent.time}
               onChange={handleTimeChange}
-              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             />
           </div>
         </div>
@@ -285,7 +285,7 @@ const TeacherDashboard = ({ teacherData }) => {
             type="text"
             value={newEvent.type}
             onChange={handleTypeChange}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             placeholder="Ex: Prova, Trabalho, Apresentação, Seminário..."
           />
         </div>
@@ -297,7 +297,7 @@ const TeacherDashboard = ({ teacherData }) => {
           <textarea
             value={newEvent.description}
             onChange={handleDescriptionChange}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             rows="3"
             placeholder="Detalhes adicionais sobre o evento..."
           />
@@ -306,13 +306,13 @@ const TeacherDashboard = ({ teacherData }) => {
         <div className="flex gap-3 pt-4">
           <button
             onClick={closeModal}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
           >
             Cancelar
           </button>
           <button
             onClick={handleAddEvent}
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
+            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-2xl transition-colors"
           >
             Adicionar Evento
           </button>
@@ -344,9 +344,9 @@ const TeacherDashboard = ({ teacherData }) => {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
+          <div className="p-4 dark:bg-[#0D1117] bg-gray-100 rounded-3xl">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-500/10 rounded-lg">
+              <div className="p-2 bg-blue-500/10 rounded-2xl">
                 <BookOpen size={20} className="text-blue-500" />
               </div>
               <div>
@@ -356,9 +356,9 @@ const TeacherDashboard = ({ teacherData }) => {
             </div>
           </div>
 
-          <div className="p-4 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
+          <div className="p-4 dark:bg-[#0D1117] bg-gray-100 rounded-3xl">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-500/10 rounded-lg">
+              <div className="p-2 bg-green-500/10 rounded-2xl">
                 <Users size={20} className="text-green-500" />
               </div>
               <div>
@@ -370,9 +370,9 @@ const TeacherDashboard = ({ teacherData }) => {
             </div>
           </div>
 
-          <div className="p-4 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
+          <div className="p-4 dark:bg-[#0D1117] bg-gray-100 rounded-3xl">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-500/10 rounded-lg">
+              <div className="p-2 bg-purple-500/10 rounded-2xl">
                 <Calendar size={20} className="text-purple-500" />
               </div>
               <div>
@@ -402,8 +402,8 @@ const TeacherDashboard = ({ teacherData }) => {
             .map((event) => {
               const eventClass = teacherClasses.find((cls) => cls.id === event.classId)
               return (
-                <div key={event.id} className="flex items-center gap-4 p-3 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
-                  <div className="p-2 bg-[#8C43FF]/10 rounded-lg">
+                <div key={event.id} className="flex items-center gap-4 p-3 dark:bg-[#0D1117] bg-gray-100 rounded-3xl">
+                  <div className="p-2 bg-[#8C43FF]/10 rounded-2xl">
                     <Calendar size={16} className="text-[#8C43FF]" />
                   </div>
                   <div className="flex-1">
@@ -475,7 +475,7 @@ const TeacherDashboard = ({ teacherData }) => {
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-[#8C43FF]/10 rounded-xl">
+                  <div className="p-3 bg-[#8C43FF]/10 rounded-3xl">
                     <BookOpen size={24} className="text-[#8C43FF]" />
                   </div>
                   <div>
@@ -504,7 +504,7 @@ const TeacherDashboard = ({ teacherData }) => {
                       setSelectedClassCalendar(classItem)
                       setActiveSection("calendar")
                     }}
-                    className="px-3 py-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors text-sm font-medium"
+                    className="px-3 py-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-2xl transition-colors text-sm font-medium"
                   >
                     Ver Calendário
                   </button>
@@ -535,7 +535,7 @@ const TeacherDashboard = ({ teacherData }) => {
                       {classItem.students_list.map((student) => (
                         <div
                           key={student.id}
-                          className="flex items-center gap-3 p-3 dark:bg-[#0D1117] bg-gray-100 rounded-xl"
+                          className="flex items-center gap-3 p-3 dark:bg-[#0D1117] bg-gray-100 rounded-3xl"
                         >
                           <img
                             src={student.avatar || "/placeholder.svg"}
@@ -580,7 +580,7 @@ const TeacherDashboard = ({ teacherData }) => {
                 const selectedClass = teacherClasses.find((cls) => cls.id === Number.parseInt(e.target.value))
                 setSelectedClassCalendar(selectedClass)
               }}
-              className="px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              className="px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             >
               {teacherClasses.map((cls) => (
                 <option key={cls.id} value={cls.id}>
@@ -593,7 +593,7 @@ const TeacherDashboard = ({ teacherData }) => {
                 setSelectedClassCalendar(currentClass)
                 setShowAddEventModal(true)
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-2xl transition-colors"
             >
               <Plus size={18} />
               Adicionar Evento
@@ -607,10 +607,10 @@ const TeacherDashboard = ({ teacherData }) => {
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold dark:text-white text-gray-900">Janeiro 2025</h3>
               <div className="flex gap-2">
-                <button className="p-2 dark:bg-[#21262D] bg-gray-100 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
+                <button className="p-2 dark:bg-[#21262D] bg-gray-100 rounded-2xl hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
                   ←
                 </button>
-                <button className="p-2 dark:bg-[#21262D] bg-gray-100 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
+                <button className="p-2 dark:bg-[#21262D] bg-gray-100 rounded-2xl hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
                   →
                 </button>
               </div>
@@ -638,7 +638,7 @@ const TeacherDashboard = ({ teacherData }) => {
                 return (
                   <div
                     key={i}
-                    className={`aspect-square flex items-center justify-center text-sm rounded-lg cursor-pointer transition-colors ${
+                    className={`aspect-square flex items-center justify-center text-sm rounded-2xl cursor-pointer transition-colors ${
                       isCurrentMonth
                         ? hasEvent
                           ? "bg-[#8C43FF] text-white"
@@ -659,7 +659,7 @@ const TeacherDashboard = ({ teacherData }) => {
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {classEvents.length > 0 ? (
                 classEvents.map((event) => (
-                  <div key={event.id} className="p-3 dark:bg-[#0D1117] bg-gray-100 rounded-xl">
+                  <div key={event.id} className="p-3 dark:bg-[#0D1117] bg-gray-100 rounded-3xl">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
@@ -718,7 +718,7 @@ const TeacherDashboard = ({ teacherData }) => {
         <div className="w-64 dark:bg-[#1E1E1E] bg-white border-r dark:border-[#30363D] border-gray-200 min-h-screen">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-8">
-              <div className="p-2 bg-[#8C43FF] rounded-xl">
+              <div className="p-2 bg-[#8C43FF] rounded-3xl">
                 <GraduationCap size={24} className="text-white" />
               </div>
               <div>
@@ -730,7 +730,7 @@ const TeacherDashboard = ({ teacherData }) => {
             <nav className="space-y-2">
               <button
                 onClick={() => setActiveSection("home")}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-3xl font-medium transition-all ${
                   activeSection === "home"
                     ? "bg-[#8C43FF] text-white"
                     : "dark:text-gray-400 text-gray-600 hover:bg-gray-100 dark:hover:bg-[#21262D]"
@@ -742,7 +742,7 @@ const TeacherDashboard = ({ teacherData }) => {
 
               <button
                 onClick={() => setActiveSection("classes")}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-3xl font-medium transition-all ${
                   activeSection === "classes"
                     ? "bg-[#8C43FF] text-white"
                     : "dark:text-gray-400 text-gray-600 hover:bg-gray-100 dark:hover:bg-[#21262D]"
@@ -754,7 +754,7 @@ const TeacherDashboard = ({ teacherData }) => {
 
               <button
                 onClick={() => setActiveSection("calendar")}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-3xl font-medium transition-all ${
                   activeSection === "calendar"
                     ? "bg-[#8C43FF] text-white"
                     : "dark:text-gray-400 text-gray-600 hover:bg-gray-100 dark:hover:bg-[#21262D]"
@@ -770,7 +770,7 @@ const TeacherDashboard = ({ teacherData }) => {
                   await logout();
                   window.location.href = "/";
                 }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all dark:text-gray-400 text-gray-600 hover:bg-red-100 dark:hover:bg-red-900/20 mt-8"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-3xl font-medium transition-all dark:text-gray-400 text-gray-600 hover:bg-red-100 dark:hover:bg-red-900/20 mt-8"
               >
                 <X size={20} className="text-red-500" />
                 <span className="text-red-500">Sair</span>

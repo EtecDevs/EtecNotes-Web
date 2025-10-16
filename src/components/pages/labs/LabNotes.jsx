@@ -701,7 +701,7 @@ const LabsControlPage = ({ userType = "teacher", userData }) => {
                   <option value="">Selecione um laboratório</option>
                   {labs.map((lab) => (
                     <option key={lab.id} value={lab.id}>
-                      {lab.nome} ({lab.capacidade} lugares)
+                      {lab.nome} {lab.capacidade} 
                     </option>
                   ))}
                 </select>

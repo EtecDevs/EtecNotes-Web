@@ -87,7 +87,7 @@ const Modal = ({ isOpen, onClose, title, children, size = "md" }) => {
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-2xl transition-colors"
             >
               <X size={20} className="text-gray-500 dark:text-gray-400" />
             </button>
@@ -777,7 +777,7 @@ const EtecDashboard = ({ onLogout }) => {
       className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200"
     >
       <div className="flex items-center justify-between mb-4">
-        <div className={`p-3 rounded-xl ${color}`}>
+        <div className={`p-3 rounded-3xl ${color}`}>
           <Icon size={24} className="text-white" />
         </div>
         {trend && (
@@ -842,7 +842,7 @@ const EtecDashboard = ({ onLogout }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <button
             onClick={() => openModal('createUser')}
-            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-[#E1E1E1] rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-[#E1E1E1] rounded-3xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
           >
             <UserPlus className="text-[#8C43FF]" size={24} />
             <div className="text-left">
@@ -853,7 +853,7 @@ const EtecDashboard = ({ onLogout }) => {
 
           <button
             onClick={() => openModal('createTurma')}
-            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-[#E1E1E1] rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-[#E1E1E1] rounded-3xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
           >
             <BookOpen className="text-[#8C43FF]" size={24} />
             <div className="text-left">
@@ -864,7 +864,7 @@ const EtecDashboard = ({ onLogout }) => {
 
           <button
             onClick={() => openModal('createEvent')}
-            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-[#E1E1E1] rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-[#E1E1E1] rounded-3xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
           >
             <Calendar className="text-[#8C43FF]" size={24} />
             <div className="text-left">
@@ -875,7 +875,7 @@ const EtecDashboard = ({ onLogout }) => {
 
           <button
             onClick={() => openModal('sendNotification')}
-            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-[#E1E1E1] rounded-xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+            className="flex items-center gap-3 p-4 dark:bg-[#0D1117] bg-[#E1E1E1] rounded-3xl hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
           >
             <Bell className="text-[#8C43FF]" size={24} />
             <div className="text-left">
@@ -892,7 +892,7 @@ const EtecDashboard = ({ onLogout }) => {
           <h3 className="text-lg font-semibold dark:text-white text-gray-900 mb-4">Atividade Recente</h3>
           <div className="space-y-4">
             <div className="flex items-start gap-3">
-              <div className="p-2 bg-green-500/10 rounded-lg">
+              <div className="p-2 bg-green-500/10 rounded-2xl">
                 <UserPlus size={16} className="text-green-500" />
               </div>
               <div>
@@ -902,7 +902,7 @@ const EtecDashboard = ({ onLogout }) => {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="p-2 bg-blue-500/10 rounded-lg">
+              <div className="p-2 bg-blue-500/10 rounded-2xl">
                 <Calendar size={16} className="text-blue-500" />
               </div>
               <div>
@@ -912,7 +912,7 @@ const EtecDashboard = ({ onLogout }) => {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="p-2 bg-purple-500/10 rounded-lg">
+              <div className="p-2 bg-purple-500/10 rounded-2xl">
                 <Bell size={16} className="text-purple-500" />
               </div>
               <div>
@@ -935,7 +935,7 @@ const EtecDashboard = ({ onLogout }) => {
               </div>
             ) : eventos.slice(0, 3).map((evento, index) => (
               <div key={index} className="flex items-center gap-3">
-                <div className="p-2 bg-[#8C43FF]/10 rounded-lg">
+                <div className="p-2 bg-[#8C43FF]/10 rounded-2xl">
                   <Calendar size={16} className="text-[#8C43FF]" />
                 </div>
                 <div className="flex-1">
@@ -964,14 +964,14 @@ const EtecDashboard = ({ onLogout }) => {
               placeholder="Buscar usuários..."
               value={filters.searchTerm}
               onChange={(e) => setFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
-              className="px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              className="px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             />
           </div>
           
           <select
             value={filters.userType}
             onChange={(e) => setFilters(prev => ({ ...prev, userType: e.target.value }))}
-            className="px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+            className="px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
           >
             <option value="todos">Todos</option>
             <option value="aluno">Alunos</option>
@@ -981,7 +981,7 @@ const EtecDashboard = ({ onLogout }) => {
 
           <button
             onClick={() => openModal('importUsers')}
-            className="flex items-center gap-2 px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors"
+            className="flex items-center gap-2 px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-3xl hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors"
           >
             <Upload size={18} />
             Importar
@@ -989,7 +989,7 @@ const EtecDashboard = ({ onLogout }) => {
 
           <button
             onClick={() => openModal('createUser')}
-            className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-3xl transition-colors"
           >
             <Plus size={18} />
             Novo Usuário
@@ -1067,13 +1067,13 @@ const EtecDashboard = ({ onLogout }) => {
                       <div className="flex gap-2">
                         <button
                           onClick={() => {/* handleEditUser(usuario) */}}
-                          className="p-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors"
+                          className="p-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-2xl transition-colors"
                         >
                           <Edit size={16} />
                         </button>
                         <button
                           onClick={() => handleDeleteUser(usuario.id)}
-                          className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                          className="p-2 text-red-500 hover:bg-red-500/10 rounded-2xl transition-colors"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -1094,7 +1094,7 @@ const EtecDashboard = ({ onLogout }) => {
         <h2 className="text-2xl font-bold dark:text-white text-gray-900">Gestão de Turmas</h2>
         <button
           onClick={() => openModal('createTurma')}
-          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-3xl transition-colors"
         >
           <Plus size={18} />
           Nova Turma
@@ -1109,7 +1109,7 @@ const EtecDashboard = ({ onLogout }) => {
             <p className="dark:text-gray-500 text-gray-500 text-center max-w-md">Ainda não há turmas cadastradas no sistema. Comece criando a primeira turma.</p>
             <button
               onClick={() => openModal('createTurma')}
-              className="mt-4 flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+              className="mt-4 flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-3xl transition-colors"
             >
               <Plus size={18} />
               Criar Primeira Turma
@@ -1141,14 +1141,14 @@ const EtecDashboard = ({ onLogout }) => {
             )}
 
             <div className="flex gap-2">
-              <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors text-sm">
+              <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-2xl hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors text-sm">
                 <Users size={16} />
                 Ver Alunos
               </button>
-              <button className="flex items-center justify-center gap-2 px-3 py-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors text-sm">
+              <button className="flex items-center justify-center gap-2 px-3 py-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-2xl transition-colors text-sm">
                 <Edit size={16} />
               </button>
-              <button className="flex items-center justify-center gap-2 px-3 py-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors text-sm">
+              <button className="flex items-center justify-center gap-2 px-3 py-2 text-red-500 hover:bg-red-500/10 rounded-2xl transition-colors text-sm">
                 <Trash2 size={16} />
               </button>
             </div>
@@ -1164,7 +1164,7 @@ const EtecDashboard = ({ onLogout }) => {
         <h2 className="text-2xl font-bold dark:text-white text-gray-900">Gestão de Eventos</h2>
         <button
           onClick={() => openModal('createEvent')}
-          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-3xl transition-colors"
         >
           <Plus size={18} />
           Novo Evento
@@ -1179,7 +1179,7 @@ const EtecDashboard = ({ onLogout }) => {
             <p className="dark:text-gray-500 text-gray-500 text-center max-w-md">Ainda não há eventos cadastrados no sistema. Comece criando o primeiro evento.</p>
             <button
               onClick={() => openModal('createEvent')}
-              className="mt-4 flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+              className="mt-4 flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-3xl transition-colors"
             >
               <Plus size={18} />
               Criar Primeiro Evento
@@ -1226,10 +1226,10 @@ const EtecDashboard = ({ onLogout }) => {
               </span>
 
               <div className="flex gap-2">
-                <button className="p-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-lg transition-colors">
+                <button className="p-2 text-[#8C43FF] hover:bg-[#8C43FF]/10 rounded-2xl transition-colors">
                   <Edit size={16} />
                 </button>
-                <button className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
+                <button className="p-2 text-red-500 hover:bg-red-500/10 rounded-2xl transition-colors">
                   <Trash2 size={16} />
                 </button>
               </div>
@@ -1246,7 +1246,7 @@ const EtecDashboard = ({ onLogout }) => {
         <h2 className="text-2xl font-bold dark:text-white text-gray-900">Notificações</h2>
         <button
           onClick={() => openModal('sendNotification')}
-          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-3xl transition-colors"
         >
           <Send size={18} />
           Nova Notificação
@@ -1261,7 +1261,7 @@ const EtecDashboard = ({ onLogout }) => {
             <p className="dark:text-gray-500 text-gray-500 text-center max-w-md">Ainda não há notificações no sistema. Envie a primeira notificação para os usuários.</p>
             <button
               onClick={() => openModal('sendNotification')}
-              className="mt-4 flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+              className="mt-4 flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-3xl transition-colors"
             >
               <Send size={18} />
               Enviar Primeira Notificação
@@ -1276,7 +1276,7 @@ const EtecDashboard = ({ onLogout }) => {
           >
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
-                <div className={`p-3 rounded-xl ${
+                <div className={`p-3 rounded-3xl ${
                   notification.tipo === 'urgente' ? 'bg-red-500/10' :
                   notification.tipo === 'aviso' ? 'bg-yellow-500/10' :
                   'bg-blue-500/10'
@@ -1300,7 +1300,7 @@ const EtecDashboard = ({ onLogout }) => {
                   </div>
                 </div>
               </div>
-              <button className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors">
+              <button className="p-2 text-red-500 hover:bg-red-500/10 rounded-2xl transition-colors">
                 <Trash2 size={16} />
               </button>
             </div>
@@ -1340,7 +1340,7 @@ const EtecDashboard = ({ onLogout }) => {
                   <div className="w-64 flex-shrink-0">
                     {isComprovantePDF ? (
                       // Se for PDF, mostra um iframe ou ícone
-                      <div className="w-full h-40 rounded-lg border dark:border-[#30363D] border-gray-200 overflow-hidden bg-gray-100 dark:bg-[#0D1117]">
+                      <div className="w-full h-40 rounded-2xl border dark:border-[#30363D] border-gray-200 overflow-hidden bg-gray-100 dark:bg-[#0D1117]">
                         <iframe
                           src={comprovante.comprovante}
                           className="w-full h-full"
@@ -1352,12 +1352,12 @@ const EtecDashboard = ({ onLogout }) => {
                       <img
                         src={comprovante.comprovante || "/placeholder.svg"}
                         alt="Comprovante"
-                        className="w-full h-40 object-cover rounded-lg border dark:border-[#30363D] border-gray-200"
+                        className="w-full h-40 object-cover rounded-2xl border dark:border-[#30363D] border-gray-200"
                       />
                     )}
                     <button 
                       onClick={() => window.open(comprovante.comprovante, '_blank')}
-                      className="mt-2 w-full px-4 py-2 text-sm text-[#8C43FF] hover:text-[#9955FF] flex items-center justify-center gap-2 border dark:border-[#30363D] border-gray-300 rounded-lg transition-colors"
+                      className="mt-2 w-full px-4 py-2 text-sm text-[#8C43FF] hover:text-[#9955FF] flex items-center justify-center gap-2 border dark:border-[#30363D] border-gray-300 rounded-2xl transition-colors"
                     >
                       {isComprovantePDF ? (
                         <>
@@ -1375,7 +1375,7 @@ const EtecDashboard = ({ onLogout }) => {
                       <a
                         href={comprovante.comprovante}
                         download={`Comprovante_${comprovante.aluno.replace(/\s+/g, '_')}_${comprovante.evento.replace(/\s+/g, '_')}.pdf`}
-                        className="mt-2 w-full px-4 py-2 text-sm text-white bg-[#8C43FF] hover:bg-[#9955FF] flex items-center justify-center gap-2 rounded-lg transition-colors"
+                        className="mt-2 w-full px-4 py-2 text-sm text-white bg-[#8C43FF] hover:bg-[#9955FF] flex items-center justify-center gap-2 rounded-2xl transition-colors"
                       >
                         <Download className="w-4 h-4" />
                         Baixar PDF
@@ -1427,14 +1427,14 @@ const EtecDashboard = ({ onLogout }) => {
                     <div className="flex gap-3">
                       <button
                         onClick={() => aprovarComprovante(comprovante.id)}
-                        className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center justify-center gap-2 transition-colors"
+                        className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-2xl flex items-center justify-center gap-2 transition-colors"
                       >
                         <CheckCircle className="w-4 h-4" />
                         Aprovar
                       </button>
                       <button
                         onClick={() => rejeitarComprovante(comprovante.id)}
-                        className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center justify-center gap-2 transition-colors"
+                        className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-2xl flex items-center justify-center gap-2 transition-colors"
                       >
                         <X className="w-4 h-4" />
                         Rejeitar
@@ -1457,7 +1457,7 @@ const EtecDashboard = ({ onLogout }) => {
         <h2 className="text-2xl font-bold dark:text-white text-gray-900">Relatórios</h2>
         <button
           onClick={() => openModal('viewReport')}
-          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-xl transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-3xl transition-colors"
         >
           <BarChart3 size={18} />
           Gerar Relatório
@@ -1467,7 +1467,7 @@ const EtecDashboard = ({ onLogout }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-blue-500/10 rounded-xl">
+            <div className="p-3 bg-blue-500/10 rounded-3xl">
               <Users size={24} className="text-blue-500" />
             </div>
             <div>
@@ -1475,7 +1475,7 @@ const EtecDashboard = ({ onLogout }) => {
               <p className="text-sm dark:text-gray-400 text-gray-600">Estatísticas de alunos e professores</p>
             </div>
           </div>
-          <button className="w-full px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
+          <button className="w-full px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-2xl hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
             <Download size={16} className="inline mr-2" />
             Baixar PDF
           </button>
@@ -1483,7 +1483,7 @@ const EtecDashboard = ({ onLogout }) => {
 
         <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-green-500/10 rounded-xl">
+            <div className="p-3 bg-green-500/10 rounded-3xl">
               <Calendar size={24} className="text-green-500" />
             </div>
             <div>
@@ -1491,7 +1491,7 @@ const EtecDashboard = ({ onLogout }) => {
               <p className="text-sm dark:text-gray-400 text-gray-600">Eventos e participação</p>
             </div>
           </div>
-          <button className="w-full px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
+          <button className="w-full px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-2xl hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
             <Download size={16} className="inline mr-2" />
             Baixar Excel
           </button>
@@ -1499,7 +1499,7 @@ const EtecDashboard = ({ onLogout }) => {
 
         <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-purple-500/10 rounded-xl">
+            <div className="p-3 bg-purple-500/10 rounded-3xl">
               <BarChart3 size={24} className="text-purple-500" />
             </div>
             <div>
@@ -1507,7 +1507,7 @@ const EtecDashboard = ({ onLogout }) => {
               <p className="text-sm dark:text-gray-400 text-gray-600">Estatísticas completas</p>
             </div>
           </div>
-          <button className="w-full px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
+          <button className="w-full px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-2xl hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors">
             <Download size={16} className="inline mr-2" />
             Baixar PDF
           </button>
@@ -1530,7 +1530,7 @@ const EtecDashboard = ({ onLogout }) => {
             <input
               type="text"
               defaultValue="Etec Albert Einstein"
-              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             />
           </div>
           <div>
@@ -1540,7 +1540,7 @@ const EtecDashboard = ({ onLogout }) => {
             <input
               type="text"
               defaultValue="Prof. Maria Silva"
-              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             />
           </div>
           <div>
@@ -1550,7 +1550,7 @@ const EtecDashboard = ({ onLogout }) => {
             <input
               type="email"
               defaultValue="contato@etec.sp.gov.br"
-              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             />
           </div>
           <div>
@@ -1560,13 +1560,13 @@ const EtecDashboard = ({ onLogout }) => {
             <input
               type="tel"
               defaultValue="(11) 1234-5678"
-              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             />
           </div>
         </div>
         
         <div className="mt-6">
-          <button className="px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors">
+          <button className="px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-2xl transition-colors">
             <Save size={16} className="inline mr-2" />
             Salvar Alterações
           </button>
@@ -1606,7 +1606,7 @@ const EtecDashboard = ({ onLogout }) => {
           <h3 className="text-lg font-semibold text-red-500 mb-4">Zona de Perigo</h3>
           <button
             onClick={onLogout}
-            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-2xl transition-colors"
           >
             Sair da Conta
           </button>
@@ -1641,7 +1641,7 @@ const EtecDashboard = ({ onLogout }) => {
           <select
             value={userForm.tipo}
             onChange={(e) => handleUserFormChange('tipo', e.target.value)}
-            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+            className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
           >
             <option value="aluno">Aluno</option>
             <option value="professor">Professor</option>
@@ -1658,7 +1658,7 @@ const EtecDashboard = ({ onLogout }) => {
               type="text"
               value={userForm.nome}
               onChange={(e) => handleUserFormChange('nome', e.target.value)}
-              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
               placeholder="João Silva"
             />
           </div>
@@ -1670,7 +1670,7 @@ const EtecDashboard = ({ onLogout }) => {
               type="email"
               value={userForm.email}
               onChange={(e) => handleUserFormChange('email', e.target.value)}
-              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
               placeholder="joao@etec.sp.gov.br"
             />
           </div>
@@ -1685,7 +1685,7 @@ const EtecDashboard = ({ onLogout }) => {
               type="password"
               value={userForm.senha}
               onChange={(e) => handleUserFormChange('senha', e.target.value)}
-              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
               placeholder="Senha inicial"
             />
           </div>
@@ -1698,7 +1698,7 @@ const EtecDashboard = ({ onLogout }) => {
                 type="text"
                 value={userForm.rm}
                 onChange={(e) => handleUserFormChange('rm', e.target.value)}
-                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
                 placeholder="12345"
               />
             </div>
@@ -1713,7 +1713,7 @@ const EtecDashboard = ({ onLogout }) => {
             <select
               value={userForm.turma}
               onChange={(e) => handleUserFormChange('turma', e.target.value)}
-              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
             >
               <option value="">Selecione a turma</option>
               {turmas.map(turma => (
@@ -1726,14 +1726,14 @@ const EtecDashboard = ({ onLogout }) => {
         <div className="flex gap-3 pt-4">
           <button
             onClick={() => closeModal('createUser')}
-            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-lg dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+            className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
           >
             Cancelar
           </button>
           <button
             onClick={handleCreateUser}
             disabled={loading}
-            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-lg transition-colors disabled:opacity-50"
+            className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-2xl transition-colors disabled:opacity-50"
           >
             {loading ? 'Criando...' : 'Criar Usuário'}
           </button>
@@ -1749,7 +1749,7 @@ const EtecDashboard = ({ onLogout }) => {
         <div className="w-64 dark:bg-[#1E1E1E] bg-white border-r dark:border-[#30363D] border-gray-200 min-h-screen">
           <div className="p-6">
             <div className="flex items-center gap-3 mb-8">
-              <div className="p-2 bg-[#8C43FF] rounded-xl">
+              <div className="p-2 bg-[#8C43FF] rounded-3xl">
                 <Building2 size={24} className="text-white" />
               </div>
               <div>
@@ -1772,7 +1772,7 @@ const EtecDashboard = ({ onLogout }) => {
                 <button
                   key={item.id}
                   onClick={() => setActiveSection(item.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-3xl font-medium transition-all ${
                     activeSection === item.id
                       ? "bg-[#8C43FF] text-white"
                       : "dark:text-gray-400 text-gray-600 hover:bg-gray-100 dark:hover:bg-[#21262D]"
