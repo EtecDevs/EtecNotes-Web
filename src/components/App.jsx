@@ -75,8 +75,12 @@ function AppContent() {
   // Navegação por teclado global
   useEffect(() => {
     const handleGlobalKeyDown = (e) => {
-      // Ignorar se estiver digitando em input/textarea
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+      // Ignorar se estiver digitando em input/textarea ou elemento editável
+      if (
+        e.target.tagName === 'INPUT' || 
+        e.target.tagName === 'TEXTAREA' || 
+        e.target.isContentEditable
+      ) {
         return
       }
 
@@ -555,10 +559,8 @@ function AppContent() {
           activeElement.blur()
         }
         
-        // Garantir que body nunca receba foco
-        if (document.activeElement === document.body) {
-          document.body.blur()
-        }
+        // ❌ REMOVIDO: document.body.blur() - estava causando perda de foco nos inputs
+        // Deixar o body com foco é melhor que remover foco de inputs acidentalmente
       }, 10)
     }
 
@@ -598,13 +600,14 @@ function AppContent() {
     }
 
     document.addEventListener('mousedown', handleMouseDown)
-    document.body.addEventListener('focus', preventStructuralFocus, true)
-    document.body.addEventListener('focusin', preventStructuralFocus, true)
+    // Mudado de capture:true para capture:false para não bloquear foco em inputs
+    document.body.addEventListener('focus', preventStructuralFocus, false)
+    document.body.addEventListener('focusin', preventStructuralFocus, false)
     
     return () => {
       document.removeEventListener('mousedown', handleMouseDown)
-      document.body.removeEventListener('focus', preventStructuralFocus, true)
-      document.body.removeEventListener('focusin', preventStructuralFocus, true)
+      document.body.removeEventListener('focus', preventStructuralFocus, false)
+      document.body.removeEventListener('focusin', preventStructuralFocus, false)
     }
   }, [navigationMode]) // 🎯 Recriar listeners quando navigationMode mudar
 
@@ -1267,9 +1270,15 @@ function AppContent() {
         {activeTab !== "Login" && 
          activeTab !== "Fórum" && 
          activeTab !== "Chat" && 
-         activeTab !== "Iatec" &&
+         activeTab !== "Perfil" &&          
+         activeTab !== "Cloud" &&
+         activeTab !== "Laboratórios" && 
+         activeTab !== "Chat" && 
          activeTab !== "Calendário" && (
-          <Footer isAuthenticated={isAuthenticated} onNavigate={(tab) => {
+          <Footer 
+            isAuthenticated={isAuthenticated} 
+            userRole={user?.role}
+            onNavigate={(tab) => {
             // Map footer navigation names to app tabs
             const map = {
               "Login": "Login",
@@ -1277,7 +1286,11 @@ function AppContent() {
               "Calendário": "Calendário",
               "Chat": "Chat",
               "Perfil": "Perfil",
-              "Cloud": "Cloud"
+              "Cloud": "Cloud",
+              "AdminDashboard": "AdminDashboard",
+              "Laboratórios": "Laboratórios",
+              "Fórum": "Fórum",
+              "Sobre Nós": "Sobre Nós"
             }
             const target = map[tab] || tab
             setActiveTab(target)

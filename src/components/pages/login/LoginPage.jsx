@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Eye, EyeOff, GraduationCap, Users, Building2, Calendar, AlertCircle, Shield } from "lucide-react"
 import { useAuth } from "../../../hooks/useAuth"
+import ForgotPasswordPage from "./ForgotPasswordPage"
 
 export default function LoginPage({ onLogin, onCancel }) {
   const { login, loading } = useAuth()
@@ -17,6 +18,7 @@ export default function LoginPage({ onLogin, onCancel }) {
   const [errorMessage, setErrorMessage] = useState('')
   const [suggestionMessage, setSuggestionMessage] = useState('')
   const [errorCode, setErrorCode] = useState('')
+  const [showForgotPassword, setShowForgotPassword] = useState(false)
   const [formData, setFormData] = useState({
     codigoEtec: "",
     rm: "",
@@ -380,7 +382,7 @@ export default function LoginPage({ onLogin, onCancel }) {
                 <div className="space-y-1.5">
                   <Label htmlFor="rm" className="text-white font-medium text-sm">
                     RM
-                  </Label>0
+                  </Label>
                   <Input
                     id="rm"
                     type="text"
@@ -435,7 +437,11 @@ export default function LoginPage({ onLogin, onCancel }) {
 
             {/* Footer Links - COMPACTADO */}
             <div className="mt-4 text-center space-y-1">
-              <button className="text-white hover:text-purple-300 text-xs transition-colors block w-full">
+              <button 
+                type="button"
+                onClick={() => setShowForgotPassword(true)}
+                className="text-white hover:text-purple-300 text-xs transition-colors block w-full"
+              >
                 Esqueceu sua senha?
               </button>
               <button
@@ -455,6 +461,19 @@ export default function LoginPage({ onLogin, onCancel }) {
           <p className="text-white text-xs">Sistema de Gestão Educacional ETEC</p>
         </div>
       </div>
+
+      {/* Backdrop para modal de recuperação de senha */}
+      {showForgotPassword && (
+        <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setShowForgotPassword(false)} />
+      )}
+
+      {/* Modal de recuperação de senha */}
+      {showForgotPassword && (
+        <ForgotPasswordPage 
+          onCancel={() => setShowForgotPassword(false)}
+          onBackToLogin={() => setShowForgotPassword(false)}
+        />
+      )}
     </div>
   )
 }
