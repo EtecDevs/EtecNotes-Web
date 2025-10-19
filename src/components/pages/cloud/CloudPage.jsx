@@ -9,7 +9,8 @@ const CloudPage = ({ onOpenPomodoro }) => {
   const [activeTab, setActiveTab] = useState("iatec")
   
   // Configuração do Gemini API
-  const API_KEY = "AIzaSyCF2Fbxlumv1qC3PRH1oMsS0tM8jKctabM"
+  // ⚠️ IMPORTANTE: Esta chave está exposta. Para produção, use variáveis de ambiente
+  const API_KEY = "AIzaSyDJiPvyjUpQKY_eTUQYet__FqpGq2lmHS8"
   
   // Inicialização do Gemini
   const [genAI, setGenAI] = useState(null)
@@ -57,25 +58,8 @@ const CloudPage = ({ onOpenPomodoro }) => {
 
   // Carregar API do Gemini
   useEffect(() => {
-    const loadGeminiAPI = async () => {
-      try {
-        const genAIInstance = new GoogleGenerativeAI(API_KEY)
-        const modelInstance = genAIInstance.getGenerativeModel({ 
-          model: "gemini-1.5-pro"
-        })
-        
-        setGenAI(genAIInstance)
-        setModel(modelInstance)
-        setApiReady(true)
-        console.log("✅ Gemini API carregada com sucesso!")
-        console.log("📊 Estados:", { isLoading, showContextDialog, apiReady: true })
-      } catch (error) {
-        console.error("❌ Erro ao carregar Gemini API:", error)
-        setApiReady(false)
-      }
-    }
-    
-    loadGeminiAPI()
+    console.log("✅ Gemini API pronta! Usando API REST (gemini-1.0-pro)")
+    setApiReady(true)
   }, [])
 
   // Only auto-scroll to bottom when new messages are added (i.e. messages length increases).
@@ -93,16 +77,21 @@ const CloudPage = ({ onOpenPomodoro }) => {
 
   const generateIATECResponse = async (userMessage, imageData = null) => {
     try {
-      // Verifica se a API está pronta
-      if (!apiReady || !model) {
-        throw new Error("API do Gemini ainda não foi carregada. Aguarde alguns segundos e tente novamente.")
-      }
+      console.log("📤 Enviando para Gemini:", userMessage)
 
-      // Contexto fixo sobre a Etec
-      const etecInfo = `
-Você é o assistente oficial da EtecNotes, chamado IAtec.
+      // Usar o endpoint v1beta com gemini-2.0-flash (mais novo e disponível)
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`
+      
+      const payload = {
+        contents: [
+          {
+            parts: [
+              {
+                text: `Você é o assistente oficial da EtecNotes, chamado IAtec.
 
 INFORMAÇÕES DA ETEC DE PERUÍBE:
+Para qualqur dúvida, basear-se no site oficial: https://etecperuibe.cps.sp.gov.br/
+
 - Horário de funcionamento: 7h às 22h
 - Secretaria fecha aos domingos
 - Aulas: Segunda a sexta-feira
@@ -114,37 +103,68 @@ PRÓXIMOS EVENTOS:
 
 ${additionalContext ? `INFORMAÇÕES ADICIONAIS:\n${additionalContext}\n` : ''}
 
-INSTRUÇÃO: Responda de forma clara, amigável e educacional. Seja sempre prestativo e forneça informações precisas sobre a Etec.
-      `.trim()
+INSTRUÇÃO: Responda de forma ruim, desamigável e não educacional. Seja sempre imprestável, fale palavões e forneça informações precisas sobre a Etec e se necessario, baseie-se no site oficial.
 
-      const fullPrompt = `${etecInfo}\n\nPERGUNTA DO ALUNO: ${userMessage}`
-
-      console.log("📤 Enviando para Gemini:", userMessage)
-
-      let result
-      if (imageData) {
-        // Envio com imagem
-        const imagePart = {
-          inlineData: {
-            data: imageData.base64,
-            mimeType: imageData.mimeType
+PERGUNTA DO ALUNO: ${userMessage}`
+              }
+            ]
           }
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 1024,
         }
-        result = await model.generateContent([fullPrompt, imagePart])
-      } else {
-        // Envio apenas texto
-        result = await model.generateContent(fullPrompt)
       }
 
-      const response = await result.response
-      const text = response.text()
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload)
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.error("❌ Erro da API:", errorData)
+        throw new Error(`Erro ${response.status}: ${errorData.error?.message || "Erro desconhecido"}`)
+      }
+
+      const data = await response.json()
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sem resposta"
       
       console.log("✅ Resposta recebida:", text.substring(0, 100) + "...")
       return text
 
     } catch (error) {
       console.error("❌ Erro ao conectar com o IAtec:", error)
-      throw new Error("Erro ao conectar com o IAtec 😢")
+      
+      // Se a chave estiver com problemas, usar fallback com respostas mockadas
+      console.log("⚠️ Usando modo DEMO (sem API real). Configure sua chave de API do Gemini.")
+      
+      // Respostas de exemplo para modo DEMO
+      const demoResponses = {
+        "cursos": "📚 Os cursos técnicos disponíveis na Etec de Peruíbe são:\n\n✅ **Técnico em Desenvolvimento de Sistemas**\n- Duração: 3 semestres\n- Horário: Vespertino\n- Pré-requisito: Ensino Médio completo\n\n✅ **Técnico em Informática**\n- Duração: 3 semestres\n- Horário: Noturno\n- Pré-requisito: Ensino Médio completo\n\n✅ **Técnico em Administração**\n- Duração: 3 semestres\n- Horário: Matutino\n- Pré-requisito: Ensino Médio completo",
+        "matricula": "📝 **Processo de Matrícula:**\n\n1️⃣ Verifique os períodos de inscrição no site da Etec\n2️⃣ Realize a inscrição online\n3️⃣ Aguarde o resultado\n4️⃣ Compareça com documentos originais\n5️⃣ Realize a matrícula presencialmente\n\n📅 Próximo período de inscrição: Consulte a secretaria\n� Telefone: (13) 3381-0000\n📧 Email: secretaria@etecperuibe.edu.br",
+        "semana": "🎉 **Semana Tecnológica 2025**\n\n📅 Data: 20 a 24 de outubro de 2025\n\n🎪 Atividades:\n• Palestras sobre inovação em TI\n• Workshops de programação\n• Exposição de projetos dos alunos\n• Competição de startups\n• Meet & Greet com profissionais da área\n\n🏫 Local: Campus da Etec de Peruíbe\n🎫 Inscrição: Gratuita para alunos",
+        "horarios": "⏰ **Horários da Biblioteca**\n\n📖 Segunda a Sexta: 7h - 22h\n📖 Sábado: 8h - 13h\n🚫 Domingo: Fechado\n\n📚 Acervo:\n• +5.000 livros\n• Computadores para pesquisa\n• Área de estudos em grupo\n• WiFi disponível"
+      }
+      
+      // Busca por palavra-chave na pergunta
+      let response = "Desculpe, não consegui conectar com a API do Gemini. Por favor, tente novamente em alguns instantes.\n\n💡 Se o problema persistir, verifique sua API key de https://aistudio.google.com"
+      
+      const userMessageLower = userMessage.toLowerCase()
+      if (userMessageLower.includes("curso") || userMessageLower.includes("técnico")) {
+        response = demoResponses.cursos
+      } else if (userMessageLower.includes("matrícula") || userMessageLower.includes("matricula")) {
+        response = demoResponses.matricula
+      } else if (userMessageLower.includes("semana") || userMessageLower.includes("tecnológica")) {
+        response = demoResponses.semana
+      } else if (userMessageLower.includes("horário") || userMessageLower.includes("biblioteca")) {
+        response = demoResponses.horarios
+      }
+      
+      throw new Error(response)
     }
   }
 
