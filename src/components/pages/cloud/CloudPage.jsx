@@ -5,6 +5,130 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Send, Bot, User, Loader2, Trash2, Copy, Music, Play, Pause, Volume2, VolumeX, Volume1, GamepadIcon, Heart, Smile, Timer, Mic, Image as ImageIcon, Settings } from "lucide-react"
 import { GoogleGenerativeAI } from "@google/generative-ai"
 
+// Componente de visualizador de ondas de gravação
+const WaveformVisualizer = ({ isRecording, sensitivity = "auto" }) => {
+  const canvasRef = useRef(null)
+  const animationRef = useRef(null)
+  const bars = useRef([])
+
+  useEffect(() => {
+    if (!isRecording) return
+
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const ctx = canvas.getContext("2d")
+    const barCount = 24
+    const barWidth = canvas.width / barCount
+
+    // Inicializar barras
+    if (bars.current.length === 0) {
+      bars.current = Array(barCount).fill(0).map(() => ({
+        height: Math.random() * 0.3,
+        targetHeight: Math.random() * 0.3,
+      }))
+    }
+
+    const animate = () => {
+      // Limpar canvas com efeito de fade
+      ctx.fillStyle = "rgba(0, 0, 0, 0.02)"
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      // Atualizar altura das barras com animação suave
+      bars.current.forEach((bar, i) => {
+        // Gerar nova altura aleatória ocasionalmente
+        if (Math.random() > 0.85) {
+          bar.targetHeight = Math.random() * 0.85
+        }
+        bar.height += (bar.targetHeight - bar.height) * 0.25
+
+        // Desenhar barra
+        const x = i * barWidth + 1
+        const y = canvas.height / 2
+        const height = bar.height * canvas.height
+
+        // Determinar cores baseadas na sensibilidade
+        let colorStart, colorMid, colorEnd
+        
+        if (sensitivity === "alto") {
+          colorStart = "#ef4444"
+          colorMid = "#f97316"
+          colorEnd = "#ef4444"
+        } else if (sensitivity === "baixo") {
+          colorStart = "#22c55e"
+          colorMid = "#16a34a"
+          colorEnd = "#22c55e"
+        } else {
+          colorStart = "#8c43ff"
+          colorMid = "#a855f7"
+          colorEnd = "#8c43ff"
+        }
+
+        // Gradiente de cor da barra
+        const gradient = ctx.createLinearGradient(0, y - height, 0, y + height)
+        gradient.addColorStop(0, colorStart)
+        gradient.addColorStop(0.5, colorMid)
+        gradient.addColorStop(1, colorEnd)
+
+        ctx.fillStyle = gradient
+        ctx.fillRect(x, y - height / 2, barWidth - 2, height)
+
+        // Adicionar brilho na barra
+        ctx.fillStyle = "rgba(255, 255, 255, 0.1)"
+        ctx.fillRect(x, y - height / 2, barWidth - 2, 2)
+
+        // Ponto brilhante no topo
+        ctx.fillStyle = "rgba(255, 255, 255, 0.9)"
+        ctx.beginPath()
+        ctx.arc(x + (barWidth - 2) / 2, y - height / 2 - 1, 1.5, 0, Math.PI * 2)
+        ctx.fill()
+      })
+
+      animationRef.current = requestAnimationFrame(animate)
+    }
+
+    animate()
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [isRecording, sensitivity])
+
+  if (!isRecording) return null
+
+  const getSensitivityLabel = () => {
+    switch(sensitivity) {
+      case "alto":
+        return "🔴 Alto"
+      case "baixo":
+        return "🟢 Baixo"
+      default:
+        return "🟡 Auto"
+    }
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <canvas
+        ref={canvasRef}
+        width={260}
+        height={70}
+        className="rounded-lg bg-gradient-to-r from-[#1a1a2e] to-[#0f0f1e]"
+      />
+      <div className="flex items-center gap-2">
+        <span className="text-xs font-medium dark:text-gray-300 text-gray-600 animate-pulse">
+          🎤 Gravando...
+        </span>
+        <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-[#8C43FF]/20 text-[#8C43FF] dark:text-[#a855f7]">
+          {getSensitivityLabel()}
+        </span>
+      </div>
+    </div>
+  )
+}
+
 const CloudPage = ({ onOpenPomodoro }) => {
   const [activeTab, setActiveTab] = useState("iatec")
   
@@ -31,6 +155,7 @@ const CloudPage = ({ onOpenPomodoro }) => {
   const [additionalContext, setAdditionalContext] = useState("") // Campo para alimentar a IA
   const [showContextDialog, setShowContextDialog] = useState(false) // Modal de configuração
   const [isRecording, setIsRecording] = useState(false) // Estado de gravação de voz
+  const [recordingSensitivity, setRecordingSensitivity] = useState("auto") // "auto", "alto", "baixo"
   const [selectedImage, setSelectedImage] = useState(null) // Imagem selecionada
   const [imagePreview, setImagePreview] = useState(null) // Preview da imagem
   const messagesEndRef = useRef(null)
@@ -245,8 +370,49 @@ PERGUNTA DO ALUNO: ${userMessage}`
     recognition.continuous = false
     recognition.interimResults = false
 
+    // Tentar acessar o microfone para detectar sensibilidade
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then((stream) => {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+        const analyser = audioContext.createAnalyser()
+        const microphone = audioContext.createMediaStreamSource(stream)
+        microphone.connect(analyser)
+        analyser.fftSize = 2048
+
+        const dataArray = new Uint8Array(analyser.frequencyBinCount)
+        let samples = []
+
+        const checkSensitivity = () => {
+          analyser.getByteFrequencyData(dataArray)
+          const average = dataArray.reduce((a, b) => a + b) / dataArray.length
+          samples.push(average)
+
+          if (samples.length > 10) {
+            const avgLevel = samples.reduce((a, b) => a + b) / samples.length
+            if (avgLevel > 100) {
+              setRecordingSensitivity("alto")
+            } else if (avgLevel < 30) {
+              setRecordingSensitivity("baixo")
+            } else {
+              setRecordingSensitivity("auto")
+            }
+            stream.getTracks().forEach(track => track.stop())
+            audioContext.close()
+          } else {
+            requestAnimationFrame(checkSensitivity)
+          }
+        }
+
+        checkSensitivity()
+      })
+      .catch((err) => {
+        console.warn("Microfone indisponível:", err)
+        setRecordingSensitivity("auto")
+      })
+
     recognition.onstart = () => {
       setIsRecording(true)
+      setRecordingSensitivity("auto")
     }
 
     recognition.onresult = (event) => {
@@ -261,6 +427,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
     recognition.onerror = (event) => {
       console.error('Erro no reconhecimento de voz:', event.error)
       setIsRecording(false)
+      setRecordingSensitivity("auto")
       if (event.error === 'no-speech') {
         alert('Nenhuma fala detectada. Tente novamente.')
       } else if (event.error === 'not-allowed') {
@@ -270,6 +437,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
 
     recognition.onend = () => {
       setIsRecording(false)
+      setRecordingSensitivity("auto")
     }
 
     recognitionRef.current = recognition
@@ -629,14 +797,14 @@ PERGUNTA DO ALUNO: ${userMessage}`
         }
       `}</style>
 
-      <div className="w-full max-w-4xl mx-auto px-6 py-10 flex flex-col h-full">
+      <div className="w-full max-w-5xl mx-auto px-4 py-6 flex flex-col h-full">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8 flex-shrink-0">
+        <div className="flex items-center justify-between mb-4 flex-shrink-0">
           <div>
-            <h1 className="text-4xl font-bold bg-[#58417d] bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl font-bold bg-[#58417d] bg-clip-text text-transparent mb-1">
               {activeTab === "iatec" ? "IATEC AI" : "Meditação & Bem-estar"}
             </h1>
-            <p className="dark:text-gray-400 text-gray-600">
+            <p className="dark:text-gray-400 text-gray-600 text-sm">
               {activeTab === "iatec" 
                 ? "Assistente virtual inteligente da Etec" 
                 : "Relaxe e recarregue suas energias"}
@@ -650,14 +818,14 @@ PERGUNTA DO ALUNO: ${userMessage}`
                   className="p-2 rounded-full dark:bg-[#2D2D2D] bg-gray-100 hover:bg-[#8C43FF] hover:text-white dark:hover:bg-[#8C43FF] transition-colors"
                   title="Alimentar IA com contexto"
                 >
-                  <Settings size={20} className="dark:text-gray-400 text-gray-600" />
+                  <Settings size={18} className="dark:text-gray-400 text-gray-600" />
                 </button>
                 <button
                   onClick={clearChat}
                   className="p-2 rounded-full dark:bg-[#2D2D2D] bg-gray-100 hover:bg-gray-200 dark:hover:bg-[#3D3D3D] transition-colors"
                   title="Limpar conversa"
                 >
-                  <Trash2 size={20} className="dark:text-gray-400 text-gray-600" />
+                  <Trash2 size={18} className="dark:text-gray-400 text-gray-600" />
                 </button>
               </>
             )}
@@ -665,10 +833,10 @@ PERGUNTA DO ALUNO: ${userMessage}`
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex mb-6 flex-shrink-0">
+        <div className="flex mb-3 flex-shrink-0">
           <button
             onClick={() => setActiveTab("iatec")}
-            className={`px-6 py-3 rounded-t-2xl font-medium transition-colors ${
+            className={`px-4 py-2 rounded-t-xl font-medium transition-colors text-sm ${
               activeTab === "iatec"
                 ? "bg-[#8C43FF] text-white"
                 : "dark:bg-[#2D2D2D] bg-gray-200 dark:text-gray-300 text-gray-700 hover:bg-[#8C43FF]/20"
@@ -678,7 +846,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
           </button>
           <button
             onClick={() => setActiveTab("meditation")}
-            className={`px-6 py-3 rounded-t-2xl font-medium transition-colors ${
+            className={`px-4 py-2 rounded-t-xl font-medium transition-colors text-sm ${
               activeTab === "meditation"
                 ? "bg-[#8C43FF] text-white"
                 : "dark:bg-[#2D2D2D] bg-gray-200 dark:text-gray-300 text-gray-700 hover:bg-[#8C43FF]/20"
@@ -690,7 +858,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
 
         {/* Content Area */}
         <motion.div
-          className="flex-1 min-h-0 dark:bg-[#1E1E1E]/80 bg-white backdrop-blur-md rounded-3xl shadow-lg border dark:border-[#333333] border-gray-300 flex flex-col overflow-hidden"
+          className="flex-1 min-h-0 dark:bg-[#1E1E1E]/80 bg-white backdrop-blur-md rounded-3xl shadow-lg border dark:border-[#333333] border-gray-300 flex flex-col overflow-hidden relative"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -705,8 +873,8 @@ PERGUNTA DO ALUNO: ${userMessage}`
                 </div>
               )}
               
-              {/* Chat Messages */}
-              <div className="h-[400px] overflow-y-auto p-6 space-y-4 custom-scrollbar">
+              {/* Chat Messages - Flex container com overflow */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar pb-20">
                 <AnimatePresence>
                   {messages.map((message) => (
                     <motion.div
@@ -715,25 +883,25 @@ PERGUNTA DO ALUNO: ${userMessage}`
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
-                      className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                      className={`flex gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}
                     >
                       {message.role === "assistant" && (
-                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#8C43FF] flex items-center justify-center">
-                          <Bot size={16} className="text-white" />
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#8C43FF] flex items-center justify-center flex-col">
+                          <Bot size={14} className="text-white" />
                         </div>
                       )}
 
                       <div
-                        className={`max-w-[70%] rounded-2xl px-4 py-3 ${
+                        className={`max-w-[75%] rounded-lg px-3 py-2 ${
                           message.role === "user"
-                            ? "bg-[#8C43FF] text-white"
-                            : "dark:bg-[#2D2D2D] bg-gray-100 dark:text-white text-gray-800"
+                            ? "bg-[#8C43FF] text-white rounded-br-none"
+                            : "dark:bg-[#2D2D2D] bg-gray-100 dark:text-white text-gray-800 rounded-bl-none"
                         }`}
                       >
                         {message.isLoading ? (
                           <div className="flex items-center gap-2">
-                            <Loader2 size={16} className="animate-spin" />
-                            <span className="text-sm">IATEC AI está pensando...</span>
+                            <Loader2 size={14} className="animate-spin" />
+                            <span className="text-xs">Pensando...</span>
                           </div>
                         ) : (
                           <>
@@ -741,20 +909,20 @@ PERGUNTA DO ALUNO: ${userMessage}`
                               <img 
                                 src={message.image} 
                                 alt="Imagem enviada" 
-                                className="max-w-full h-auto rounded-2xl mb-2"
+                                className="max-w-full h-auto rounded-lg mb-1"
                               />
                             )}
-                            <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                            <div className="flex items-center justify-between mt-2">
-                              <span className="text-xs opacity-70">{formatTime(message.timestamp)}</span>
+                            <p className="text-sm leading-snug whitespace-pre-wrap">{message.content}</p>
+                            <div className="flex items-center justify-between mt-1 gap-1">
+                              <span className="text-xs opacity-60">{formatTime(message.timestamp)}</span>
                               {message.role === "assistant" && (
-                                <div className="flex gap-1">
+                                <div className="flex gap-0.5">
                                   <button
                                     onClick={() => copyMessage(message.content)}
-                                    className="p-1 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+                                    className="p-0.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
                                     title="Copiar mensagem"
                                   >
-                                    <Copy size={12} className="opacity-70" />
+                                    <Copy size={11} className="opacity-60" />
                                   </button>
                                 </div>
                               )}
@@ -764,8 +932,8 @@ PERGUNTA DO ALUNO: ${userMessage}`
                       </div>
 
                       {message.role === "user" && (
-                        <div className="flex-shrink-0 w-8 h-8 rounded-full dark:bg-[#2D2D2D] bg-gray-200 flex items-center justify-center">
-                          <User size={16} className="dark:text-gray-400 text-gray-600" />
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full dark:bg-[#2D2D2D] bg-gray-200 flex items-center justify-center">
+                          <User size={14} className="dark:text-gray-400 text-gray-600" />
                         </div>
                       )}
                     </motion.div>
@@ -774,22 +942,29 @@ PERGUNTA DO ALUNO: ${userMessage}`
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Input Area */}
-              <div className="flex-shrink-0 border-t dark:border-[#333333] border-gray-200 p-4">
+              {/* Input Area - Fixed at bottom */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white dark:from-[#1E1E1E] to-white/80 dark:to-[#1E1E1E]/80 border-t dark:border-[#333333] border-gray-200 p-3 backdrop-blur-md rounded-b-3xl">
+                {/* Visualizador de Gravação */}
+                {isRecording && (
+                  <div className="mb-3 flex justify-center">
+                    <WaveformVisualizer isRecording={isRecording} sensitivity={recordingSensitivity} />
+                  </div>
+                )}
+
                 {/* Preview da imagem selecionada */}
                 {imagePreview && (
-                  <div className="mb-3 relative inline-block">
+                  <div className="mb-2 relative inline-block">
                     <img 
                       src={imagePreview} 
                       alt="Preview" 
-                      className="h-20 w-20 object-cover rounded-2xl border-2 border-[#8C43FF]"
+                      className="h-16 w-16 object-cover rounded-full border-2 border-[#8C43FF]"
                     />
                     <button
                       onClick={removeImage}
                       className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
                       title="Remover imagem"
                     >
-                      <Trash2 size={12} />
+                      <Trash2 size={10} />
                     </button>
                   </div>
                 )}
@@ -799,10 +974,10 @@ PERGUNTA DO ALUNO: ${userMessage}`
                   <button
                     type="button"
                     onClick={() => setShowContextDialog(true)}
-                    className="p-3 rounded-2xl dark:bg-[#2D2D2D] bg-gray-100 hover:bg-[#8C43FF] hover:text-white dark:text-gray-400 text-gray-600 transition-colors"
+                    className="p-2 rounded-full dark:bg-[#2D2D2D] bg-gray-100 hover:bg-[#8C43FF] hover:text-white dark:text-gray-400 text-gray-600 transition-colors flex-shrink-0"
                     title="Configurar contexto da IA"
                   >
-                    <Settings size={18} />
+                    <Settings size={16} />
                   </button>
 
                   {/* Botão de Voz */}
@@ -810,14 +985,14 @@ PERGUNTA DO ALUNO: ${userMessage}`
                     type="button"
                     onClick={startVoiceRecording}
                     disabled={isLoading || isRecording}
-                    className={`p-3 rounded-2xl transition-colors ${
+                    className={`p-2 rounded-full transition-colors flex-shrink-0 ${
                       isRecording 
                         ? 'bg-red-500 text-white animate-pulse' 
                         : 'dark:bg-[#2D2D2D] bg-gray-100 hover:bg-[#8C43FF] hover:text-white dark:text-gray-400 text-gray-600'
                     } disabled:opacity-50 disabled:cursor-not-allowed`}
                     title={isRecording ? "Gravando..." : "Enviar por voz"}
                   >
-                    <Mic size={18} />
+                    <Mic size={16} />
                   </button>
 
                   {/* Botão de Imagem */}
@@ -825,10 +1000,10 @@ PERGUNTA DO ALUNO: ${userMessage}`
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isLoading}
-                    className="p-3 rounded-2xl dark:bg-[#2D2D2D] bg-gray-100 hover:bg-[#8C43FF] hover:text-white dark:text-gray-400 text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-2 rounded-full dark:bg-[#2D2D2D] bg-gray-100 hover:bg-[#8C43FF] hover:text-white dark:text-gray-400 text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
                     title="Enviar imagem"
                   >
-                    <ImageIcon size={18} />
+                    <ImageIcon size={16} />
                   </button>
                   <input
                     ref={fileInputRef}
@@ -853,8 +1028,8 @@ PERGUNTA DO ALUNO: ${userMessage}`
                         handleSubmit(e)
                       }
                     }}
-                    placeholder="Digite sua mensagem para a IAtec..."
-                    className="flex-1 px-4 py-3 rounded-2xl dark:bg-[#2D2D2D] bg-[#d5bbff] dark:text-white text-gray-800 placeholder-gray-500 dark:placeholder-gray-400 border-none outline-none focus:ring-2 focus:ring-[#8C43FF]"
+                    placeholder="Mensagem para IAtec..."
+                    className="flex-1 px-3 py-2 rounded-full dark:bg-[#2D2D2D] bg-[#d5bbff] dark:text-white text-gray-800 placeholder-gray-500 dark:placeholder-gray-400 border-none outline-none focus:ring-2 focus:ring-[#8C43FF] text-sm"
                     autoComplete="off"
                     style={{
                       pointerEvents: 'auto',
@@ -866,14 +1041,14 @@ PERGUNTA DO ALUNO: ${userMessage}`
                   <button
                     type="submit"
                     disabled={(!input.trim() && !selectedImage) || isLoading}
-                    className="px-6 py-3 bg-[#8C43FF] hover:bg-[#9955FF] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-2xl transition-colors flex items-center gap-2"
+                    className="px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-full transition-colors flex items-center gap-1 flex-shrink-0"
                   >
-                    {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
+                    {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                   </button>
                 </form>
 
                 {/* Quick Actions */}
-                <div className="flex flex-wrap gap-2 mt-3">
+                <div className="flex flex-wrap gap-1.5 mt-2">
                   {[
                     "Quais cursos técnicos estão disponíveis?",
                     "Como funciona o processo de matrícula?",
@@ -883,7 +1058,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
                     <button
                       key={index}
                       onClick={() => setInput(suggestion)}
-                      className="px-3 py-1 text-xs rounded-full dark:bg-[#2D2D2D] bg-gray-100 dark:text-gray-300 text-gray-600 hover:bg-[#8C43FF] hover:text-white transition-colors"
+                      className="px-2 py-1 text-xs rounded-full dark:bg-[#2D2D2D] bg-gray-100 dark:text-gray-300 text-gray-600 hover:bg-[#8C43FF] hover:text-white transition-colors"
                     >
                       {suggestion}
                     </button>
@@ -984,7 +1159,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
                       <button
                         key={music.id}
                         onClick={() => playMusic(music)}
-                        className={`p-4 rounded-2xl transition-all text-left border-2 ${
+                        className={`p-4 rounded-3xl transition-all text-left border-2 ${
                           isActive
                             ? 'bg-[#8C43FF] text-white border-[#8C43FF] shadow-lg'
                             : 'dark:bg-[#2D2D2D] bg-gray-100 border-transparent hover:bg-[#8C43FF] hover:text-white hover:border-[#8C43FF]'
@@ -1023,7 +1198,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
                       <button
                         key={game.id}
                         onClick={() => startGame(game)}
-                        className="p-4 dark:bg-[#2D2D2D] bg-gray-100 hover:bg-[#8C43FF] hover:text-white rounded-2xl transition-colors text-left flex items-center gap-3"
+                        className="p-4 dark:bg-[#2D2D2D] bg-gray-100 hover:bg-[#8C43FF] hover:text-white rounded-3xl transition-colors text-left flex items-center gap-3"
                       >
                         <div className="p-2 dark:bg-[#3D3D3D] bg-gray-200 rounded-full">
                           <IconComponent size={20} />
@@ -1041,7 +1216,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mt-6 p-6 dark:bg-[#2D2D2D] bg-gray-100 rounded-2xl relative overflow-hidden"
+                    className="mt-6 p-6 dark:bg-[#2D2D2D] bg-gray-100 rounded-3xl relative overflow-hidden"
                   >
                     {currentGame.id === 1 ? (
                       // Animação de Respiração Consciente
@@ -1052,7 +1227,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
                           </h4>
                           <button
                             onClick={stopBreathing}
-                            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-2xl transition-colors text-sm"
+                            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors text-sm"
                           >
                             Parar
                           </button>
@@ -1178,7 +1353,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
         </motion.div>
 
         {/* Footer */}
-        <div className="mt-4 text-center flex-shrink-0">
+        <div className="mt-2 text-center flex-shrink-0">
           <p className="text-xs dark:text-gray-500 text-gray-400">
             {activeTab === "iatec" 
               ? "IAtec é uma assistente virtual desenvolvida para auxiliar estudantes da Etec"
@@ -1217,7 +1392,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
               value={additionalContext}
               onChange={(e) => setAdditionalContext(e.target.value)}
               placeholder="Exemplos:&#10;- Professor de biologia pediu resumo sobre genética&#10;- Prova de física na sexta-feira&#10;- Reunião de pais dia 22&#10;- Prazo de entrega do TCC: 15 de novembro"
-              className="w-full h-64 px-4 py-3 rounded-2xl dark:bg-[#2D2D2D] bg-gray-100 dark:text-white text-gray-800 placeholder-gray-500 dark:placeholder-gray-400 border-none outline-none focus:ring-2 focus:ring-[#8C43FF] resize-none"
+              className="w-full h-64 px-4 py-3 rounded-3xl dark:bg-[#2D2D2D] bg-gray-100 dark:text-white text-gray-800 placeholder-gray-500 dark:placeholder-gray-400 border-none outline-none focus:ring-2 focus:ring-[#8C43FF] resize-none"
             />
 
             <div className="flex gap-3 mt-4">
@@ -1225,19 +1400,19 @@ PERGUNTA DO ALUNO: ${userMessage}`
                 onClick={() => {
                   setAdditionalContext("")
                 }}
-                className="flex-1 px-4 py-3 rounded-2xl dark:bg-[#2D2D2D] bg-gray-200 dark:text-white text-gray-800 hover:bg-gray-300 dark:hover:bg-[#3D3D3D] transition-colors"
+                className="flex-1 px-4 py-3 rounded-full dark:bg-[#2D2D2D] bg-gray-200 dark:text-white text-gray-800 hover:bg-gray-300 dark:hover:bg-[#3D3D3D] transition-colors"
               >
                 Limpar
               </button>
               <button
                 onClick={() => setShowContextDialog(false)}
-                className="flex-1 px-4 py-3 rounded-2xl bg-[#8C43FF] text-white hover:bg-[#9955FF] transition-colors"
+                className="flex-1 px-4 py-3 rounded-full bg-[#8C43FF] text-white hover:bg-[#9955FF] transition-colors"
               >
                 Salvar
               </button>
             </div>
 
-            <div className="mt-4 p-4 rounded-2xl dark:bg-[#2D2D2D] bg-gray-100">
+            <div className="mt-4 p-4 rounded-3xl dark:bg-[#2D2D2D] bg-gray-100">
               <p className="text-xs dark:text-gray-400 text-gray-600">
                 💡 <strong>Dica:</strong> Essas informações serão enviadas junto com todas as suas perguntas, 
                 ajudando a IAtec a fornecer respostas mais precisas e contextualizadas.
