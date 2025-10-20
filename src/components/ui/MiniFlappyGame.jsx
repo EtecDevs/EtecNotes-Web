@@ -16,11 +16,11 @@ function MiniFlappyGame() {
   const animationRef = useRef(null)
   const pipeTimerRef = useRef(null)
 
-  const GRAVITY = 0.4
-  const JUMP_STRENGTH = -6
+  const GRAVITY = 0.03
+  const JUMP_STRENGTH = -1.5
   const PIPE_WIDTH = 40
-  const PIPE_GAP = 120
-  const PIPE_SPEED = 2
+  const PIPE_GAP = 100
+  const PIPE_SPEED = 3
   const GAME_WIDTH = 300
   const GAME_HEIGHT = 200
 
@@ -68,7 +68,7 @@ function MiniFlappyGame() {
           }
 
           // Incrementar score quando passar pelo pipe
-          if (pipe.x + PIPE_WIDTH === 50 && !pipe.scored) {
+          if (pipe.x + PIPE_WIDTH < 50 && !pipe.scored) {
             pipe.scored = true
             setScore(s => s + 1)
           }
@@ -148,7 +148,7 @@ function MiniFlappyGame() {
     <div className="bg-[#1a1a1a] rounded-lg p-4 border border-[#2d2d2d] shadow-lg">
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-[#8b5cf6] font-semibold text-sm flex items-center gap-2">
-          <span className="text-lg">🐦</span>
+          <span className="text-lg">🦆</span>
           Flappy Notes
         </h4>
         <div className="flex items-center gap-3 text-xs">
@@ -170,17 +170,41 @@ function MiniFlappyGame() {
         className="relative bg-gradient-to-b from-[#0a0a0a] to-[#1a1a2e] rounded-md overflow-hidden cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#8b5cf6] focus:ring-opacity-50"
         style={{ width: GAME_WIDTH, height: GAME_HEIGHT }}
       >
-        {/* Pássaro */}
+        {/* Pato */}
         <div
-          className="absolute w-5 h-5 bg-[#8b5cf6] rounded-full transition-transform"
+          className="absolute transition-transform"
           style={{
-            left: '50px',
+            left: '40px',
             top: `${birdY}px`,
-            transform: `rotate(${birdVelocity * 3}deg)`,
-            boxShadow: '0 0 10px rgba(139, 92, 246, 0.5)'
+            transform: `rotate(${birdVelocity * 2}deg)`,
+            width: '35px',
+            height: '30px'
           }}
         >
-          <div className="absolute w-2 h-2 bg-white rounded-full top-1 left-3"></div>
+          {/* Corpo do pato */}
+          <div className="absolute w-7 h-5 bg-white rounded-full bottom-0 left-1 shadow-lg" 
+               style={{ boxShadow: '0 2px 8px rgba(255, 255, 255, 0.3)' }}>
+          </div>
+          
+          {/* Cabeça do pato */}
+          <div className="absolute w-5 h-5 bg-white rounded-full top-0 right-0 shadow-md">
+            {/* Olho */}
+            <div className="absolute w-1.5 h-1.5 bg-[#1a1a1a] rounded-full top-1.5 right-1"></div>
+            
+            {/* Óculos */}
+            <div className="absolute top-1 right-0.5 w-2.5 h-2 border-2 border-[#1a1a1a] rounded-full bg-cyan-100 bg-opacity-30"></div>
+            <div className="absolute top-2 right-2.5 w-1.5 h-0.5 bg-[#1a1a1a]"></div>
+          </div>
+          
+          {/* Bico laranja */}
+          <div className="absolute w-3 h-1.5 bg-[#fb923c] rounded-sm top-2 -right-1 shadow-sm"></div>
+          
+          {/* Asa */}
+          <div className="absolute w-3 h-4 bg-gray-100 rounded-full bottom-1 left-2 rotate-12 opacity-90"></div>
+          
+          {/* Pés */}
+          <div className="absolute w-1 h-1.5 bg-[#fb923c] rounded-sm -bottom-1 left-2"></div>
+          <div className="absolute w-1 h-1.5 bg-[#fb923c] rounded-sm -bottom-1 left-4"></div>
         </div>
 
         {/* Pipes */}
@@ -237,7 +261,7 @@ function MiniFlappyGame() {
                   e.stopPropagation()
                   resetGame()
                 }}
-                className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white px-4 py-2 rounded-md text-xs font-semibold transition-colors flex items-center gap-2 mx-auto"
+                className="bg-[#8b5cf6] hover:bg-[#7c3aed] text-white px-4 py-2 rounded-full text-xs font-semibold transition-colors flex items-center gap-2 mx-auto"
               >
                 <RotateCcw className="w-3 h-3" />
                 Jogar Novamente

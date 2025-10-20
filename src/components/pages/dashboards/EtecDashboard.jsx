@@ -148,6 +148,7 @@ const EtecDashboard = ({ onLogout }) => {
     createEvent: false,
     sendNotification: false,
     importUsers: false,
+    importTurmas: false,
     settings: false,
     viewReport: false
   })
@@ -168,7 +169,10 @@ const EtecDashboard = ({ onLogout }) => {
     curso: '',
     periodo: '',
     ano: '',
-    professor: ''
+    professor: '',
+    capacidade: '',
+    sala: '',
+    horario: ''
   })
 
   const [eventForm, setEventForm] = useState({
@@ -178,7 +182,10 @@ const EtecDashboard = ({ onLogout }) => {
     hora: '',
     local: '',
     publico: 'todos',
-    tipo: 'evento'
+    tipo: 'evento',
+    isPaid: false,
+    price: 0,
+    allowPresence: true
   })
 
   const [notificationForm, setNotificationForm] = useState({
@@ -496,9 +503,12 @@ const EtecDashboard = ({ onLogout }) => {
     setTurmaForm({
       nome: '',
       curso: '',
+      periodo: '',
+      ano: '',
       professor: '',
       capacidade: '',
-      horarios: []
+      sala: '',
+      horario: ''
     });
     setEventForm({
       titulo: '',
@@ -506,7 +516,11 @@ const EtecDashboard = ({ onLogout }) => {
       data: '',
       hora: '',
       local: '',
-      categoria: ''
+      publico: 'todos',
+      tipo: 'evento',
+      isPaid: false,
+      price: 0,
+      allowPresence: true
     });
     setNotificationForm({
       titulo: '',
@@ -761,6 +775,30 @@ const EtecDashboard = ({ onLogout }) => {
       showNotification('Usuários importados com sucesso!', 'success')
     } catch (error) {
       showNotification('Erro ao importar usuários: ' + error.message, 'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleImportTurmas = async (file) => {
+    try {
+      setLoading(true)
+      const formData = new FormData()
+      formData.append('file', file)
+
+      await authService.request('/turmas/import', {
+        method: 'POST',
+        body: formData,
+        headers: {}
+      })
+
+      closeModal('importTurmas')
+      loadTurmas()
+      loadStats()
+      
+      showNotification('Turmas importadas com sucesso!', 'success')
+    } catch (error) {
+      showNotification('Erro ao importar turmas: ' + error.message, 'error')
     } finally {
       setLoading(false)
     }
@@ -1092,13 +1130,22 @@ const EtecDashboard = ({ onLogout }) => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold dark:text-white text-gray-900">Gestão de Turmas</h2>
-        <button
-          onClick={() => openModal('createTurma')}
-          className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-3xl transition-colors"
-        >
-          <Plus size={18} />
-          Nova Turma
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => openModal('importTurmas')}
+            className="flex items-center gap-2 px-4 py-2 dark:bg-[#21262D] bg-gray-100 dark:text-white text-gray-800 rounded-3xl hover:bg-gray-200 dark:hover:bg-[#30363D] transition-colors"
+          >
+            <Upload size={18} />
+            Importar
+          </button>
+          <button
+            onClick={() => openModal('createTurma')}
+            className="flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-3xl transition-colors"
+          >
+            <Plus size={18} />
+            Nova Turma
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1741,7 +1788,420 @@ const EtecDashboard = ({ onLogout }) => {
       </div>
       </Modal>
     );
-  }, [modalState.createUser, userForm, handleCreateUser, handleUserFormChange]);  // Renderização principal
+  }, [modalState.createUser, userForm, handleCreateUser, handleUserFormChange]);
+
+  // Modal para criar evento
+  const createEventModal = useMemo(() => {
+    if (!modalState.createEvent) return null;
+    
+    return (
+      <Modal
+        isOpen={modalState.createEvent}
+        onClose={() => closeModal('createEvent')}
+        title="Criar Novo Evento"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+              Título do Evento
+            </label>
+            <input
+              type="text"
+              value={eventForm.titulo}
+              onChange={(e) => setEventForm(prev => ({ ...prev, titulo: e.target.value }))}
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              placeholder="Ex: Semana Tecnológica"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+              Descrição
+            </label>
+            <textarea
+              value={eventForm.descricao}
+              onChange={(e) => setEventForm(prev => ({ ...prev, descricao: e.target.value }))}
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              placeholder="Descrição completa do evento"
+              rows="3"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+                Data
+              </label>
+              <input
+                type="date"
+                value={eventForm.data}
+                onChange={(e) => setEventForm(prev => ({ ...prev, data: e.target.value }))}
+                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+                Horário
+              </label>
+              <input
+                type="time"
+                value={eventForm.hora}
+                onChange={(e) => setEventForm(prev => ({ ...prev, hora: e.target.value }))}
+                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+              Local
+            </label>
+            <input
+              type="text"
+              value={eventForm.local}
+              onChange={(e) => setEventForm(prev => ({ ...prev, local: e.target.value }))}
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              placeholder="Ex: Auditório Principal"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+                Tipo de Evento
+              </label>
+              <select
+                value={eventForm.tipo}
+                onChange={(e) => setEventForm(prev => ({ ...prev, tipo: e.target.value }))}
+                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              >
+                <option value="evento">Evento</option>
+                <option value="reuniao">Reunião</option>
+                <option value="atividade">Atividade</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+                Público Alvo
+              </label>
+              <select
+                value={eventForm.publico}
+                onChange={(e) => setEventForm(prev => ({ ...prev, publico: e.target.value }))}
+                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              >
+                <option value="todos">Todos</option>
+                <option value="alunos">Alunos</option>
+                <option value="professores">Professores</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="border-t dark:border-[#30363D] border-gray-300 pt-4">
+            <div className="flex items-start gap-3 mb-4">
+              <input
+                type="checkbox"
+                id="isPaid"
+                checked={eventForm.isPaid}
+                onChange={(e) => setEventForm(prev => ({ 
+                  ...prev, 
+                  isPaid: e.target.checked,
+                  price: e.target.checked ? prev.price : 0
+                }))}
+                className="w-4 h-4 text-[#8C43FF] rounded mt-1"
+              />
+              <div>
+                <label htmlFor="isPaid" className="block text-sm font-medium dark:text-gray-300 text-gray-700 cursor-pointer">
+                  Evento Pago
+                </label>
+                <p className="text-xs dark:text-gray-400 text-gray-600">Marque se o evento requer pagamento</p>
+              </div>
+            </div>
+
+            {eventForm.isPaid && (
+              <div className="ml-7 mb-4">
+                <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+                  Valor (R$)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={eventForm.price}
+                  onChange={(e) => setEventForm(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
+                  className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+                  placeholder="0.00"
+                />
+              </div>
+            )}
+
+            {!eventForm.isPaid && (
+              <div className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  id="allowPresence"
+                  checked={eventForm.allowPresence}
+                  onChange={(e) => setEventForm(prev => ({ ...prev, allowPresence: e.target.checked }))}
+                  className="w-4 h-4 text-[#8C43FF] rounded mt-1"
+                />
+                <div>
+                  <label htmlFor="allowPresence" className="block text-sm font-medium dark:text-gray-300 text-gray-700 cursor-pointer">
+                    É possível marcar presença neste evento
+                  </label>
+                  <p className="text-xs dark:text-gray-400 text-gray-600">
+                    Permite que alunos marquem presença no evento gratuito
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <button
+              onClick={() => closeModal('createEvent')}
+              className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleCreateEvent}
+              disabled={loading}
+              className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-2xl transition-colors disabled:opacity-50"
+            >
+              {loading ? 'Criando...' : 'Criar Evento'}
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
+  }, [modalState.createEvent, eventForm, handleCreateEvent, loading]);
+
+  // Modal para criar turma
+  const createTurmaModal = useMemo(() => {
+    if (!modalState.createTurma) return null;
+    
+    return (
+      <Modal
+        isOpen={modalState.createTurma}
+        onClose={() => closeModal('createTurma')}
+        title="Criar Nova Turma"
+        size="lg"
+      >
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+                Nome da Turma *
+              </label>
+              <input
+                type="text"
+                value={turmaForm.nome}
+                onChange={(e) => setTurmaForm(prev => ({ ...prev, nome: e.target.value }))}
+                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+                placeholder="Ex: 1º DS A"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+                Curso *
+              </label>
+              <select
+                value={turmaForm.curso}
+                onChange={(e) => setTurmaForm(prev => ({ ...prev, curso: e.target.value }))}
+                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              >
+                <option value="">Selecione o curso</option>
+                <option value="Desenvolvimento de Sistemas">Desenvolvimento de Sistemas</option>
+                <option value="Informática para Internet">Informática para Internet</option>
+                <option value="Redes de Computadores">Redes de Computadores</option>
+                <option value="Administração">Administração</option>
+                <option value="Logística">Logística</option>
+                <option value="Contabilidade">Contabilidade</option>
+                <option value="Recursos Humanos">Recursos Humanos</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+                Período *
+              </label>
+              <select
+                value={turmaForm.periodo}
+                onChange={(e) => setTurmaForm(prev => ({ ...prev, periodo: e.target.value }))}
+                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              >
+                <option value="">Período</option>
+                <option value="Manhã">Manhã</option>
+                <option value="Tarde">Tarde</option>
+                <option value="Noite">Noite</option>
+                <option value="Integral">Integral</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+                Ano *
+              </label>
+              <input
+                type="text"
+                value={turmaForm.ano}
+                onChange={(e) => setTurmaForm(prev => ({ ...prev, ano: e.target.value }))}
+                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+                placeholder="2025"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+                Sala
+              </label>
+              <input
+                type="text"
+                value={turmaForm.sala}
+                onChange={(e) => setTurmaForm(prev => ({ ...prev, sala: e.target.value }))}
+                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+                placeholder="Ex: Lab 01"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+                Professor Responsável
+              </label>
+              <select
+                value={turmaForm.professor}
+                onChange={(e) => setTurmaForm(prev => ({ ...prev, professor: e.target.value }))}
+                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              >
+                <option value="">Selecione o professor</option>
+                {usuarios.filter(u => u.role === 'professor').map(prof => (
+                  <option key={prof.id} value={prof.name}>{prof.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+                Capacidade
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="50"
+                value={turmaForm.capacidade}
+                onChange={(e) => setTurmaForm(prev => ({ ...prev, capacidade: e.target.value }))}
+                className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+                placeholder="40"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium dark:text-gray-300 text-gray-700 mb-2">
+              Horário das Aulas
+            </label>
+            <input
+              type="text"
+              value={turmaForm.horario}
+              onChange={(e) => setTurmaForm(prev => ({ ...prev, horario: e.target.value }))}
+              className="w-full px-3 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:bg-[#0D1117] bg-white dark:text-white text-gray-900 focus:ring-2 focus:ring-[#8C43FF] focus:border-transparent"
+              placeholder="Ex: 19:00 às 22:30"
+            />
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <button
+              onClick={() => closeModal('createTurma')}
+              className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={handleCreateTurma}
+              disabled={loading}
+              className="flex-1 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-2xl transition-colors disabled:opacity-50"
+            >
+              {loading ? 'Criando...' : 'Criar Turma'}
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
+  }, [modalState.createTurma, turmaForm, handleCreateTurma, loading, usuarios]);
+
+  // Modal para importar turmas
+  const importTurmasModal = useMemo(() => {
+    if (!modalState.importTurmas) return null;
+    
+    return (
+      <Modal
+        isOpen={modalState.importTurmas}
+        onClose={() => closeModal('importTurmas')}
+        title="Importar Turmas"
+        size="md"
+      >
+        <div className="space-y-4">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-4">
+            <h4 className="font-semibold text-blue-900 dark:text-blue-300 mb-2">Formato do Arquivo</h4>
+            <p className="text-sm text-blue-800 dark:text-blue-400 mb-3">
+              O arquivo deve ser CSV ou Excel com as seguintes colunas:
+            </p>
+            <ul className="text-sm text-blue-800 dark:text-blue-400 list-disc list-inside space-y-1">
+              <li><strong>nome</strong> - Nome da turma (Ex: 1º DS A)</li>
+              <li><strong>curso</strong> - Nome do curso</li>
+              <li><strong>periodo</strong> - Manhã, Tarde, Noite ou Integral</li>
+              <li><strong>ano</strong> - Ano letivo (Ex: 2025)</li>
+              <li><strong>professor</strong> - Nome do professor (opcional)</li>
+              <li><strong>sala</strong> - Sala de aula (opcional)</li>
+              <li><strong>capacidade</strong> - Número máximo de alunos (opcional)</li>
+              <li><strong>horario</strong> - Horário das aulas (opcional)</li>
+            </ul>
+          </div>
+
+          <div className="border-2 border-dashed dark:border-[#30363D] border-gray-300 rounded-2xl p-8 text-center">
+            <Upload size={48} className="mx-auto dark:text-gray-400 text-gray-500 mb-3" />
+            <p className="dark:text-gray-300 text-gray-700 font-medium mb-2">
+              Arraste o arquivo aqui ou clique para selecionar
+            </p>
+            <p className="text-sm dark:text-gray-400 text-gray-600 mb-4">
+              Formatos aceitos: .csv, .xlsx, .xls
+            </p>
+            <input
+              type="file"
+              accept=".csv,.xlsx,.xls"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  handleImportTurmas(file);
+                }
+              }}
+              className="hidden"
+              id="import-turmas-file"
+            />
+            <label
+              htmlFor="import-turmas-file"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-2xl cursor-pointer transition-colors"
+            >
+              <Upload size={18} />
+              Selecionar Arquivo
+            </label>
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <button
+              onClick={() => closeModal('importTurmas')}
+              className="flex-1 px-4 py-2 border dark:border-[#30363D] border-gray-300 rounded-2xl dark:text-gray-300 text-gray-700 hover:bg-gray-100 dark:hover:bg-[#21262D] transition-colors"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
+  }, [modalState.importTurmas]);
+
+  // Renderização principal
   return (
     <div className="min-h-screen bg-[#f3e8ff] dark:bg-[#121212]">
       <div className="flex">
@@ -1819,6 +2279,9 @@ const EtecDashboard = ({ onLogout }) => {
 
       {/* Modais */}
       {createUserModal}
+      {createEventModal}
+      {createTurmaModal}
+      {importTurmasModal}
       {/* Outros modais seriam implementados aqui */}
     </div>
   )

@@ -26,6 +26,7 @@ const EventsPage = () => {
       location: "Auditório Principal",
       isPaid: false,
       price: 0,
+      allowPresence: true,
     },
     {
       id: 3,
@@ -39,6 +40,7 @@ const EventsPage = () => {
       location: "Auditório",
       isPaid: true,
       price: 200,
+      allowPresence: false,
     },
     {
       id: 4,
@@ -52,6 +54,7 @@ const EventsPage = () => {
       location: "Quadra Poliesportiva",
       isPaid: true,
       price: 10.00,
+      allowPresence: false,
     },
     {
       id: 6,
@@ -65,6 +68,7 @@ const EventsPage = () => {
       location: "Laboratórios de Informática",
       isPaid: false,
       price: 0,
+      allowPresence: false,
     },
   ]
 
@@ -81,8 +85,8 @@ const EventsPage = () => {
       // Se for pago, redirecionar para página de confirmação
       setEventToConfirm(event)
       setShowConfirmation(true)
-    } else {
-      // Se for gratuito, apenas marcar presença
+    } else if (event.allowPresence) {
+      // Se for gratuito E permitir marcar presença, apenas marcar presença
       handleMarkPresence(event.id)
     }
   }
@@ -148,22 +152,24 @@ const EventsPage = () => {
                 >
                   Saber mais
                 </button>
-                <button
-                  onClick={() => handleParticipate(event)}
-                  className={`px-5 py-2 rounded-xl font-semibold shadow transition-colors ${
-                    markedEvents.includes(event.id)
-                      ? "bg-green-500 text-white"
-                      : event.isPaid
-                      ? "bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600"
-                      : "bg-white/80 dark:bg-gray-700 text-[#8C43FF] dark:text-white border border-[#8C43FF] dark:border-gray-600"
-                  }`}
-                >
-                  {markedEvents.includes(event.id) 
-                    ? "Participação Confirmada" 
-                    : event.isPaid 
-                    ? "Participar (Pago)" 
-                    : "Marcar Presença"}
-                </button>
+                {(event.isPaid || event.allowPresence) && (
+                  <button
+                    onClick={() => handleParticipate(event)}
+                    className={`px-5 py-2 rounded-xl font-semibold shadow transition-colors ${
+                      markedEvents.includes(event.id)
+                        ? "bg-green-500 text-white"
+                        : event.isPaid
+                        ? "bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600"
+                        : "bg-white/80 dark:bg-gray-700 text-[#8C43FF] dark:text-white border border-[#8C43FF] dark:border-gray-600"
+                    }`}
+                  >
+                    {markedEvents.includes(event.id) 
+                      ? "Participação Confirmada" 
+                      : event.isPaid 
+                      ? "Participar (Pago)" 
+                      : "Marcar Presença"}
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -199,7 +205,7 @@ const EventsPage = () => {
           </div>
           
           {/* Botão de participação no modal */}
-            {user?.role === 'aluno' && (
+            {user?.role === 'aluno' && (selectedEvent.isPaid || selectedEvent.allowPresence) && (
               <button
                 onClick={() => {
                   setSelectedEvent(null)
