@@ -5,6 +5,28 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Send, Bot, User, Loader2, Trash2, Copy, Music, Play, Pause, Volume2, VolumeX, Volume1, GamepadIcon, Heart, Smile, Timer, Mic, Image as ImageIcon, Settings } from "lucide-react"
 import { GoogleGenerativeAI } from "@google/generative-ai"
 
+// Remove autoapresentações e repetições comuns do modelo
+const sanitizeModelText = (text) => {
+  if (!text) return text
+  // Normaliza quebras e espaços
+  let t = text.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim()
+  const introRegexes = [
+    /\b(sou|eu\s+sou)\b.*\bia\s*tec\b/i,
+    /assistente\s+virtual\s+(da|do)\s+etec/i,
+    /fui\s+criad[ao].*?ajudar/i,
+    /em\s+que\s+posso\s+te\s+ajudar/i,
+    /posso\s+te\s+ajudar\s+hoje/i,
+    /meus?\s+criadores/i
+  ]
+  // Remove linhas iniciais claramente introdutórias
+  const lines = t.split(/\n+/)
+  while (lines.length && introRegexes.some((rx) => rx.test(lines[0]))) {
+    lines.shift()
+  }
+  t = lines.join("\n").trim()
+  return t || text
+}
+
 // Hook para animação de digitação
 const useTypingAnimation = (words, typingSpeed = 100, deletingSpeed = 50, pauseTime = 2000) => {
   const [displayText, setDisplayText] = useState("")
@@ -178,14 +200,7 @@ const CloudPage = ({ onOpenPomodoro }) => {
   const [apiReady, setApiReady] = useState(false)
   
   // Estados da IATEC
-  const [messages, setMessages] = useState([
-    {
-      id: "1",
-      content: "Olá! Eu sou a IAtec, sua assistente virtual oficial do EtecNotes. Como posso ajudá-lo hoje?",
-      role: "assistant",
-      timestamp: new Date(),
-    },
-  ])
+  const [messages, setMessages] = useState([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [additionalContext, setAdditionalContext] = useState("") // Campo para alimentar a IA
@@ -254,35 +269,35 @@ const CloudPage = ({ onOpenPomodoro }) => {
       // Usar o endpoint v1beta com gemini-2.0-flash (mais novo e disponível)
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`
       
+      // Prompt de regras para evitar autoapresentação e repetição
+      const SYSTEM_PROMPT = `Você é a IAtec, assistente da Etec de Peruíbe.
+Regras:
+- Não se apresente nem explique quem você é; responda direto ao ponto.
+- Não repita que foi criada/treinada ou sua missão.
+- Seja claro, objetivo e educado. Emoji no máximo 1 se fizer sentido.
+- Se a pergunta for vaga (ex.: "oi"), responda curto e pergunte o objetivo.
+- Use o site oficial quando necessário: https://etecperuibe.cps.sp.gov.br/
+Informações oficiais:
+- Horário: 7h às 22h; Secretaria fecha aos domingos; Aulas: seg-sex.
+- Eventos: Feira Tecnológica (20/10/2025), Entrega de notas (28/10/2025), Semana do TCC (04-08/11/2025).
+${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
+
+      // Histórico curto para coerência
+      const history = messages
+        .slice(-8)
+        .filter((m) => m.content && !m.isLoading)
+        .map((m) => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.content }] }))
+
+      const contents = [
+        ...history,
+        { role: 'user', parts: [{ text: userMessage }] }
+      ]
+
       const payload = {
-        contents: [
-          {
-            parts: [
-              {
-                text: `Você é o assistente oficial da EtecNotes, chamado IAtec.
-
-INFORMAÇÕES DA ETEC DE PERUÍBE:
-Para qualqur dúvida, basear-se no site oficial: https://etecperuibe.cps.sp.gov.br/
-
-- Horário de funcionamento: 7h às 22h
-- Secretaria fecha aos domingos
-- Aulas: Segunda a sexta-feira
-
-PRÓXIMOS EVENTOS:
-- Feira Tecnológica: 20 de outubro de 2025
-- Entrega de notas: 28 de outubro de 2025
-- Semana do TCC: 4 a 8 de novembro de 2025
-
-${additionalContext ? `INFORMAÇÕES ADICIONAIS:\n${additionalContext}\n` : ''}
-
-INSTRUÇÃO: Responda de forma clara, amigável e educacional. Seja sempre prestativo e forneça informações precisas sobre a Etec e se necessario, baseie-se no site oficial, Seus criadores sâo Gustavo Silva e Daniel Pereira.
-PERGUNTA DO ALUNO: ${userMessage}`
-              }
-            ]
-          }
-        ],
+        systemInstruction: { role: 'system', parts: [{ text: SYSTEM_PROMPT }] },
+        contents,
         generationConfig: {
-          temperature: 0.7,
+          temperature: 0.4,
           maxOutputTokens: 1024,
         }
       }
@@ -301,8 +316,9 @@ PERGUNTA DO ALUNO: ${userMessage}`
         throw new Error(`Erro ${response.status}: ${errorData.error?.message || "Erro desconhecido"}`)
       }
 
-      const data = await response.json()
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sem resposta"
+  const data = await response.json()
+  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sem resposta"
+  const text = sanitizeModelText(raw)
       
       console.log("✅ Resposta recebida:", text.substring(0, 100) + "...")
       return text
@@ -363,7 +379,12 @@ PERGUNTA DO ALUNO: ${userMessage}`
 
     setMessages((prev) => [...prev, userMessage, loadingMessage])
     setInput("")
-    setIsLoading(true)
+    // Garantir altura fixa do textarea
+    if (inputRef.current) {
+      inputRef.current.style.height = '48px'
+      inputRef.current.style.overflowY = 'auto'
+    }
+  setIsLoading(true)
 
     try {
       // Prepara dados da imagem se existir
@@ -399,6 +420,10 @@ PERGUNTA DO ALUNO: ${userMessage}`
       )
     } finally {
       setIsLoading(false)
+      // Voltar foco para o input após envio
+      requestAnimationFrame(() => {
+        if (inputRef.current) inputRef.current.focus()
+      })
     }
   }
 
@@ -524,15 +549,15 @@ PERGUNTA DO ALUNO: ${userMessage}`
   }
 
   const clearChat = () => {
-    setMessages([
-      {
-        id: "1",
-        content: "Olá! Eu sou a IAtec, sua assistente virtual oficial do EtecNotes. Como posso ajudá-lo hoje?",
-        role: "assistant",
-        timestamp: new Date(),
-      },
-    ])
+    setMessages([])
     removeImage()
+    if (inputRef.current) {
+      inputRef.current.value = ''
+      inputRef.current.style.height = '48px'
+      inputRef.current.style.overflowY = 'auto'
+      // Garantir foco após limpar
+      requestAnimationFrame(() => inputRef.current && inputRef.current.focus())
+    }
   }
 
   const copyMessage = (content) => {
@@ -752,7 +777,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
   }, [isPlaying, currentMusic])
 
   return (
-    <div className="flex flex-col h-full bg-[#f3e8ff] dark:bg-[#121212]">
+    <div className="flex flex-col h-screen overflow-hidden bg-[#f3e8ff] dark:bg-[#121212]">
   <style>{`
         .custom-scrollbar {
           --sb-size: 8px;
@@ -843,7 +868,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
         }
       `}</style>
 
-  <div className="w-full max-w-5xl mx-auto px-4 py-6 flex flex-col h-full bg-[#f3e8ff] dark:bg-[#121212]">
+  <div className="w-full max-w-5xl mx-auto px-4 py-6 flex flex-col h-full overflow-hidden bg-[#f3e8ff] dark:bg-[#121212]">
         {/* Header */}
         <div className="flex items-center justify-between mb-4 flex-shrink-0">
           <div>
@@ -920,16 +945,16 @@ PERGUNTA DO ALUNO: ${userMessage}`
               )}
               
               {/* Chat Messages - scroll apenas nas mensagens */}
-              <div className="flex-1 overflow-y-auto p-4 pb-28 custom-scrollbar">
+              <div className="flex-1 overflow-y-auto overscroll-contain p-4 custom-scrollbar">
                 <AnimatePresence>
-                  {messages.length === 1 ? (
+                  {messages.length === 0 ? (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       className="w-full max-w-3xl mx-auto text-center py-12 space-y-8"
                     >
                       <div style={{ fontFamily: 'Inter, system-ui, -apple-system, Roboto, "Helvetica Neue", Arial' }} className="space-y-3">
-                        <h2 className="text-3xl md:text-4xl font-medium text-gray-900">O que a <span className="text-[#8C43FF]">IATec</span> pode</h2>
+                        <h2 className="text-3xl md:text-4xl font-medium text-gray-900 dark:text-gray-100">O que a <span className="text-[#8C43FF]">IATec</span> pode</h2>
                         <div className="flex items-center justify-center gap-3">
                           <h3 className="text-3xl md:text-4xl font-semibold text-gray-500 tracking-tight">{animatedText}</h3>
                           <span className="w-0.5 h-8 bg-[#8C43FF] animate-pulse" />
@@ -1001,8 +1026,8 @@ PERGUNTA DO ALUNO: ${userMessage}`
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Input Area - Absolutamente fixo no fundo, fora do scroll */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white dark:from-[#1E1E1E] to-white/80 dark:to-[#1E1E1E]/80 border-t dark:border-[#333333] border-gray-200 p-3 backdrop-blur-md rounded-b-3xl">
+              {/* Input Area - fixa no fundo do card */}
+              <div className="flex-shrink-0 border-t dark:border-[#333333] border-gray-200 p-3 bg-gradient-to-t from-white dark:from-[#1E1E1E] to-white/80 dark:to-[#1E1E1E]/80 backdrop-blur-md">
                 {/* Visualizador de Gravação */}
                 {isRecording && (
                   <div className="mb-3 flex justify-center">
@@ -1041,18 +1066,11 @@ PERGUNTA DO ALUNO: ${userMessage}`
                         }
                       }}
                       placeholder="Mensagem para IAtec..."
-                      rows={1}
-                      className="w-full text-left pl-4 pr-28 py-3 rounded-3xl bg-[#58417d] dark:bg-[#8c43ff] border border-[#1f1f1f] text-gray-200 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-[#8C43FF] transition-all dark:opacity-40 hover:opacity-100 resize-none overflow-hidden min-h-[48px] max-h-[120px]"
+                      rows={2}
+                      className="w-full text-left pl-4 pr-28 py-3 rounded-3xl bg-[#58417d] dark:bg-[#8c43ff] border border-[#1f1f1f] text-gray-200 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-[#8C43FF] transition-all dark:opacity-40 hover:opacity-100 resize-none overflow-y-auto h-12"
                       autoComplete="off"
                       disabled={isLoading}
-                      style={{
-                        height: 'auto',
-                        overflowY: input.length > 100 ? 'auto' : 'hidden'
-                      }}
-                      onInput={(e) => {
-                        e.target.style.height = 'auto'
-                        e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px'
-                      }}
+                      style={{ height: '48px' }}
                     />
                     {/* action icons to the right */}
                     <div className="absolute right-2 bottom-3 flex items-center gap-2">
