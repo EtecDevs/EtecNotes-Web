@@ -19,7 +19,7 @@ function MiniFlappyGame() {
   const GRAVITY = 0.03
   const JUMP_STRENGTH = -1.5
   const PIPE_WIDTH = 40
-  const PIPE_GAP = 100
+  const PIPE_GAP = 80
   const PIPE_SPEED = 3
   const GAME_WIDTH = 300
   const GAME_HEIGHT = 200
@@ -145,7 +145,7 @@ function MiniFlappyGame() {
   }
 
   return (
-    <div className="bg-[#1a1a1a] rounded-lg p-4 border border-[#2d2d2d] shadow-lg">
+    <div className="bg-[#58417d] dark:bg-[#1a1a1a] rounded-lg p-4 border border-[#6b32c3] dark:border-[#2d2d2d] shadow-lg">
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-[#8b5cf6] font-semibold text-sm flex items-center gap-2">
           <span className="text-lg">🦆</span>

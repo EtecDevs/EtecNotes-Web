@@ -51,7 +51,7 @@ function Footer({ isAuthenticated = false, onNavigate, alwaysShowFull = false })
 
   if (shouldShowFull) {
     return (
-      <footer className="bg-[#181818] border-t border-[#2d2d2d] mt-20 overflow-hidden">
+      <footer className="bg-[#58417d] dark:bg-[#181818] border-t border-[#2d2d2d] mt-20 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 py-16">
           {/* Container principal com jogo */}
           <div className="flex flex-col lg:flex-row gap-8 items-start justify-between mb-12">

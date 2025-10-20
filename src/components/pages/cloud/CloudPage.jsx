@@ -220,7 +220,7 @@ const CloudPage = ({ onOpenPomodoro }) => {
     "esclarecer para você?",
     "solucionar para você?",
     "ensinar a você?",
-    "ajudar você?",
+    "fazer para ajudar você?",
     "responder para você?"
   ]
   const animatedText = useTypingAnimation(typingWords, 80, 40, 1500)
@@ -275,8 +275,7 @@ PRÓXIMOS EVENTOS:
 
 ${additionalContext ? `INFORMAÇÕES ADICIONAIS:\n${additionalContext}\n` : ''}
 
-INSTRUÇÃO: Responda de forma ruim, desamigável e não educacional. Seja sempre imprestável, fale palavões e forneça informações precisas sobre a Etec e se necessario, baseie-se no site oficial.
-
+INSTRUÇÃO: Responda de forma clara, amigável e educacional. Seja sempre prestativo e forneça informações precisas sobre a Etec e se necessario, baseie-se no site oficial, Seus criadores sâo Gustavo Silva e Daniel Pereira.
 PERGUNTA DO ALUNO: ${userMessage}`
               }
             ]
@@ -844,7 +843,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
         }
       `}</style>
 
-  <div className="w-full max-w-5xl mx-auto px-4 py-6 flex flex-col h-full bg-[#0f0f0f] dark:bg-[#0f0f0f]">
+  <div className="w-full max-w-5xl mx-auto px-4 py-6 flex flex-col h-full bg-[#f3e8ff] dark:bg-[#121212]">
         {/* Header */}
         <div className="flex items-center justify-between mb-4 flex-shrink-0">
           <div>
@@ -920,8 +919,8 @@ PERGUNTA DO ALUNO: ${userMessage}`
                 </div>
               )}
               
-              {/* Chat Messages - show hero when only initial assistant message exists */}
-              <div className="flex-1 overflow-y-auto p-4 custom-scrollbar pb-20">
+              {/* Chat Messages - scroll apenas nas mensagens */}
+              <div className="flex-1 overflow-y-auto p-4 pb-28 custom-scrollbar">
                 <AnimatePresence>
                   {messages.length === 1 ? (
                     <motion.div
@@ -930,9 +929,9 @@ PERGUNTA DO ALUNO: ${userMessage}`
                       className="w-full max-w-3xl mx-auto text-center py-12 space-y-8"
                     >
                       <div style={{ fontFamily: 'Inter, system-ui, -apple-system, Roboto, "Helvetica Neue", Arial' }} className="space-y-3">
-                        <h2 className="text-3xl md:text-4xl font-medium text-white">O que a <span className="text-[#8C43FF]">IAtec</span> pode</h2>
+                        <h2 className="text-3xl md:text-4xl font-medium text-gray-900">O que a <span className="text-[#8C43FF]">IATec</span> pode</h2>
                         <div className="flex items-center justify-center gap-3">
-                          <h3 className="text-3xl md:text-4xl font-semibold text-white tracking-tight">{animatedText}</h3>
+                          <h3 className="text-3xl md:text-4xl font-semibold text-gray-500 tracking-tight">{animatedText}</h3>
                           <span className="w-0.5 h-8 bg-[#8C43FF] animate-pulse" />
                         </div>
                       </div>
@@ -950,7 +949,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
                             initial={{ opacity: 0, y: 6 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.06 }}
-                            className="px-4 py-2 rounded-full border border-[#262626] bg-[#0f0f0f] text-gray-300 hover:bg-[#151515] hover:border-[#8C43FF]/30 transition-all text-sm"
+                            className="px-4 py-2 rounded-full border border-[#262626] bg-[#58417d] text-gray-300 hover:bg-[#151515] hover:border-[#8C43FF]/30 transition-all text-sm"
                           >
                             {suggestion}
                           </motion.button>
@@ -958,7 +957,8 @@ PERGUNTA DO ALUNO: ${userMessage}`
                       </div>
                     </motion.div>
                   ) : (
-                    messages.map((message) => (
+                    <div className="w-full max-w-3xl mx-auto space-y-3">
+                    {messages.map((message) => (
                       <motion.div
                         key={message.id}
                         initial={{ opacity: 0, y: 12 }}
@@ -973,7 +973,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
                           </div>
                         )}
 
-                        <div className={`max-w-[75%] rounded-lg px-3 py-2 ${message.role === "user" ? "bg-[#8C43FF] text-white" : "bg-[#111111] text-gray-200 border border-[#222]"}`}>
+                        <div className={`max-w-[75%] rounded-3xl px-4 py-3 ${message.role === "user" ? "bg-[#8C43FF] text-white" : "bg-[#111111] text-gray-200 border border-[#222]"}`}>
                           {message.isLoading ? (
                             <div className="flex items-center gap-2"><Loader2 size={14} className="animate-spin" /><span className="text-xs">Pensando...</span></div>
                           ) : (
@@ -994,13 +994,14 @@ PERGUNTA DO ALUNO: ${userMessage}`
                           <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#222] flex items-center justify-center"><User size={14} className="text-gray-400" /></div>
                         )}
                       </motion.div>
-                    ))
+                    ))}
+                    </div>
                   )}
                 </AnimatePresence>
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Input Area - Fixed at bottom */}
+              {/* Input Area - Absolutamente fixo no fundo, fora do scroll */}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white dark:from-[#1E1E1E] to-white/80 dark:to-[#1E1E1E]/80 border-t dark:border-[#333333] border-gray-200 p-3 backdrop-blur-md rounded-b-3xl">
                 {/* Visualizador de Gravação */}
                 {isRecording && (
@@ -1027,20 +1028,34 @@ PERGUNTA DO ALUNO: ${userMessage}`
                   </div>
                 )}
                 
-                <form onSubmit={handleSubmit} className="flex items-center gap-3">
+                <form onSubmit={handleSubmit} className="flex items-end gap-3">
                   <div className="flex-1 relative">
-                    <input
+                    <textarea
                       ref={inputRef}
-                      type="text"
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault()
+                          handleSubmit(e)
+                        }
+                      }}
                       placeholder="Mensagem para IAtec..."
-                      className="w-full text-center px-4 py-3 rounded-3xl bg-[#0b0b0b] border border-[#1f1f1f] text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8C43FF] transition-all"
+                      rows={1}
+                      className="w-full text-left pl-4 pr-28 py-3 rounded-3xl bg-[#58417d] dark:bg-[#8c43ff] border border-[#1f1f1f] text-gray-200 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-[#8C43FF] transition-all dark:opacity-40 hover:opacity-100 resize-none overflow-hidden min-h-[48px] max-h-[120px]"
                       autoComplete="off"
                       disabled={isLoading}
+                      style={{
+                        height: 'auto',
+                        overflowY: input.length > 100 ? 'auto' : 'hidden'
+                      }}
+                      onInput={(e) => {
+                        e.target.style.height = 'auto'
+                        e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px'
+                      }}
                     />
                     {/* action icons to the right */}
-                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
+                    <div className="absolute right-2 bottom-3 flex items-center gap-2">
                       <button type="button" onClick={() => fileInputRef.current?.click()} className="p-2 rounded-full hover:bg-[#151515] transition-colors" title="Enviar imagem">
                         <ImageIcon size={16} className="text-gray-400" />
                       </button>
@@ -1051,7 +1066,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
                     </div>
                   </div>
 
-                  <button type="submit" disabled={(!input.trim() && !selectedImage) || isLoading} className="px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-full transition-colors flex items-center gap-2">
+                  <button type="submit" disabled={(!input.trim() && !selectedImage) || isLoading} className="px-4 py-2 bg-[#58417d] dark:bg-[#8C43FF] dark:hover:bg-[#9955FF] text-white rounded-full transition-colors flex items-center gap-2">
                     {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                   </button>
                   <button type="button" onClick={() => setShowContextDialog(true)} className="p-2 rounded-full hover:bg-[#151515] transition-colors" title="Contexto da IA">
@@ -1059,23 +1074,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
                   </button>
                 </form>
 
-                {/* Quick Actions */}
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {[
-                    "Quais cursos técnicos estão disponíveis?",
-                    "Como funciona o processo de matrícula?",
-                    "Informações sobre a Semana Tecnológica",
-                    "Horários da biblioteca",
-                  ].map((suggestion, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setInput(suggestion)}
-                      className="px-2 py-1 text-xs rounded-full dark:bg-[#2D2D2D] bg-gray-100 dark:text-gray-300 text-gray-600 hover:bg-[#8C43FF] hover:text-white transition-colors"
-                    >
-                      {suggestion}
-                    </button>
-                  ))}
-                </div>
+                {/* Quick Actions removidos para evitar duplicação de sugestões (mantidas apenas no topo) */}
               </div>
             </>
           ) : (

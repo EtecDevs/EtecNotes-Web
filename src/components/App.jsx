@@ -520,97 +520,6 @@ function AppContent() {
   }, [pomodoroActive, pomodoroPhase, pomodoroTime, pomodoroSettings])
   // ============ FIM FUNÇÕES POMODORO ============
 
-  // 🎯 Listener global para remover focus ao clicar com mouse
-  // MAS permitir foco quando Modo de Navegação (N) estiver ativo
-  useEffect(() => {
-    // Garantir que body nunca seja focável
-    document.body.setAttribute('tabindex', '-1')
-    document.body.style.outline = 'none'
-    
-    const handleMouseDown = (e) => {
-      // 🎯 Se Modo de Navegação estiver ativo, não interferir
-      if (navigationMode) return
-      
-      // Remover classes de navegação por teclado
-      document.querySelectorAll('.keyboard-navigating').forEach(el => {
-        el.classList.remove('keyboard-navigating')
-      })
-      
-      // Remover foco após um pequeno delay (para não interferir com o clique)
-      setTimeout(() => {
-        const activeElement = document.activeElement
-        
-        // Log para debug - ver qual elemento está recebendo foco
-        if (activeElement && activeElement !== document.body) {
-          console.log('🎯 Elemento focado:', activeElement.tagName, activeElement.className, activeElement.id)
-        }
-        
-        // 🎯 NÃO remover foco de botões de navegação do header
-        const isHeaderNavButton = activeElement?.closest('header')?.contains(activeElement) && 
-                                   activeElement?.tagName === 'BUTTON'
-        
-        // Não remover foco de inputs/textareas (usuário pode querer digitar)
-        // Não remover foco de botões do header
-        if (activeElement && 
-            !isHeaderNavButton &&
-            activeElement.tagName !== 'INPUT' && 
-            activeElement.tagName !== 'TEXTAREA' &&
-            activeElement.tagName !== 'SELECT') {
-          activeElement.blur()
-        }
-        
-        // ❌ REMOVIDO: document.body.blur() - estava causando perda de foco nos inputs
-        // Deixar o body com foco é melhor que remover foco de inputs acidentalmente
-      }, 10)
-    }
-
-    // Listener adicional para prevenir foco no body e elementos estruturais
-    // MAS permitir quando Modo de Navegação estiver ativo
-    const preventStructuralFocus = (e) => {
-      // 🎯 Se Modo de Navegação estiver ativo, permitir foco em tudo
-      if (navigationMode) return
-      
-      const target = e.target
-      const tagName = target.tagName
-      
-      // 🔥 EXCEÇÃO: Permitir foco em inputs e elementos interativos
-      if (tagName === 'INPUT' || 
-          tagName === 'TEXTAREA' || 
-          tagName === 'BUTTON' ||
-          tagName === 'SELECT' ||
-          tagName === 'A' ||
-          target.contentEditable === 'true') {
-        return // Permite foco normal
-      }
-      
-      // Prevenir foco em elementos estruturais
-      if (tagName === 'BODY' || 
-          tagName === 'HTML' || 
-          tagName === 'MAIN' ||
-          tagName === 'DIV' && !target.hasAttribute('role') && !target.onclick ||
-          tagName === 'SECTION' ||
-          tagName === 'ARTICLE' ||
-          tagName === 'HEADER' ||
-          tagName === 'FOOTER') {
-        e.preventDefault()
-        e.stopPropagation()
-        target.blur()
-        console.log('🚫 Foco bloqueado em:', tagName, target.className)
-      }
-    }
-
-    document.addEventListener('mousedown', handleMouseDown)
-    // Mudado de capture:true para capture:false para não bloquear foco em inputs
-    document.body.addEventListener('focus', preventStructuralFocus, false)
-    document.body.addEventListener('focusin', preventStructuralFocus, false)
-    
-    return () => {
-      document.removeEventListener('mousedown', handleMouseDown)
-      document.body.removeEventListener('focus', preventStructuralFocus, false)
-      document.body.removeEventListener('focusin', preventStructuralFocus, false)
-    }
-  }, [navigationMode]) // 🎯 Recriar listeners quando navigationMode mudar
-
   // Scroll to top when changing main tabs so pages always start at the top
   useEffect(() => {
     // try to scroll the app's main container first (it's the one with overflow-auto)
@@ -1243,13 +1152,9 @@ function AppContent() {
         <main 
           id="main-content" 
           className="flex-1 overflow-auto bg-[#f3e8ff] dark:bg-[#121212] transition-colors duration-300"
-          tabIndex={-1}
           aria-label="Conteúdo principal"
-          onFocus={(e) => {
-            // Prevenir foco visual no main
-            e.target.blur()
-          }}
           style={{ outline: 'none' }}
+          tabIndex={-1}
         >
           {renderActivePage()}
         </main>

@@ -156,6 +156,16 @@ article:focus {
   box-shadow: none !important;
 }
 
+/* 🔥 CRÍTICO: Remover outline do main-content especificamente */
+main#main-content,
+main#main-content:focus,
+main#main-content:focus-visible,
+main#main-content:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
 /* 🎯 EXCEÇÃO: Botões de navegação do header PODEM ter outline */
 header button:focus,
 header button:focus-visible {
