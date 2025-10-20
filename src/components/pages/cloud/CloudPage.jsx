@@ -844,7 +844,7 @@ PERGUNTA DO ALUNO: ${userMessage}`
         }
       `}</style>
 
-      <div className="w-full max-w-5xl mx-auto px-4 py-6 flex flex-col h-full">
+  <div className="w-full max-w-5xl mx-auto px-4 py-6 flex flex-col h-full bg-[#0f0f0f] dark:bg-[#0f0f0f]">
         {/* Header */}
         <div className="flex items-center justify-between mb-4 flex-shrink-0">
           <div>
@@ -920,71 +920,82 @@ PERGUNTA DO ALUNO: ${userMessage}`
                 </div>
               )}
               
-              {/* Chat Messages - Flex container com overflow */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar pb-20">
+              {/* Chat Messages - show hero when only initial assistant message exists */}
+              <div className="flex-1 overflow-y-auto p-4 custom-scrollbar pb-20">
                 <AnimatePresence>
-                  {messages.map((message) => (
+                  {messages.length === 1 ? (
                     <motion.div
-                      key={message.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.3 }}
-                      className={`flex gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                      className="w-full max-w-3xl mx-auto text-center py-12 space-y-8"
                     >
-                      {message.role === "assistant" && (
-                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#8C43FF] flex items-center justify-center flex-col">
-                          <Bot size={14} className="text-white" />
+                      <div style={{ fontFamily: 'Inter, system-ui, -apple-system, Roboto, "Helvetica Neue", Arial' }} className="space-y-3">
+                        <h2 className="text-3xl md:text-4xl font-medium text-white">O que a <span className="text-[#8C43FF]">IAtec</span> pode</h2>
+                        <div className="flex items-center justify-center gap-3">
+                          <h3 className="text-3xl md:text-4xl font-semibold text-white tracking-tight">{animatedText}</h3>
+                          <span className="w-0.5 h-8 bg-[#8C43FF] animate-pulse" />
                         </div>
-                      )}
-
-                      <div
-                        className={`max-w-[75%] rounded-lg px-3 py-2 ${
-                          message.role === "user"
-                            ? "bg-[#8C43FF] text-white rounded-br-none"
-                            : "dark:bg-[#2D2D2D] bg-gray-100 dark:text-white text-gray-800 rounded-bl-none"
-                        }`}
-                      >
-                        {message.isLoading ? (
-                          <div className="flex items-center gap-2">
-                            <Loader2 size={14} className="animate-spin" />
-                            <span className="text-xs">Pensando...</span>
-                          </div>
-                        ) : (
-                          <>
-                            {message.image && (
-                              <img 
-                                src={message.image} 
-                                alt="Imagem enviada" 
-                                className="max-w-full h-auto rounded-lg mb-1"
-                              />
-                            )}
-                            <p className="text-sm leading-snug whitespace-pre-wrap">{message.content}</p>
-                            <div className="flex items-center justify-between mt-1 gap-1">
-                              <span className="text-xs opacity-60">{formatTime(message.timestamp)}</span>
-                              {message.role === "assistant" && (
-                                <div className="flex gap-0.5">
-                                  <button
-                                    onClick={() => copyMessage(message.content)}
-                                    className="p-0.5 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
-                                    title="Copiar mensagem"
-                                  >
-                                    <Copy size={11} className="opacity-60" />
-                                  </button>
-                                </div>
-                              )}
-                            </div>
-                          </>
-                        )}
                       </div>
 
-                      {message.role === "user" && (
-                        <div className="flex-shrink-0 w-6 h-6 rounded-full dark:bg-[#2D2D2D] bg-gray-200 flex items-center justify-center">
-                          <User size={14} className="dark:text-gray-400 text-gray-600" />
-                        </div>
-                      )}
+                      <div className="flex flex-wrap justify-center gap-3 mt-6">
+                        {[
+                          "Quais cursos técnicos estão disponíveis?",
+                          "Como funciona o processo de matrícula?",
+                          "Informações sobre a Semana Tecnológica",
+                          "Horários da biblioteca",
+                        ].map((suggestion, index) => (
+                          <motion.button
+                            key={index}
+                            onClick={() => setInput(suggestion)}
+                            initial={{ opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.06 }}
+                            className="px-4 py-2 rounded-full border border-[#262626] bg-[#0f0f0f] text-gray-300 hover:bg-[#151515] hover:border-[#8C43FF]/30 transition-all text-sm"
+                          >
+                            {suggestion}
+                          </motion.button>
+                        ))}
+                      </div>
                     </motion.div>
-                  ))}
+                  ) : (
+                    messages.map((message) => (
+                      <motion.div
+                        key={message.id}
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -12 }}
+                        transition={{ duration: 0.25 }}
+                        className={`flex gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                      >
+                        {message.role === "assistant" && (
+                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#8C43FF] flex items-center justify-center">
+                            <Bot size={14} className="text-white" />
+                          </div>
+                        )}
+
+                        <div className={`max-w-[75%] rounded-lg px-3 py-2 ${message.role === "user" ? "bg-[#8C43FF] text-white" : "bg-[#111111] text-gray-200 border border-[#222]"}`}>
+                          {message.isLoading ? (
+                            <div className="flex items-center gap-2"><Loader2 size={14} className="animate-spin" /><span className="text-xs">Pensando...</span></div>
+                          ) : (
+                            <>
+                              {message.image && <img src={message.image} alt="Imagem enviada" className="max-w-full h-auto rounded-lg mb-1" />}
+                              <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                              <div className="flex items-center justify-between mt-1">
+                                <span className="text-xs opacity-60">{formatTime(message.timestamp)}</span>
+                                {message.role === "assistant" && (
+                                  <button onClick={() => copyMessage(message.content)} className="p-0.5 rounded hover:bg-white/5 transition-colors" title="Copiar resposta"><Copy size={12} className="opacity-60" /></button>
+                                )}
+                              </div>
+                            </>
+                          )}
+                        </div>
+
+                        {message.role === "user" && (
+                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#222] flex items-center justify-center"><User size={14} className="text-gray-400" /></div>
+                        )}
+                      </motion.div>
+                    ))
+                  )}
                 </AnimatePresence>
                 <div ref={messagesEndRef} />
               </div>
@@ -1016,81 +1027,35 @@ PERGUNTA DO ALUNO: ${userMessage}`
                   </div>
                 )}
                 
-                <form onSubmit={handleSubmit} className="flex gap-2">
-                  {/* Botão de Configuração */}
-                  <button
-                    type="button"
-                    onClick={() => setShowContextDialog(true)}
-                    className="p-2 rounded-full dark:bg-[#2D2D2D] bg-gray-100 hover:bg-[#8C43FF] hover:text-white dark:text-gray-400 text-gray-600 transition-colors flex-shrink-0"
-                    title="Configurar contexto da IA"
-                  >
-                    <Settings size={16} />
-                  </button>
+                <form onSubmit={handleSubmit} className="flex items-center gap-3">
+                  <div className="flex-1 relative">
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      placeholder="Mensagem para IAtec..."
+                      className="w-full text-center px-4 py-3 rounded-3xl bg-[#0b0b0b] border border-[#1f1f1f] text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8C43FF] transition-all"
+                      autoComplete="off"
+                      disabled={isLoading}
+                    />
+                    {/* action icons to the right */}
+                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
+                      <button type="button" onClick={() => fileInputRef.current?.click()} className="p-2 rounded-full hover:bg-[#151515] transition-colors" title="Enviar imagem">
+                        <ImageIcon size={16} className="text-gray-400" />
+                      </button>
+                      <button type="button" onClick={startVoiceRecording} disabled={isLoading || isRecording} className={`p-2 rounded-full hover:bg-[#151515] transition-colors ${isRecording ? 'bg-red-500 text-white' : ''}`} title={isRecording ? 'Gravando...' : 'Gravar voz'}>
+                        <Mic size={16} className="text-gray-400" />
+                      </button>
+                      <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                    </div>
+                  </div>
 
-                  {/* Botão de Voz */}
-                  <button
-                    type="button"
-                    onClick={startVoiceRecording}
-                    disabled={isLoading || isRecording}
-                    className={`p-2 rounded-full transition-colors flex-shrink-0 ${
-                      isRecording 
-                        ? 'bg-red-500 text-white animate-pulse' 
-                        : 'dark:bg-[#2D2D2D] bg-gray-100 hover:bg-[#8C43FF] hover:text-white dark:text-gray-400 text-gray-600'
-                    } disabled:opacity-50 disabled:cursor-not-allowed`}
-                    title={isRecording ? "Gravando..." : "Enviar por voz"}
-                  >
-                    <Mic size={16} />
-                  </button>
-
-                  {/* Botão de Imagem */}
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={isLoading}
-                    className="p-2 rounded-full dark:bg-[#2D2D2D] bg-gray-100 hover:bg-[#8C43FF] hover:text-white dark:text-gray-400 text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
-                    title="Enviar imagem"
-                  >
-                    <ImageIcon size={16} />
-                  </button>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
-
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={input}
-                    onChange={(e) => {
-                      console.log("✏️ Digitando:", e.target.value)
-                      setInput(e.target.value)
-                    }}
-                    onClick={() => console.log("🖱️ Input clicado!")}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault()
-                        handleSubmit(e)
-                      }
-                    }}
-                    placeholder="Mensagem para IAtec..."
-                    className="flex-1 px-3 py-2 rounded-full dark:bg-[#2D2D2D] bg-[#d5bbff] dark:text-white text-gray-800 placeholder-gray-500 dark:placeholder-gray-400 border-none outline-none focus:ring-2 focus:ring-[#8C43FF] text-sm"
-                    autoComplete="off"
-                    style={{
-                      pointerEvents: 'auto',
-                      userSelect: 'text',
-                      cursor: 'text',
-                      zIndex: 1
-                    }}
-                  />
-                  <button
-                    type="submit"
-                    disabled={(!input.trim() && !selectedImage) || isLoading}
-                    className="px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-full transition-colors flex items-center gap-1 flex-shrink-0"
-                  >
+                  <button type="submit" disabled={(!input.trim() && !selectedImage) || isLoading} className="px-4 py-2 bg-[#8C43FF] hover:bg-[#9955FF] text-white rounded-full transition-colors flex items-center gap-2">
                     {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                  </button>
+                  <button type="button" onClick={() => setShowContextDialog(true)} className="p-2 rounded-full hover:bg-[#151515] transition-colors" title="Contexto da IA">
+                    <Settings size={16} className="text-gray-400" />
                   </button>
                 </form>
 
