@@ -5,6 +5,42 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Send, Bot, User, Loader2, Trash2, Copy, Music, Play, Pause, Volume2, VolumeX, Volume1, GamepadIcon, Heart, Smile, Timer, Mic, Image as ImageIcon, Settings } from "lucide-react"
 import { GoogleGenerativeAI } from "@google/generative-ai"
 
+// Hook para animação de digitação
+const useTypingAnimation = (words, typingSpeed = 100, deletingSpeed = 50, pauseTime = 2000) => {
+  const [displayText, setDisplayText] = useState("")
+  const [wordIndex, setWordIndex] = useState(0)
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  useEffect(() => {
+    const currentWord = words[wordIndex]
+    
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        // Digitando
+        if (displayText.length < currentWord.length) {
+          setDisplayText(currentWord.slice(0, displayText.length + 1))
+        } else {
+          // Palavra completa, pausar antes de deletar
+          setTimeout(() => setIsDeleting(true), pauseTime)
+        }
+      } else {
+        // Deletando
+        if (displayText.length > 0) {
+          setDisplayText(currentWord.slice(0, displayText.length - 1))
+        } else {
+          // Palavra deletada, passar para próxima
+          setIsDeleting(false)
+          setWordIndex((prev) => (prev + 1) % words.length)
+        }
+      }
+    }, isDeleting ? deletingSpeed : typingSpeed)
+
+    return () => clearTimeout(timeout)
+  }, [displayText, isDeleting, wordIndex, words, typingSpeed, deletingSpeed, pauseTime])
+
+  return displayText
+}
+
 // Componente de visualizador de ondas de gravação
 const WaveformVisualizer = ({ isRecording, sensitivity = "auto" }) => {
   const canvasRef = useRef(null)
@@ -177,6 +213,17 @@ const CloudPage = ({ onOpenPomodoro }) => {
   const [breathingCount, setBreathingCount] = useState(4)
   const [breathingActive, setBreathingActive] = useState(false)
   const breathingIntervalRef = useRef(null)
+
+  // Animação de digitação para o título
+  const typingWords = [
+    "fazer por você?",
+    "esclarecer para você?",
+    "solucionar para você?",
+    "ensinar a você?",
+    "ajudar você?",
+    "responder para você?"
+  ]
+  const animatedText = useTypingAnimation(typingWords, 80, 40, 1500)
 
   // Do not autofocus when navigating to the page to avoid scrolling the viewport.
   // The user can click the input to focus when ready.

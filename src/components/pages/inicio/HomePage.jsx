@@ -116,10 +116,6 @@ const HomePage = ({ activeTab, onTabChange }) => {
                       </div>
                     )}
                     
-                    {/* Título sobre a imagem */}
-                    <h2 className="text-white text-3xl font-bold text-center relative z-10 drop-shadow-lg">
-                      {slides[currentSlide].title}
-                    </h2>
                   </motion.div>
                 </AnimatePresence>
 
