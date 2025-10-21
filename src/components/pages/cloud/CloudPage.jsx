@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Send, Bot, User, Loader2, Trash2, Copy, Music, Play, Pause, Volume2, VolumeX, Volume1, GamepadIcon, Heart, Smile, Timer, Mic, Image as ImageIcon, Settings } from "lucide-react"
+import { Send, Bot, User, Loader2, Trash2, Copy, Music, Play, Pause, Volume2, VolumeX, Volume1, GamepadIcon, Heart, Smile, Timer, Mic, Image as ImageIcon, Settings, FileText } from "lucide-react"
 import { GoogleGenerativeAI } from "@google/generative-ai"
+import RequerimentosPage from "./RequerimentosPage"
 
 // Remove autoapresentações e repetições comuns do modelo
 const sanitizeModelText = (text) => {
@@ -188,7 +189,7 @@ const WaveformVisualizer = ({ isRecording, sensitivity = "auto" }) => {
 }
 
 const CloudPage = ({ onOpenPomodoro }) => {
-  const [activeTab, setActiveTab] = useState("iatec")
+  const [activeTab, setActiveTab] = useState("iatec") // "iatec", "meditacao" ou "requerimentos"
   
   // Configuração do Gemini API
   // ⚠️ IMPORTANTE: Esta chave está exposta. Para produção, use variáveis de ambiente
@@ -907,22 +908,35 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
         <div className="flex mb-3 flex-shrink-0">
           <button
             onClick={() => setActiveTab("iatec")}
-            className={`px-4 py-2 rounded-t-xl font-medium transition-colors text-sm ${
+            className={`px-4 py-2 rounded-t-xl font-medium transition-colors text-sm flex items-center gap-2 ${
               activeTab === "iatec"
                 ? "bg-[#58417d] dark:bg-[#58417d] text-white"
                 : "dark:bg-[#2D2D2D] bg-gray-200 dark:text-gray-300 text-gray-700 hover:bg-[#8C43FF]/20"
             }`}
           >
+            <Bot size={16} />
             IATEC AI
           </button>
           <button
+            onClick={() => setActiveTab("requerimentos")}
+            className={`px-4 py-2 rounded-t-xl font-medium transition-colors text-sm flex items-center gap-2 ${
+              activeTab === "requerimentos"
+                ? "bg-[#6B32C3] text-white"
+                : "dark:bg-[#2D2D2D] bg-gray-200 dark:text-gray-300 text-gray-700 hover:bg-[#8C43FF]/20"
+            }`}
+          >
+            <FileText size={16} />
+            Requerimentos
+          </button>
+          <button
             onClick={() => setActiveTab("meditation")}
-            className={`px-4 py-2 rounded-t-xl font-medium transition-colors text-sm ${
+            className={`px-4 py-2 rounded-t-xl font-medium transition-colors text-sm flex items-center gap-2 ${
               activeTab === "meditation"
                 ? "bg-[#8C43FF] text-white"
                 : "dark:bg-[#2D2D2D] bg-gray-200 dark:text-gray-300 text-gray-700 hover:bg-[#8C43FF]/20"
             }`}
           >
+            <Heart size={16} />
             Meditação
           </button>
         </div>
@@ -1095,6 +1109,10 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
                 {/* Quick Actions removidos para evitar duplicação de sugestões (mantidas apenas no topo) */}
               </div>
             </>
+          ) : activeTab === "requerimentos" ? (
+            <div className="flex-1 overflow-hidden p-6">
+              <RequerimentosPage />
+            </div>
           ) : (
             <div className="p-6 overflow-y-auto custom-scrollbar">
               {/* Music Player */}
@@ -1386,6 +1404,8 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
           <p className="text-xs dark:text-gray-500 text-gray-400">
             {activeTab === "iatec" 
               ? "IAtec é uma assistente virtual desenvolvida para auxiliar estudantes da Etec"
+              : activeTab === "requerimentos"
+              ? "Envie seus requerimentos e acompanhe o status das solicitações"
               : "Cuide do seu bem-estar mental e emocional"}
           </p>
         </div>
