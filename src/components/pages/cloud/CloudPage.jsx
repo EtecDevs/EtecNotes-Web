@@ -909,7 +909,7 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
             onClick={() => setActiveTab("iatec")}
             className={`px-4 py-2 rounded-t-xl font-medium transition-colors text-sm ${
               activeTab === "iatec"
-                ? "bg-[#8C43FF] text-white"
+                ? "bg-[#58417d] dark:bg-[#58417d] text-white"
                 : "dark:bg-[#2D2D2D] bg-gray-200 dark:text-gray-300 text-gray-700 hover:bg-[#8C43FF]/20"
             }`}
           >

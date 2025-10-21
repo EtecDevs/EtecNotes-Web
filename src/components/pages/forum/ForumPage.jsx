@@ -141,7 +141,7 @@ const ForumPage = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-[#f3e8ff] via-[#e8d5ff] to-[#f3e8ff] dark:from-[#0a0a0a] dark:via-[#121212] dark:to-[#0a0a0a] overflow-hidden">
+    <div className="flex h-screen bg-[#f3e8ff] dark:bg-[#121212] overflow-hidden">
       {/* Sidebar Esquerda - Cursos com redimensionamento */}
       <div 
         className="relative flex-shrink-0 transition-all duration-200"

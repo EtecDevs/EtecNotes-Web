@@ -332,55 +332,54 @@ const UserDashboard = () => {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="grid grid-cols-1 sm:grid-cols-3 gap-4"
             >
-              {/* Streak (mantido) */}
-              <div className="dark:bg-[#0D1117] bg-white rounded-2xl p-6 shadow-lg border dark:border-[#2a2a2a] border-gray-100 hover:shadow-xl transform hover:-translate-y-1 transition-all min-h-[160px] flex flex-col justify-between group hover:border-[#8C43FF] dark:hover:border-[#8C43FF]">
+              {/* Streak */}
+              <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200 hover:shadow-md transition-all min-h-[160px] flex flex-col justify-between group">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-orange-50 dark:bg-orange-900/20 group-hover:scale-110 transition-transform">
-                      <TrendingUp size={24} className="text-orange-500" />
+                    <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-orange-50 dark:bg-orange-500/10 group-hover:scale-105 transition-transform">
+                      <TrendingUp size={20} className="text-orange-500" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold dark:text-gray-300 text-gray-600 mb-1">Dias seguidos</p>
-                      <p className="text-4xl font-extrabold dark:text-white text-gray-900">{userStats.studyStreak}</p>
+                      <p className="text-sm font-medium dark:text-gray-400 text-gray-600 mb-1">Dias seguidos</p>
+                      <p className="text-3xl font-bold dark:text-white text-gray-900">{userStats.studyStreak}</p>
                     </div>
                   </div>
-                  <div className="text-2xl">🔥</div>
+                  <div className="text-xl">🔥</div>
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">Mantenha a sequência!</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">Mantenha a sequência!</p>
               </div>
 
-              {/* Carga Horária Estimada (novo cartão) */}
-              <div className="dark:bg-[#0D1117] bg-white rounded-2xl p-6 shadow-lg border dark:border-[#2a2a2a] border-gray-100 hover:shadow-xl transform hover:-translate-y-1 transition-all min-h-[160px] flex flex-col justify-between group hover:border-[#8C43FF] dark:hover:border-[#8C43FF]">
+              {/* Carga Horária Estimada */}
+              <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200 hover:shadow-md transition-all min-h-[160px] flex flex-col justify-between group">
                 <div className="relative">
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#8C43FF]/20 to-[#6B28E6]/10 group-hover:scale-110 transition-transform">
-                      <Calendar size={24} className="text-[#8C43FF]" />
+                    <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#8C43FF]/20 to-[#8C43FF]/10 group-hover:scale-105 transition-transform">
+                      <Calendar size={20} className="text-[#8C43FF]" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold dark:text-gray-300 text-gray-600 mb-1">Eventos neste mês</p>
-                      <p className="text-4xl font-extrabold dark:text-white text-gray-900">{estimatedWeeklyLoad}<span className="text-sm font-medium text-gray-500 ml-1">/sem</span></p>
+                      <p className="text-sm font-medium dark:text-gray-400 text-gray-600 mb-1">Eventos neste mês</p>
+                      <p className="text-3xl font-bold dark:text-white text-gray-900">{estimatedWeeklyLoad}</p>
                     </div>
                   </div>
-                  <span className="absolute -top-2.5 -right-2.5 px-1.5 py-[1px] text-[8px] font-semibold bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300 rounded-full shadow-sm">ESTIMADA</span>
-
                 </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">Baseado no seu calendário de aulas.</p>
               </div>
 
-              {/* Total de Horas Estudadas (mantido) */}
-              <div className="dark:bg-[#0D1117] bg-white rounded-2xl p-6 shadow-lg border dark:border-[#2a2a2a] border-gray-100 hover:shadow-xl transform hover:-translate-y-1 transition-all min-h-[160px] flex flex-col justify-between group hover:border-[#8C43FF] dark:hover:border-[#8C43FF]">
+              {/* Total de Notas */}
+              <div className="dark:bg-[#1E1E1E] bg-white rounded-2xl p-6 shadow-sm border dark:border-[#30363D] border-gray-200 hover:shadow-md transition-all min-h-[160px] flex flex-col justify-between group">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-purple-50 dark:bg-purple-900/20 group-hover:scale-110 transition-transform">
-                      <Clock size={24} className="text-purple-500" />
+                    <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-purple-50 dark:bg-purple-500/10 group-hover:scale-105 transition-transform">
+                      <Clock size={20} className="text-purple-500" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold dark:text-gray-300 text-gray-600 mb-1">Notas Totais</p>
-                      <p className="text-4xl font-extrabold dark:text-white text-gray-900">{userStats.totalNotes}</p>
+                      <p className="text-sm font-medium dark:text-gray-400 text-gray-600 mb-1">Notas Totais</p>
+                      <p className="text-3xl font-bold dark:text-white text-gray-900">{userStats.totalNotes}</p>
                     </div>
                   </div>
-                  <div className="text-2xl">⏱️</div>
+                  <div className="text-xl">📝</div>
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">Total acumulado desde que você começou a usar o EtecNotes.</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">Total acumulado no EtecNotes.</p>
               </div>
             </motion.div>
 
