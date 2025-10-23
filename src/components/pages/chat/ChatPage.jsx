@@ -34,11 +34,41 @@ import {
 import RequerimentosViewer from "./RequerimentosViewer"
 import RequerimentoFullPage from "./RequerimentoFullPage"
 import RequerimentoTypeSelector from "./RequerimentoTypeSelector"
+import RequerimentoProfessorAdmin from "./RequerimentoProfessorAdmin"
+
+// Hook simplificado temporário para permissões
+const usePermissions = () => {
+  // Por enquanto, vamos simular um usuário
+  // ALTERE AQUI O ROLE PARA TESTAR DIFERENTES PERFIS:
+  // "ALUNO" | "PROFESSOR" | "SECRETARIA" | "ADMINISTRADOR"
+  const mockUser = {
+    id: 1,
+    name: "Ana Silva",
+    email: "ana.silva@etec.sp.gov.br",
+    role: "ALUNO", // 👈 MUDE AQUI PARA TESTAR: ALUNO, PROFESSOR, SECRETARIA, ADMINISTRADOR
+    permissions: ["CHAT_ACCESS", "LABS_VIEW", "EVENTS_VIEW"]
+  }
+  
+  const getRole = () => mockUser.role
+  
+  const can = (permission) => {
+    if (mockUser.role === 'ADMINISTRADOR') return true
+    return mockUser.permissions.includes(permission)
+  }
+  
+  return {
+    user: mockUser,
+    getRole,
+    can
+  }
+}
 
 const ChatPage = () => {
+  // Hook de permissões
+  const { user, getRole, can } = usePermissions()
+  
   // Estados principais
   const [activeConversation, setActiveConversation] = useState(null)
-  const [userType] = useState("student") // student, teacher, secretaria
   const [message, setMessage] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
   const [showNewChatModal, setShowNewChatModal] = useState(false)
@@ -46,6 +76,7 @@ const ChatPage = () => {
   const [showRequerimentosModal, setShowRequerimentosModal] = useState(false)
   const [showRequerimentoForm, setShowRequerimentoForm] = useState(false)
   const [showRequerimentoTypeSelector, setShowRequerimentoTypeSelector] = useState(false)
+  const [showRequerimentoProfAdmin, setShowRequerimentoProfAdmin] = useState(false)
   const [selectedRequerimentoType, setSelectedRequerimentoType] = useState(null)
   const [showContactInfo, setShowContactInfo] = useState(false)
   const [activeTab, setActiveTab] = useState("chat") // chat, files, media
@@ -88,13 +119,13 @@ const ChatPage = () => {
   // Mock data baseado no sistema especificado
   const currentUser = {
     id: 1,
-    name: "Ana Silva",
-    email: "ana.silva@etec.sp.gov.br",
-    role: userType,
+    name: user?.name || "Ana Silva",
+    email: user?.email || "ana.silva@etec.sp.gov.br",
+    role: getRole(),
     avatar: "src/assets/imagesGeneral/iconeProfs.jpg",
-    course: "Desenvolvimento de Sistemas",
-    turma: "3º DS A",
-    campus: "Etec Albert Einstein",
+    course: user?.course || "Desenvolvimento de Sistemas",
+    turma: user?.turma || "3º DS A",
+    campus: user?.campus || "Etec Albert Einstein",
     status: "online",
   }
 
@@ -1154,33 +1185,64 @@ const ChatPage = () => {
         {/* Footer da sidebar - Botões de Requerimentos */}
         <div className="p-4 bg-[#f3e8ff] dark:bg-[#121212] border-t border-gray-200/50 dark:border-gray-700/50">
           <div className="grid grid-cols-1 gap-3">
-            <button
-              onClick={() => setShowRequerimentoTypeSelector(true)}
-              className="w-full flex items-center justify-center gap-3 py-5 px-4 bg-[#6B32C3] hover:bg-[#5927A3] text-white rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold group"
-            >
-              <FileText size={18} />
-              <span>Novo Requerimento</span>
-            </button>
-            
-            <button
-              onClick={() => setShowRequerimentosModal(true)}
-              className="w-full flex items-center justify-between gap-3 py-5 px-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold group"
-            >
-              <div className="flex items-center gap-3">
-                <Archive size={18} />
-                <span>Meus Requerimentos</span>
-              </div>
-              {requerimentosCount.pendentes > 0 && (
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center shadow-lg shadow-yellow-500/25">
-                    <span className="text-xs text-white font-bold">{requerimentosCount.pendentes}</span>
+            {/* Botões APENAS para Alunos - Os dois tipos de requerimento do aluno */}
+            {(getRole() === 'ALUNO' || getRole() === 'MONITOR_LAB') && (
+              <>
+                <button
+                  onClick={() => setShowRequerimentoTypeSelector(true)}
+                  className="w-full flex items-center justify-center gap-3 py-5 px-4 bg-[#6B32C3] hover:bg-[#5927A3] text-white rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold group"
+                >
+                  <FileText size={18} />
+                  <span>Novo Requerimento</span>
+                </button>
+                
+                <button
+                  onClick={() => setShowRequerimentosModal(true)}
+                  className="w-full flex items-center justify-between gap-3 py-5 px-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold group"
+                >
+                  <div className="flex items-center gap-3">
+                    <Archive size={18} />
+                    <span>Meus Requerimentos</span>
+                  </div>
+                  {requerimentosCount.pendentes > 0 && (
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center shadow-lg shadow-yellow-500/25">
+                        <span className="text-xs text-white font-bold">{requerimentosCount.pendentes}</span>
+                      </div>
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Eye size={16} />
+                      </div>
+                    </div>
+                  )}
+                </button>
+              </>
+            )}
+
+            {/* Botões APENAS para Professores e Secretaria - Apenas o requerimento oficial */}
+            {(getRole() === 'PROFESSOR' || getRole() === 'SECRETARIA' || getRole() === 'ADMINISTRADOR') && (
+              <>
+                <button
+                  onClick={() => setShowRequerimentoProfAdmin(true)}
+                  className="w-full flex items-center justify-center gap-3 py-5 px-4 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold group"
+                >
+                  <Building size={18} />
+                  <span>Requerimento Oficial ETEC</span>
+                </button>
+                
+                <button
+                  onClick={() => setShowRequerimentosModal(true)}
+                  className="w-full flex items-center justify-between gap-3 py-5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold group"
+                >
+                  <div className="flex items-center gap-3">
+                    <Archive size={18} />
+                    <span>Gerenciar Requerimentos</span>
                   </div>
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Eye size={16} />
+                    <Settings size={16} />
                   </div>
-                </div>
-              )}
-            </button>
+                </button>
+              </>
+            )}
           </div>
         </div>
 
@@ -1614,6 +1676,17 @@ const ChatPage = () => {
           requerimentoType={selectedRequerimentoType}
         />
       )}
+
+      {/* Requerimento para Professores e Administradores */}
+      <AnimatePresence>
+        {showRequerimentoProfAdmin && (
+          <RequerimentoProfessorAdmin 
+            onClose={() => setShowRequerimentoProfAdmin(false)}
+            userRole={getRole()}
+            userName={currentUser.name}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }
