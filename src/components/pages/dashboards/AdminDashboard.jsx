@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import RequerimentosManager from "../admin/RequerimentosManager"
 import {
   Users,
   BookOpen,
@@ -2213,14 +2214,15 @@ const AdminDashboard = ({ onLogout }) => {
                 <Building2 size={24} className="text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-[#58417d] bg-clip-text text-transparent mb-2">Painel SECRETARIA</h1>
-                <p className="text-sm dark:text-gray-400 text-gray-600">Secretaria</p>
+                <h1 className="text-2xl font-bold bg-[#58417d] bg-clip-text text-transparent mb-2">Painel Administrativo</h1>
+                <p className="text-sm dark:text-gray-400 text-gray-600">Etec de Peruíbe</p>
               </div>
             </div>
 
             <nav className="space-y-2">
               {[
                 { id: 'overview', icon: Home, label: 'Visão Geral' },
+                { id: 'requerimentos', icon: FileText, label: 'Requerimentos' },
                 { id: 'users', icon: Users, label: 'Usuários' },
                 { id: 'turmas', icon: BookOpen, label: 'Turmas' },
                 { id: 'eventos', icon: Calendar, label: 'Eventos' },
@@ -2266,6 +2268,7 @@ const AdminDashboard = ({ onLogout }) => {
             transition={{ duration: 0.3 }}
           >
             {activeSection === 'overview' && renderOverview()}
+            {activeSection === 'requerimentos' && <RequerimentosManager onBack={() => setActiveSection('overview')} />}
             {activeSection === 'users' && renderUsers()}
             {activeSection === 'turmas' && renderTurmas()}
             {activeSection === 'eventos' && renderEventos()}

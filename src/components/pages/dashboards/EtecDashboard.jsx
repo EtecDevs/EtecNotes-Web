@@ -2213,8 +2213,9 @@ const EtecDashboard = ({ onLogout }) => {
                 <Building2 size={24} className="text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-[#58417d] bg-clip-text text-transparent mb-2">Painel SECRETARIA</h1>
-                <p className="text-sm dark:text-gray-400 text-gray-600">Secretaria</p>
+                <h1 className="text-2xl font-bold bg-[#58417d] bg-clip-text text-transparent mb-2">Painel Secretaria</h1>
+                <span className="text-sm dark:text-gray-400 text-gray-600">Etec de Peruíbe</span>
+               
               </div>
             </div>
 
