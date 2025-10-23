@@ -26,7 +26,14 @@ import {
   Users,
   Settings,
   Zap,
+  Send as SendIcon,
+  Eye,
+  Download,
+  ArrowLeft,
 } from "lucide-react"
+import RequerimentosViewer from "./RequerimentosViewer"
+import RequerimentoFullPage from "./RequerimentoFullPage"
+import RequerimentoTypeSelector from "./RequerimentoTypeSelector"
 
 const ChatPage = () => {
   // Estados principais
@@ -36,6 +43,10 @@ const ChatPage = () => {
   const [searchQuery, setSearchQuery] = useState("")
   const [showNewChatModal, setShowNewChatModal] = useState(false)
   const [showTicketModal, setShowTicketModal] = useState(false)
+  const [showRequerimentosModal, setShowRequerimentosModal] = useState(false)
+  const [showRequerimentoForm, setShowRequerimentoForm] = useState(false)
+  const [showRequerimentoTypeSelector, setShowRequerimentoTypeSelector] = useState(false)
+  const [selectedRequerimentoType, setSelectedRequerimentoType] = useState(null)
   const [showContactInfo, setShowContactInfo] = useState(false)
   const [activeTab, setActiveTab] = useState("chat") // chat, files, media
   const [isTyping, setIsTyping] = useState(false)
@@ -50,6 +61,12 @@ const ChatPage = () => {
     priority: "normal",
     description: "",
     attachments: [],
+  })
+
+  // Mock data para requerimentos
+  const [requerimentosCount] = useState({
+    pendentes: 2,
+    total: 5
   })
 
   const messagesEndRef = useRef(null)
@@ -528,6 +545,13 @@ const ChatPage = () => {
     }, 1500)
   }
 
+  // Handler para seleção de tipo de requerimento
+  const handleRequerimentoTypeSelect = (type) => {
+    setSelectedRequerimentoType(type)
+    setShowRequerimentoTypeSelector(false)
+    setShowRequerimentoForm(true)
+  }
+
   // Sincronizar activeConversation com mudanças em conversations
   useEffect(() => {
     if (activeConversation) {
@@ -552,6 +576,81 @@ const ChatPage = () => {
       }, 100)
     }
   }, [activeConversation?.messages])
+
+  // Controlar scroll do body quando modal está aberto
+  useEffect(() => {
+    if (showRequerimentosModal) {
+      // Bloquear scroll do body
+      document.body.style.overflow = 'hidden'
+      document.body.style.paddingRight = '0px' // Evitar shift de layout
+    } else {
+      // Restaurar scroll do body
+      document.body.style.overflow = 'unset'
+      document.body.style.paddingRight = '0px'
+    }
+
+    // Cleanup function para garantir que o scroll seja restaurado
+    return () => {
+      document.body.style.overflow = 'unset'
+      document.body.style.paddingRight = '0px'
+    }
+  }, [showRequerimentosModal])
+
+  // Modal para requerimentos
+  const RequerimentosModal = () => (
+    <AnimatePresence>
+      {showRequerimentosModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xl overflow-hidden"
+          onClick={() => setShowRequerimentosModal(false)}
+          style={{ touchAction: 'none' }}
+          onWheel={(e) => e.stopPropagation()}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            className="w-full max-w-6xl h-[90vh] bg-white/95 dark:bg-gray-900/95 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/50 overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+          >
+            {/* Header do Modal */}
+            <div className="relative p-6 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-cyan-500/10 border-b border-gray-200/50 dark:border-gray-700/50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-3xl flex items-center justify-center shadow-lg shadow-purple-500/25">
+                    <FileText size={28} className="text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                      Sistema de Requerimentos
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                      Gerencie seus requerimentos e solicitações acadêmicas
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowRequerimentosModal(false)}
+                  className="p-3 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 rounded-2xl transition-all duration-300 hover:scale-110"
+                >
+                  <X size={24} className="text-gray-600 dark:text-gray-400" />
+                </button>
+              </div>
+            </div>
+
+            {/* Conteúdo do Modal - RequerimentosViewer */}
+            <div className="flex-1 overflow-hidden">
+              <RequerimentosViewer />
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
 
   // Modal para nova conversa
   const NewChatModal = () => (
@@ -631,15 +730,15 @@ const ChatPage = () => {
                 ))}
               </div>
             </div>
-            <div className="p-6 ">
+            <div className="p-6">
               <button
                 onClick={() => setShowTicketModal(true)}
-                className="w-full group flex items-center justify-center gap-3 p-4 dark:bg-[#121212]"
+                className="w-full group flex items-center justify-center gap-3 p-4 dark:bg-[#121212] hover:bg-gray-50 dark:hover:bg-gray-800 rounded-2xl transition-all duration-300"
               >
                 <div className="w-6 h-6 rounded-lg flex items-center justify-center">
                   <Building size={16} />
                 </div>
-                <span className="font-semibold">Contatar Secretaria</span>
+                <span className="font-semibold">Contatar Secretaria (Chat)</span>
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                   <Zap size={16} />
                 </div>
@@ -956,7 +1055,7 @@ const ChatPage = () => {
 
         {/* Lista de conversas */}
         <div className="flex-1 overflow-y-auto bg-[#f3e8ff] dark:bg-[#121212] scrollbar-thin scrollbar-thumb-[#5b38ba] scrollbar-track-gray-200 dark:scrollbar-track-gray-800">
-          <div className="p-4">
+          <div className="p-4 pb-2">
             <div className="mb-4">
               <h2 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3 py-2 flex items-center gap-2">
                 <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full" />
@@ -1052,10 +1151,40 @@ const ChatPage = () => {
           </div>
         </div>
 
-        {/* Footer da sidebar */}
-        <div className="p-4 bg-[#f3e8ff] dark:bg-[#121212]">
-          
+        {/* Footer da sidebar - Botões de Requerimentos */}
+        <div className="p-4 bg-[#f3e8ff] dark:bg-[#121212] border-t border-gray-200/50 dark:border-gray-700/50">
+          <div className="grid grid-cols-1 gap-3">
+            <button
+              onClick={() => setShowRequerimentoTypeSelector(true)}
+              className="w-full flex items-center justify-center gap-3 py-5 px-4 bg-[#6B32C3] hover:bg-[#5927A3] text-white rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold group"
+            >
+              <FileText size={18} />
+              <span>Novo Requerimento</span>
+            </button>
+            
+            <button
+              onClick={() => setShowRequerimentosModal(true)}
+              className="w-full flex items-center justify-between gap-3 py-5 px-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl font-semibold group"
+            >
+              <div className="flex items-center gap-3">
+                <Archive size={18} />
+                <span>Meus Requerimentos</span>
+              </div>
+              {requerimentosCount.pendentes > 0 && (
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center shadow-lg shadow-yellow-500/25">
+                    <span className="text-xs text-white font-bold">{requerimentosCount.pendentes}</span>
+                  </div>
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Eye size={16} />
+                  </div>
+                </div>
+              )}
+            </button>
+          </div>
         </div>
+
+
       </div>
 
       {/* Área principal do chat */}
@@ -1065,6 +1194,15 @@ const ChatPage = () => {
             {/* Header da conversa */}
             <div className="h-20 bg-white/80 dark:bg-[#1E1E1E] px-8 flex items-center justify-between shadow-lg">
               <div className="flex items-center gap-4">
+                {/* Botão Voltar */}
+                <button
+                  onClick={() => setActiveConversation(null)}
+                  className="p-2 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-400 rounded-xl transition-all duration-300 hover:scale-110 shadow-lg shadow-gray-500/10"
+                  title="Voltar para lista de conversas"
+                >
+                  <ArrowLeft size={20} />
+                </button>
+                
                 <div className="relative">
                   <div className="w-12 h-12 rounded-2xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 shadow-lg">
                     <img
@@ -1437,9 +1575,9 @@ const ChatPage = () => {
             </p>
             <button
               onClick={() => setShowNewChatModal(true)}
-              className="group flex items-center gap-3 px-8 py-4 bg-[#6b32c3] hover:from-purple-700 hover:to-blue-700 text-white rounded-2xl transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-[1.05] font-semibold text-lg"
+              className="group flex items-center gap-3 px-8 py-4 bg-[#6b32c3] hover:bg-[#5927A3] text-white rounded-2xl transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-[1.05] font-semibold text-lg"
             >
-              <div className="w-6 h-6  rounded-lg flex items-center justify-center">
+              <div className="w-6 h-6 rounded-lg flex items-center justify-center">
                 <Plus size={18} />
               </div>
               Iniciar Nova Conversa
@@ -1454,6 +1592,28 @@ const ChatPage = () => {
       {/* Modais */}
       <NewChatModal />
       <TicketModal />
+      <RequerimentosModal />
+      
+      {/* Seletor de Tipo de Requerimento */}
+      <AnimatePresence>
+        {showRequerimentoTypeSelector && (
+          <RequerimentoTypeSelector 
+            onClose={() => setShowRequerimentoTypeSelector(false)}
+            onSelectType={handleRequerimentoTypeSelect}
+          />
+        )}
+      </AnimatePresence>
+      
+      {/* Página de Requerimento Completa */}
+      {showRequerimentoForm && (
+        <RequerimentoFullPage 
+          onClose={() => {
+            setShowRequerimentoForm(false)
+            setSelectedRequerimentoType(null)
+          }}
+          requerimentoType={selectedRequerimentoType}
+        />
+      )}
     </div>
   )
 }

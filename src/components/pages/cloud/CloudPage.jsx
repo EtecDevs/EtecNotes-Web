@@ -2,9 +2,8 @@
 
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Send, Bot, User, Loader2, Trash2, Copy, Music, Play, Pause, Volume2, VolumeX, Volume1, GamepadIcon, Heart, Smile, Timer, Mic, Image as ImageIcon, Settings, FileText } from "lucide-react"
+import { Send, Bot, User, Loader2, Trash2, Copy, Music, Play, Pause, Volume2, VolumeX, Volume1, GamepadIcon, Heart, Smile, Timer, Mic, Image as ImageIcon, Settings } from "lucide-react"
 import { GoogleGenerativeAI } from "@google/generative-ai"
-import RequerimentosPage from "./RequerimentosPage"
 
 // Remove autoapresentações e repetições comuns do modelo
 const sanitizeModelText = (text) => {
@@ -189,7 +188,7 @@ const WaveformVisualizer = ({ isRecording, sensitivity = "auto" }) => {
 }
 
 const CloudPage = ({ onOpenPomodoro }) => {
-  const [activeTab, setActiveTab] = useState("iatec") // "iatec", "meditacao" ou "requerimentos"
+  const [activeTab, setActiveTab] = useState("iatec") // "iatec" ou "meditation"
   
   // Configuração do Gemini API
   // ⚠️ IMPORTANTE: Esta chave está exposta. Para produção, use variáveis de ambiente
@@ -382,7 +381,7 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
     setInput("")
     // Garantir altura fixa do textarea
     if (inputRef.current) {
-      inputRef.current.style.height = '48px'
+      inputRef.current.style.height = '40px'
       inputRef.current.style.overflowY = 'auto'
     }
   setIsLoading(true)
@@ -554,7 +553,7 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
     removeImage()
     if (inputRef.current) {
       inputRef.current.value = ''
-      inputRef.current.style.height = '48px'
+      inputRef.current.style.height = '40px'
       inputRef.current.style.overflowY = 'auto'
       // Garantir foco após limpar
       requestAnimationFrame(() => inputRef.current && inputRef.current.focus())
@@ -878,7 +877,7 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
             </h1>
             <p className="dark:text-gray-400 text-gray-600 text-sm">
               {activeTab === "iatec" 
-                ? "Assistente virtual inteligente da Etec" 
+                ? "Assistente virtual inteligente da Etec"
                 : "Relaxe e recarregue suas energias"}
             </p>
           </div>
@@ -918,17 +917,6 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
             IATEC AI
           </button>
           <button
-            onClick={() => setActiveTab("requerimentos")}
-            className={`px-4 py-2 rounded-t-xl font-medium transition-colors text-sm flex items-center gap-2 ${
-              activeTab === "requerimentos"
-                ? "bg-[#6B32C3] text-white"
-                : "dark:bg-[#2D2D2D] bg-gray-200 dark:text-gray-300 text-gray-700 hover:bg-[#8C43FF]/20"
-            }`}
-          >
-            <FileText size={16} />
-            Requerimentos
-          </button>
-          <button
             onClick={() => setActiveTab("meditation")}
             className={`px-4 py-2 rounded-t-xl font-medium transition-colors text-sm flex items-center gap-2 ${
               activeTab === "meditation"
@@ -959,23 +947,23 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
               )}
               
               {/* Chat Messages - scroll apenas nas mensagens */}
-              <div className="flex-1 overflow-y-auto overscroll-contain p-4 custom-scrollbar">
+              <div className="flex-1 overflow-y-auto overscroll-contain p-3 custom-scrollbar">
                 <AnimatePresence>
                   {messages.length === 0 ? (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="w-full max-w-3xl mx-auto text-center py-12 space-y-8"
+                      className="w-full max-w-3xl mx-auto text-center py-8 space-y-6"
                     >
-                      <div style={{ fontFamily: 'Inter, system-ui, -apple-system, Roboto, "Helvetica Neue", Arial' }} className="space-y-3">
-                        <h2 className="text-3xl md:text-4xl font-medium text-gray-900 dark:text-gray-100">O que a <span className="text-[#8C43FF]">IATec</span> pode</h2>
+                      <div style={{ fontFamily: 'Inter, system-ui, -apple-system, Roboto, "Helvetica Neue", Arial' }} className="space-y-2">
+                        <h2 className="text-2xl md:text-3xl font-medium text-gray-900 dark:text-gray-100">O que a <span className="text-[#8C43FF]">IATec</span> pode</h2>
                         <div className="flex items-center justify-center gap-3">
-                          <h3 className="text-3xl md:text-4xl font-semibold text-gray-500 tracking-tight">{animatedText}</h3>
-                          <span className="w-0.5 h-8 bg-[#8C43FF] animate-pulse" />
+                          <h3 className="text-2xl md:text-3xl font-semibold text-gray-500 tracking-tight">{animatedText}</h3>
+                          <span className="w-0.5 h-6 bg-[#8C43FF] animate-pulse" />
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap justify-center gap-3 mt-6">
+                      <div className="flex flex-wrap justify-center gap-2 mt-4">
                         {[
                           "Quais cursos técnicos estão disponíveis?",
                           "Como funciona o processo de matrícula?",
@@ -988,7 +976,7 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
                             initial={{ opacity: 0, y: 6 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.06 }}
-                            className="px-4 py-2 rounded-full border border-[#262626] bg-[#58417d] text-gray-300 hover:bg-[#151515] hover:border-[#8C43FF]/30 transition-all text-sm"
+                            className="px-3 py-1.5 rounded-full border border-[#262626] bg-[#58417d] text-gray-300 hover:bg-[#151515] hover:border-[#8C43FF]/30 transition-all text-xs"
                           >
                             {suggestion}
                           </motion.button>
@@ -996,33 +984,33 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
                       </div>
                     </motion.div>
                   ) : (
-                    <div className="w-full max-w-3xl mx-auto space-y-3">
+                    <div className="w-full max-w-3xl mx-auto space-y-2">
                     {messages.map((message) => (
                       <motion.div
                         key={message.id}
-                        initial={{ opacity: 0, y: 12 }}
+                        initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -12 }}
-                        transition={{ duration: 0.25 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.2 }}
                         className={`flex gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}
                       >
                         {message.role === "assistant" && (
-                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#8C43FF] flex items-center justify-center">
-                            <Bot size={14} className="text-white" />
+                          <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#8C43FF] flex items-center justify-center">
+                            <Bot size={12} className="text-white" />
                           </div>
                         )}
 
-                        <div className={`max-w-[75%] rounded-3xl px-4 py-3 ${message.role === "user" ? "bg-[#8C43FF] text-white" : "bg-[#111111] text-gray-200 border border-[#222]"}`}>
+                        <div className={`max-w-[75%] rounded-2xl px-3 py-2 ${message.role === "user" ? "bg-[#8C43FF] text-white" : "bg-[#111111] text-gray-200 border border-[#222]"}`}>
                           {message.isLoading ? (
-                            <div className="flex items-center gap-2"><Loader2 size={14} className="animate-spin" /><span className="text-xs">Pensando...</span></div>
+                            <div className="flex items-center gap-2"><Loader2 size={12} className="animate-spin" /><span className="text-xs">Pensando...</span></div>
                           ) : (
                             <>
                               {message.image && <img src={message.image} alt="Imagem enviada" className="max-w-full h-auto rounded-lg mb-1" />}
-                              <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                              <p className="text-xs leading-relaxed whitespace-pre-wrap">{message.content}</p>
                               <div className="flex items-center justify-between mt-1">
-                                <span className="text-xs opacity-60">{formatTime(message.timestamp)}</span>
+                                <span className="text-xs opacity-50">{formatTime(message.timestamp)}</span>
                                 {message.role === "assistant" && (
-                                  <button onClick={() => copyMessage(message.content)} className="p-0.5 rounded hover:bg-white/5 transition-colors" title="Copiar resposta"><Copy size={12} className="opacity-60" /></button>
+                                  <button onClick={() => copyMessage(message.content)} className="p-0.5 rounded hover:bg-white/5 transition-colors" title="Copiar resposta"><Copy size={10} className="opacity-50" /></button>
                                 )}
                               </div>
                             </>
@@ -1030,7 +1018,7 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
                         </div>
 
                         {message.role === "user" && (
-                          <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#222] flex items-center justify-center"><User size={14} className="text-gray-400" /></div>
+                          <div className="flex-shrink-0 w-5 h-5 rounded-full bg-[#222] flex items-center justify-center"><User size={12} className="text-gray-400" /></div>
                         )}
                       </motion.div>
                     ))}
@@ -1041,10 +1029,10 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
               </div>
 
               {/* Input Area - fixa no fundo do card */}
-              <div className="flex-shrink-0 border-t dark:border-[#333333] border-gray-200 p-3 bg-gradient-to-t from-white dark:from-[#1E1E1E] to-white/80 dark:to-[#1E1E1E]/80 backdrop-blur-md">
+              <div className="flex-shrink-0 border-t dark:border-[#333333] border-gray-200 p-2 bg-gradient-to-t from-white dark:from-[#1E1E1E] to-white/80 dark:to-[#1E1E1E]/80 backdrop-blur-md">
                 {/* Visualizador de Gravação */}
                 {isRecording && (
-                  <div className="mb-3 flex justify-center">
+                  <div className="mb-2 flex justify-center">
                     <WaveformVisualizer isRecording={isRecording} sensitivity={recordingSensitivity} />
                   </div>
                 )}
@@ -1055,19 +1043,19 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
                     <img 
                       src={imagePreview} 
                       alt="Preview" 
-                      className="h-16 w-16 object-cover rounded-full border-2 border-[#8C43FF]"
+                      className="h-12 w-12 object-cover rounded-full border-2 border-[#8C43FF]"
                     />
                     <button
                       onClick={removeImage}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                      className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600 transition-colors"
                       title="Remover imagem"
                     >
-                      <Trash2 size={10} />
+                      <Trash2 size={8} />
                     </button>
                   </div>
                 )}
                 
-                <form onSubmit={handleSubmit} className="flex items-end gap-3">
+                <form onSubmit={handleSubmit} className="flex items-end gap-2">
                   <div className="flex-1 relative">
                     <textarea
                       ref={inputRef}
@@ -1080,39 +1068,35 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
                         }
                       }}
                       placeholder="Mensagem para IAtec..."
-                      rows={2}
-                      className="w-full text-left pl-4 pr-28 py-3 rounded-3xl bg-[#58417d] dark:bg-[#8c43ff] border border-[#1f1f1f] text-gray-200 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-[#8C43FF] transition-all dark:opacity-40 hover:opacity-100 resize-none overflow-y-auto h-12"
+                      rows={1}
+                      className="w-full text-left pl-3 pr-24 py-2 rounded-2xl bg-[#58417d] dark:bg-[#8c43ff] border border-[#1f1f1f] text-gray-200 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-[#8C43FF] transition-all dark:opacity-40 hover:opacity-100 resize-none overflow-y-auto h-10 text-sm"
                       autoComplete="off"
                       disabled={isLoading}
-                      style={{ height: '48px' }}
+                      style={{ height: '40px' }}
                     />
                     {/* action icons to the right */}
-                    <div className="absolute right-2 bottom-3 flex items-center gap-2">
-                      <button type="button" onClick={() => fileInputRef.current?.click()} className="p-2 rounded-full hover:bg-[#151515] transition-colors" title="Enviar imagem">
-                        <ImageIcon size={16} className="text-gray-400" />
+                    <div className="absolute right-1 bottom-2 flex items-center gap-1">
+                      <button type="button" onClick={() => fileInputRef.current?.click()} className="p-1.5 rounded-full hover:bg-[#151515] transition-colors" title="Enviar imagem">
+                        <ImageIcon size={14} className="text-gray-400" />
                       </button>
-                      <button type="button" onClick={startVoiceRecording} disabled={isLoading || isRecording} className={`p-2 rounded-full hover:bg-[#151515] transition-colors ${isRecording ? 'bg-red-500 text-white' : ''}`} title={isRecording ? 'Gravando...' : 'Gravar voz'}>
-                        <Mic size={16} className="text-gray-400" />
+                      <button type="button" onClick={startVoiceRecording} disabled={isLoading || isRecording} className={`p-1.5 rounded-full hover:bg-[#151515] transition-colors ${isRecording ? 'bg-red-500 text-white' : ''}`} title={isRecording ? 'Gravando...' : 'Gravar voz'}>
+                        <Mic size={14} className="text-gray-400" />
                       </button>
                       <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                     </div>
                   </div>
 
-                  <button type="submit" disabled={(!input.trim() && !selectedImage) || isLoading} className="px-4 py-2 bg-[#58417d] dark:bg-[#8C43FF] dark:hover:bg-[#9955FF] text-white rounded-full transition-colors flex items-center gap-2">
-                    {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                  <button type="submit" disabled={(!input.trim() && !selectedImage) || isLoading} className="px-3 py-2 bg-[#58417d] dark:bg-[#8C43FF] dark:hover:bg-[#9955FF] text-white rounded-full transition-colors flex items-center gap-1">
+                    {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                   </button>
                   <button type="button" onClick={() => setShowContextDialog(true)} className="p-2 rounded-full hover:bg-[#151515] transition-colors" title="Contexto da IA">
-                    <Settings size={16} className="text-gray-400" />
+                    <Settings size={14} className="text-gray-400" />
                   </button>
                 </form>
 
                 {/* Quick Actions removidos para evitar duplicação de sugestões (mantidas apenas no topo) */}
               </div>
             </>
-          ) : activeTab === "requerimentos" ? (
-            <div className="flex-1 overflow-hidden p-6">
-              <RequerimentosPage />
-            </div>
           ) : (
             <div className="p-6 overflow-y-auto custom-scrollbar">
               {/* Music Player */}
@@ -1404,8 +1388,6 @@ ${additionalContext ? `\nContexto adicional:\n${additionalContext}` : ''}`
           <p className="text-xs dark:text-gray-500 text-gray-400">
             {activeTab === "iatec" 
               ? "IAtec é uma assistente virtual desenvolvida para auxiliar estudantes da Etec"
-              : activeTab === "requerimentos"
-              ? "Envie seus requerimentos e acompanhe o status das solicitações"
               : "Cuide do seu bem-estar mental e emocional"}
           </p>
         </div>
